@@ -254,17 +254,54 @@ display x;
 %------------------------------------------------------------
 
 \begin{frame}
-	\frametitle{Do refeitório à sua tarefa}
+	\frametitle{Estudo de caso: o refeitório da fábrica}
 	\begin{itemize}
-		\item Planejamento do refeitório de uma fábrica, com
-			nutricionista;
-		\item Objetivo: \textbf{reduzir custo} sem \textbf{prejudicar a
-			saúde};
-		\item Mínimos diários: proteínas, cálcio, sódio, ferro,
-			vitaminas;
-		\item Máximo diário: calorias;
-		\item Problema da Dieta: alimentos + quantidades de menor custo
-			que atendem às exigências nutricionais.
+		\item Uma fábrica serve \textbf{milhares de refeições por dia}
+			no seu refeitório;
+		\item Isso representa um gasto \textbf{mensal alto} com
+			alimentação;
+		\item A empresa quer \textbf{reduzir o custo} das refeições --
+			mas \textbf{sem prejudicar a saúde} dos trabalhadores;
+		\item A nutricionista responsável topa ajudar, mas o problema
+			tem \textbf{muitas combinações possíveis} de alimentos e
+			quantidades para avaliar ``na mão'';
+		\item Ela recorre ao setor de planejamento (vocês) para montar
+			um modelo de otimização que sugira o cardápio de menor
+			custo.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O que é o Problema da Dieta?}
+	\begin{itemize}
+		\item Existe um conjunto de \textbf{alimentos disponíveis}, cada
+			um com um \textbf{custo} e uma composição nutricional
+			conhecida (calorias, proteínas, vitaminas, etc.);
+		\item É preciso decidir \textbf{quais alimentos usar e em que
+			quantidade} para compor a refeição/cardápio;
+		\item A escolha precisa respeitar \textbf{exigências
+			nutricionais}: quantidades mínimas de certos nutrientes e um
+			limite máximo de calorias, por exemplo;
+		\item Entre todas as combinações que atendem essas exigências,
+			queremos a de \textbf{menor custo};
+		\item É um problema clássico de otimização, estudado desde a
+			década de 1940 (planejamento de dietas militares) e ainda
+			usado hoje em nutrição, agropecuária e logística.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exigências nutricionais do estudo de caso}
+	\begin{itemize}
+		\item A nutricionista fixou, por dia, quantidades
+			\textbf{mínimas} de:
+		\begin{itemize}
+			\item proteínas, cálcio, sódio, ferro e vitaminas;
+		\end{itemize}
+		\item E um limite \textbf{máximo} de calorias;
+		\item Cada alimento contribui de forma diferente para cada um
+			desses nutrientes -- por isso a combinação importa, não só
+			a quantidade total de comida.
 	\end{itemize}
 \end{frame}
 
