@@ -52,6 +52,18 @@ verifica apenas o HTML/CSS, não os slides.
   `ghcr.io/xu-cheng/texlive-full`) → `python3 site/build.py` → publica
   `dist/` no GitHub Pages.
 
+## Estilo de escrita do conteúdo
+
+- **Slides (`.tex`)**: sempre em bullet points, nunca parágrafos de texto
+  corrido. O professor explica o conteúdo ao vivo — o slide é apoio
+  visual em tópicos, não um texto para ser lido. Isso vale mesmo para
+  descrições conceituais (ex.: estudo de caso): quebrar em bullets, não
+  assumir que o aluno já conhece o problema, mas sem virar parágrafo.
+- **Tarefas (`.md`)**: aqui pode (e deve, quando ajudar a clareza) usar
+  texto corrido normalmente — é material para leitura assíncrona pelo
+  aluno, não apoio de fala em aula. Bullets só onde fizer sentido (listas
+  de itens, passos), não como regra geral.
+
 ## Convenções
 
 - Design é intencionalmente simples/moderno (ver `site/static/css/style.css`,
