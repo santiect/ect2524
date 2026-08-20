@@ -59,6 +59,8 @@ a:hover { text-decoration: underline; }
 }
 .brand-name { color: var(--muted); font-size: 0.95rem; }
 
+.header-nav { display: flex; align-items: center; gap: 1.1rem; }
+.header-nav a { font-size: 0.92rem; font-weight: 500; }
 .header-meta { color: var(--muted); font-size: 0.9rem; }
 
 main {

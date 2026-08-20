@@ -13,6 +13,4 @@ tarefas:
 
 notebooks:
   - titulo: "OPT001 — Introdução à otimização e AMPL"
-    caminho: "notebooks/OPT001_intro.ipynb"
   - titulo: "OPT002 — Modelagem: mochila (compacta) e dieta"
-    caminho: "notebooks/OPT002_knapsack_compact.ipynb"

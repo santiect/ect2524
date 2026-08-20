@@ -12,7 +12,12 @@
     <span class="brand-code">{{ course.codigo }}</span>
     <span class="brand-name">{{ course.nome }}</span>
   </a>
-  <div class="header-meta">{{ course.professor }}</div>
+  <nav class="header-nav">
+    {% if course.notebooks_url %}
+    <a href="{{ course.notebooks_url }}" target="_blank" rel="noopener">Notebooks</a>
+    {% endif %}
+    <span class="header-meta">{{ course.professor }}</span>
+  </nav>
 </header>
 
 <main>

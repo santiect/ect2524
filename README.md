@@ -10,14 +10,18 @@ Site publicado em: `https://santiect.github.io/ect2524/`
 ## Como adicionar uma aula
 
 1. Crie uma pasta em `content/aulas/`, com prefixo numérico para ordenar
-   (ex.: `content/aulas/01-introducao/`).
-2. Dentro dela, crie um `aula.yaml` (use `content/aulas/00-exemplo/aula.yaml`
-   como referência) com título, data, resumo e os caminhos dos arquivos.
+   (ex.: `content/aulas/02-programacao-linear/`).
+2. Dentro dela, crie um `aula.yaml` (use
+   `content/aulas/01-introducao-otimizacao/aula.yaml` como referência) com
+   título, data, resumo e os caminhos dos arquivos.
 3. Coloque os slides em `slides/` (o `.tex` principal + `.bib` + `images/`).
    O nome do `.tex` também é usado como `\jobname`, então se o seu `.tex`
    referencia `\bibliography{\jobname}`, mantenha o `.bib` com o mesmo nome.
-4. Coloque notebooks `.ipynb` em `notebooks/`. Eles ganham automaticamente
-   um botão "Abrir no Colab" (via `https://colab.research.google.com/github/...`).
+4. Notebooks **não** ficam neste repositório: eles vivem na pasta
+   compartilhada do Google Drive (link em `content/course.yaml` ->
+   `notebooks_url`, mostrado no topo do site). Em `aula.yaml`, liste em
+   `notebooks:` apenas os títulos dos notebooks usados na aula — sem
+   caminho de arquivo.
 5. Tarefas podem ser só um título (sem arquivo) ou apontar para um `.md`
    dentro da pasta da aula (renderizado como HTML na página da aula).
 6. Dê `git push` na `main`. O GitHub Actions compila o LaTeX, gera o site
@@ -27,14 +31,12 @@ Site publicado em: `https://santiect.github.io/ect2524/`
 
 ```
 content/
-  course.yaml           # nome da disciplina, professor, etc.
+  course.yaml           # nome da disciplina, professor, link do Drive, etc.
   aulas/
-    00-exemplo/
+    01-introducao-otimizacao/
       aula.yaml
-      slides/aula06.tex
-      slides/aula06.bib
-      slides/images/
-      notebooks/OPT001_intro.ipynb
+      slides/aula01.tex
+      tarefas/tarefa01-dieta.md
 site/
   build.py              # gera dist/ a partir de content/
   templates/            # HTML (Jinja2)

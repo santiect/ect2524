@@ -38,8 +38,12 @@ verifica apenas o HTML/CSS, não os slides.
   qualquer acento (já aconteceu, ver histórico do git).
   - Se o `.tex` usa `\bibliography{\jobname}`, o `.bib` precisa ter o
     mesmo nome-base do `.tex` (jobname = nome do arquivo sem extensão).
-- `content/aulas/NN-slug/notebooks/*.ipynb` — viram links "Abrir no Colab"
-  automaticamente (aponta pro GitHub, repo definido em `course.yaml`).
+- Notebooks **não** ficam neste repositório nem viram link de Colab por
+  arquivo — vivem numa pasta compartilhada do Google Drive
+  (`content/course.yaml` -> `notebooks_url`, linkada no topo do site). Em
+  `aula.yaml`, `notebooks:` é só uma lista de títulos informativos (sem
+  `caminho:`). Não reintroduzir lógica de link individual por notebook
+  sem o usuário pedir — decisão explícita dele, pra não poluir a página.
 - `content/aulas/NN-slug/tarefas` — cada item em `aula.yaml` pode ser só um
   título, ou apontar (`arquivo:`) para um `.md` que é renderizado como HTML.
 - `site/build.py` lê tudo isso e gera `dist/` usando os templates Jinja2 em
@@ -53,9 +57,6 @@ verifica apenas o HTML/CSS, não os slides.
 - Design é intencionalmente simples/moderno (ver `site/static/css/style.css`,
   suporta light/dark via `prefers-color-scheme`). Não adicionar
   frameworks/JS de build — o site é puramente estático.
-- `content/aulas/00-exemplo/` é uma aula de demonstração migrada de
-  `antigos/`, só para validar o pipeline. Pode virar uma aula real ou ser
-  removida quando o usuário mandar organizar o conteúdo de `antigos/`.
 - `antigos/` é o material antigo (slides, notebooks) ainda não migrado —
   não editar diretamente; é a fonte para futuras aulas em `content/aulas/`.
 - Nunca commitar artefatos de build: `dist/`, `.aux`/`.log`/`.nav`/etc. de

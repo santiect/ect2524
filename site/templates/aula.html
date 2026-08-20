@@ -24,16 +24,15 @@
     {% if aula.notebooks %}
     <ul class="list">
       {% for nb in aula.notebooks %}
-      <li>
-        <span class="item-title">{{ nb.titulo }}</span>
-        <span class="item-links">
-          <a href="{{ nb.colab_url }}" target="_blank" rel="noopener">Abrir no Colab</a>
-          <span class="sep">·</span>
-          <a href="{{ nb.raw_url|replace(aula.slug + '/', '') }}" target="_blank" rel="noopener">Baixar .ipynb</a>
-        </span>
-      </li>
+      <li><span class="item-title">{{ nb.titulo }}</span></li>
       {% endfor %}
     </ul>
+    {% if course.notebooks_url %}
+    <p class="empty">
+      Disponíveis na
+      <a href="{{ course.notebooks_url }}" target="_blank" rel="noopener">pasta de notebooks no Google Drive</a>.
+    </p>
+    {% endif %}
     {% else %}
     <p class="empty">Nenhum notebook nesta aula.</p>
     {% endif %}

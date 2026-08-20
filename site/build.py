@@ -15,8 +15,6 @@ CONTENT = ROOT / "content"
 SITE = ROOT / "site"
 DIST = ROOT / "dist"
 
-GITHUB_REPO = None  # preenchido a partir de content/course.yaml
-
 
 def load_yaml(path: Path) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -60,17 +58,6 @@ def load_aulas():
                     )
                     tarefa["link"] = f"{aula_dir.name}/{tarefa['arquivo']}"
 
-        # Notebooks: gera links para Colab e para o arquivo bruto no GitHub.
-        for nb in data.get("notebooks") or []:
-            caminho = nb.get("caminho")
-            if caminho:
-                repo_rel = f"content/aulas/{aula_dir.name}/{caminho}"
-                nb["colab_url"] = (
-                    f"https://colab.research.google.com/github/"
-                    f"{GITHUB_REPO}/blob/main/{repo_rel}"
-                )
-                nb["raw_url"] = f"{aula_dir.name}/{caminho}"
-
         aulas.append(data)
 
     return aulas
@@ -101,10 +88,7 @@ def copy_aula_assets(aulas):
 
 
 def main():
-    global GITHUB_REPO
     course = load_course()
-    GITHUB_REPO = course.get("repo", "")
-
     aulas = load_aulas()
 
     if DIST.exists():
