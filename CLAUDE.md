@@ -45,7 +45,8 @@ verifica apenas o HTML/CSS, não os slides.
   `caminho:`). Não reintroduzir lógica de link individual por notebook
   sem o usuário pedir — decisão explícita dele, pra não poluir a página.
 - `content/aulas/NN-slug/tarefas` — cada item em `aula.yaml` pode ser só um
-  título, ou apontar (`arquivo:`) para um `.md` que é renderizado como HTML.
+  título, ou apontar (`arquivo:`) para um `.md` que é renderizado como HTML
+  direto na página (o aluno lê ali, não precisa baixar nada).
 - `site/build.py` lê tudo isso e gera `dist/` usando os templates Jinja2 em
   `site/templates/` e o CSS em `site/static/css/style.css`.
 - `.github/workflows/pages.yml` faz: compila LaTeX (imagem Docker
@@ -63,6 +64,15 @@ verifica apenas o HTML/CSS, não os slides.
   texto corrido normalmente — é material para leitura assíncrona pelo
   aluno, não apoio de fala em aula. Bullets só onde fizer sentido (listas
   de itens, passos), não como regra geral.
+
+## Formato de arquivos para download
+
+- Sempre que houver a opção de o aluno **baixar** algo (slides, material
+  auxiliar de tarefa), o arquivo tem que ser **PDF** — nunca `.tex`, `.md`
+  cru, `.docx`, etc. Slides já seguem isso (compilados para PDF pelo
+  workflow). Se uma tarefa precisar de um material auxiliar baixável além
+  do `.md` renderizado na página, gere/forneça um PDF, não linke o
+  arquivo-fonte diretamente.
 
 ## Convenções
 
