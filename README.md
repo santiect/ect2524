@@ -68,8 +68,5 @@ mas o resto do layout pode ser conferido.
 
 ## Ajustes pendentes
 
-- `content/aulas/00-exemplo/` é uma aula de demonstração (migrada de
-  `antigos/Complexidade_Heurísticas_Metaherísticas/aula06.tex`) só para
-  validar o pipeline — pode ser apagada quando as aulas reais forem criadas.
 - A pasta `antigos/` guarda o material anterior (slides e notebooks) que
   ainda será reorganizado em `content/aulas/`.

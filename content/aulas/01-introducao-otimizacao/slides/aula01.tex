@@ -1,0 +1,351 @@
+\documentclass[fleqn]{beamer}
+
+\mode<presentation> {
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinelanguage{AMPL}{
+	morekeywords={param, var, subject, to, maximize, minimize, model, data,
+		option, solve, display, solver, sum, in, binary, symbolic, Infinity, printf, for, if, then},
+	sensitive=true,
+	morecomment=[l]{\#},
+	morestring=[b]",
+}
+\lstset{
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue!70!black}\bfseries,
+	commentstyle=\color{gray},
+	stringstyle=\color{orange!70!black},
+	breaklines=true,
+	frame=single,
+	backgroundcolor=\color{black!3},
+}
+
+\title[Aula 1 -- Introdução à Otimização]{Introdução à Otimização}
+\subtitle{Modelagem, AMPL e o Problema da Mochila}
+\author[Santi]{Prof. \'Everton Santi}
+\institute[UFRN/ECT]{ECT2524 -- Introdução à Otimização \\ Escola de Ciências e Tecnologia -- UFRN}
+\date{Aula 1}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sumário}
+	\tableofcontents
+\end{frame}
+
+%------------------------------------------------------------
+\section{O que é otimização?}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{O que significa otimização?}
+	Um problema de otimização pode ser expresso como:
+	$$
+		\text{min}~f(x)
+	$$
+	sujeito a
+	$$
+		x \in S
+	$$
+	em que:
+	\begin{itemize}
+		\item $x$ é a \textbf{solução} do problema (variáveis de decisão);
+		\item $f(x)$ é a \textbf{função objetivo};
+		\item $S$ é o \textbf{conjunto de soluções viáveis}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Função objetivo -- exemplos}
+	A função objetivo pode representar, por exemplo:
+	\begin{itemize}
+		\item Distância para se deslocar de uma cidade até outra;
+		\item Desperdício de material na fabricação de um item;
+		\item Custo de uma refeição que atenda exigências nutricionais;
+		\item Tempo total de execução de tarefas;
+		\item Custo de construção de uma rede de distribuição de água;
+		\item Entre muitos outros...
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Restrito vs. irrestrito}
+	O conjunto de soluções viáveis $S$ é delimitado por um \textbf{conjunto de
+	restrições}.
+	\begin{itemize}
+		\item Se $S = \emptyset$ (sem restrições declaradas): problema
+			\textbf{irrestrito};
+		\item Se $S \neq \emptyset$: problema \textbf{restrito}.
+	\end{itemize}
+	\vspace{0.5cm}
+	\textit{Nota}: um problema restrito ainda pode ter infinitas soluções
+	viáveis -- restrito não significa finito.
+\end{frame}
+
+%------------------------------------------------------------
+\section{Modelagem}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Modelagem}
+	Qualquer situação do mundo real que possa ser representada por
+	expressões matemáticas pode ser tratada com otimização, desde que o
+	modelo permita uma aproximação satisfatória da realidade.
+	\vspace{0.3cm}
+
+	Um \textbf{modelo} é uma representação do mundo real. Em otimização,
+	falamos de um \textbf{modelo simbólico}: parâmetros, variáveis,
+	índices, funções, igualdades e desigualdades.
+	\vspace{0.3cm}
+
+	Modelar é um misto de \textbf{arte e ciência}: exige criatividade para
+	observar, entender e traduzir a realidade, além de conhecimento técnico
+	para tratá-la adequadamente.
+\end{frame}
+
+%------------------------------------------------------------
+\section{Ferramentas computacionais}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Linguagem de modelagem e solver}
+	\begin{itemize}
+		\item \textbf{Linguagem de modelagem}: escrever a formulação de
+			forma próxima da notação matemática (AMPL, GAMS, ZIMPL, OPL, ...);
+		\item \textbf{Resolvedor (\textit{solver})}: programa
+			especializado que, dados os parâmetros e a formulação, busca
+			os valores das variáveis de decisão (CPLEX, Gurobi, HiGHS,
+			CBC, ...).
+	\end{itemize}
+	\vspace{0.4cm}
+	Neste curso usaremos \textbf{AMPL}: linguagem simples de aprender,
+	com versão gratuita, e que permite usar diversos \textit{solvers}.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Estrutura básica de um projeto AMPL}
+	\begin{itemize}
+		\item \texttt{.mod} -- formulação do modelo (parâmetros, variáveis,
+			objetivo, restrições);
+		\item \texttt{.dat} -- dados de entrada (valores dos parâmetros);
+		\item \texttt{.run} -- comandos para carregar modelo + dados e
+			resolver.
+	\end{itemize}
+	\vspace{0.4cm}
+	\textit{Nota}: instruções AMPL terminam em \texttt{;} -- diferente de
+	Python, que não usa isso. Atenção ao alternar entre as duas linguagens
+	no Colab.
+\end{frame}
+
+%------------------------------------------------------------
+\section{Problema da Mochila}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Um ``Hello World'' diferente}
+	Você vai acampar no fim de semana e encontra uma mochila com
+	capacidade de \textbf{10Kg} e 6 itens candidatos, cada um com peso e
+	uma pontuação de importância (1 a 10):
+	\begin{itemize}
+		\item Item 1: Lanterna (1Kg, 8 pontos)
+		\item Item 2: Barraca (4Kg, 10 pontos)
+		\item Item 3: Reservatório de água (3Kg, 10 pontos)
+		\item Item 4: Reservatório de água (2Kg, 8 pontos)
+		\item Item 5: Colchão inflável (0.5Kg, 7 pontos)
+		\item Item 6: Caixa de som (2Kg, 4 pontos)
+	\end{itemize}
+	Decida quais itens levar, \textbf{maximizando} a soma das pontuações
+	sem \textbf{ultrapassar} a capacidade da mochila.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Formulação expandida}
+	$$
+		\text{maximize}~Z = 8x_1 + 10x_2 + 10x_3 + 8x_4 + 7x_5 + 4x_6
+	$$
+	sujeito a:
+	$$
+		x_1 + 4x_2 + 3x_3 + 2x_4 + 0.5x_5 + 2x_6 \leq 10
+	$$
+	$$
+		x_1, x_2, x_3, x_4, x_5, x_6 \in \{0,1\}
+	$$
+	\vspace{0.3cm}
+	\textbf{Limitação}: só serve para esta instância específica -- 6
+	itens fixos, escrito ``na mão''.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Formulação compacta}
+	Parâmetros:
+	\begin{itemize}
+		\item $n$ -- total de itens disponíveis;
+		\item $C$ -- capacidade de carga da mochila;
+		\item $p_i$ -- peso do item $i$, $\forall i = 1,\dots,n$;
+		\item $b_i$ -- benefício do item $i$, $\forall i = 1,\dots,n$;
+	\end{itemize}
+	Variável de decisão: $x_i \in \{0,1\}$, $\forall i = 1,\dots,n$.
+	$$
+		\text{maximize}~Z = \sum_{i=1}^{n} b_i x_i
+	$$
+	sujeito a:
+	$$
+		\sum_{i=1}^{n} p_i x_i \leq C, \qquad x_i \in \{0,1\},~\forall i=1,\dots,n
+	$$
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Arquivo \texttt{mochila.mod}}
+	\begin{lstlisting}[language=AMPL]
+param n > 0;
+param C > 0;
+param b{1..n};
+param p{1..n};
+
+var x{1..n} binary;
+
+maximize Z: sum{i in 1..n} b[i]*x[i];
+
+subject to capacidade: sum{i in 1..n} p[i]*x[i] <= C;
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Arquivo \texttt{mochila.dat}}
+	\begin{lstlisting}[language=AMPL]
+param n := 6;
+param C := 10;
+
+param : b   p  :=
+        1   8  1
+        2  10  4
+        3  10  3
+        4   8  2
+        5   7  0.5
+        6   4  2;
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Arquivo \texttt{mochila.run}}
+	\begin{lstlisting}[language=AMPL]
+model mochila.mod;
+data mochila.dat;
+option solver highs;
+solve;
+display Z;
+display x;
+	\end{lstlisting}
+	\vspace{0.3cm}
+	No terminal (Windows ou Linux): \texttt{ampl mochila.run}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Hoje em aula}
+	Vamos construir tudo isso \textbf{ao vivo}, a partir de um Colab
+	vazio:
+	\begin{enumerate}
+		\item Criar conta / logar no site do AMPL e ver como obter a
+			licença e instalar o \texttt{amplpy};
+		\item Escrever o \texttt{.mod}, \texttt{.dat} e \texttt{.run} da
+			mochila, célula por célula;
+		\item Resolver com HiGHS e interpretar o resultado.
+	\end{enumerate}
+	\vspace{0.3cm}
+	Acompanhem em: \textbf{OPT001\_intro} e \textbf{OPT002\_knapsack\_compact}.
+\end{frame}
+
+%------------------------------------------------------------
+\section{Problema da Dieta}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Do refeitório à sua tarefa}
+	Sua equipe atua no planejamento do refeitório de uma fábrica, junto
+	com a nutricionista responsável. É preciso \textbf{reduzir o custo}
+	das refeições \textbf{sem prejudicar a saúde} dos trabalhadores.
+	\vspace{0.3cm}
+
+	A nutricionista fixou, por dia, quantidades mínimas de:
+	\begin{itemize}
+		\item Proteínas, cálcio, sódio, ferro e vitaminas;
+	\end{itemize}
+	e um limite \textbf{máximo} de calorias.
+	\vspace{0.3cm}
+	Esse é o clássico \textbf{Problema da Dieta}: escolher alimentos e
+	quantidades que atendam às exigências nutricionais ao menor custo.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Problema da Dieta -- semelhança com a mochila}
+	\begin{itemize}
+		\item Mochila: \textbf{maximiza} benefício sob um limite (peso);
+		\item Dieta: \textbf{minimiza} custo sob \textbf{vários} limites
+			(um para cada nutriente), com limite inferior e superior;
+		\item Mochila: variáveis \textbf{binárias} (leva ou não leva);
+		\item Dieta: variáveis \textbf{contínuas} não-negativas (quantidade
+			de cada alimento).
+	\end{itemize}
+	\vspace{0.3cm}
+	A estrutura de modelagem (parâmetros, variáveis, objetivo,
+	restrições) é a mesma ideia -- muda o que está sendo decidido.
+\end{frame}
+
+%------------------------------------------------------------
+\section{Tarefa da Aula 1}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Tarefa da Aula 1}
+	\begin{enumerate}
+		\item Pesquisem, por conta própria, dados nutricionais reais de
+			alimentos (tabela TACO, rótulos, bases nutricionais, etc.);
+		\item Montem \textbf{seu próprio} \texttt{dieta.dat}, com pelo
+			menos 10 alimentos e as propriedades nutricionais pedidas;
+		\item Escrevam a formulação compacta do problema (parâmetros,
+			variáveis, objetivo, restrições);
+		\item Implementem em AMPL (\texttt{.mod}, \texttt{.dat},
+			\texttt{.run}) e resolvam com HiGHS;
+	\end{enumerate}
+	\vspace{0.2cm}
+	Detalhes completos em \texttt{tarefas/tarefa01-dieta.md} na página
+	da aula.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Perguntas para reflexão}
+	\begin{enumerate}
+		\item Quais as limitações da solução obtida?
+		\item O que poderia ser melhorado no modelo?
+		\item Como pensar o cardápio de um refeitório real (ex.: RU do
+			campus), ao longo de uma semana, mês ou ano?
+		\item Este modelo poderia ser aplicado na sua casa ou trabalho?
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Referências}
+	\begin{itemize}
+		\item Notebooks \texttt{OPT001\_intro} e
+			\texttt{OPT002\_knapsack\_compact} (material da disciplina);
+		\item AMPL: \url{https://ampl.com};
+		\item Dados de referência do problema da dieta: Tirone (2019),
+			\url{https://imef.furg.br/images/stories/Monografias/Matematica_aplicada/2019/2019-2_Giulia.pdf}.
+	\end{itemize}
+\end{frame}
+
+\end{document}
