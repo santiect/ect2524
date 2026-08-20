@@ -42,22 +42,29 @@ site/
 .github/workflows/pages.yml
 ```
 
-## Rodar localmente
+## Rodar localmente (testar antes do push)
+
+Requer TeX Live instalado (`sudo apt install texlive-full`, ou um subconjunto
+com `texlive-latex-extra texlive-fonts-recommended texlive-lang-portuguese
+texlive-bibtex-extra` — o suficiente para beamer/algorithmicx/babel/apalike)
+e as dependências Python:
 
 ```bash
 pip install -r site/requirements.txt
-python3 site/build.py
 ```
 
-Isso gera a pasta `dist/` (ignorada pelo git). Sem um TeX Live instalado
-localmente, o PDF dos slides não é gerado — a página mostra "PDF ainda não
-disponível" até que o build rode no GitHub Actions (que tem LaTeX completo).
-
-Para compilar os slides localmente também (opcional, requer `latexmk`):
+Depois, para reproduzir exatamente o que o GitHub Actions faz (compila todos
+os `.tex` em `content/aulas/**/slides/` e gera o site):
 
 ```bash
-latexmk -pdf -cd content/aulas/00-exemplo/slides/aula06.tex
+scripts/build-local.sh          # gera dist/
+scripts/build-local.sh --open   # gera e abre dist/index.html no navegador
 ```
+
+Rodar isso antes de cada `git push` evita descobrir erro de LaTeX só depois
+que o Actions falhar. Sem TeX Live instalado, dá pra rodar só
+`python3 site/build.py` — o PDF fica marcado como "não disponível" na página,
+mas o resto do layout pode ser conferido.
 
 ## Ajustes pendentes
 
