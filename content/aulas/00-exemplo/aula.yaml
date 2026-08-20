@@ -1,0 +1,18 @@
+# Cada pasta em content/aulas/ é uma aula. O nome da pasta define a ordem
+# de exibição no site (prefixo numérico) e não aparece publicamente.
+titulo: "Exemplo — Complexidade, Heurísticas e Metaheurísticas"
+data: "2026-08-20"
+resumo: >
+  Aula de demonstração usada para validar o pipeline de publicação
+  (compilação automática do LaTeX para PDF a cada push na main).
+
+# Caminho do .tex principal, relativo a esta pasta.
+slides: "slides/aula06.tex"
+
+tarefas:
+  - titulo: "Ainda não há tarefas cadastradas para esta aula"
+    arquivo: null
+
+notebooks:
+  - titulo: "Introdução (exemplo)"
+    caminho: "notebooks/OPT001_intro.ipynb"

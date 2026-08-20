@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ aula.titulo }} — {{ course.codigo }}{% endblock %}
+{% block content %}
+<a class="back-link" href="../index.html">&larr; Todas as aulas</a>
+
+<article class="aula-detail">
+  <p class="eyebrow">{{ aula.data }}</p>
+  <h1>{{ aula.titulo }}</h1>
+  {% if aula.resumo %}<p class="lead">{{ aula.resumo }}</p>{% endif %}
+
+  <section class="block">
+    <h2>Slides</h2>
+    {% if aula.slides_pdf %}
+    <a class="pdf-link" href="{{ aula.slides_pdf|replace(aula.slug + '/', '') }}" target="_blank" rel="noopener">
+      Abrir PDF
+    </a>
+    {% else %}
+    <p class="empty">PDF ainda não disponível.</p>
+    {% endif %}
+  </section>
+
+  <section class="block">
+    <h2>Notebooks</h2>
+    {% if aula.notebooks %}
+    <ul class="list">
+      {% for nb in aula.notebooks %}
+      <li>
+        <span class="item-title">{{ nb.titulo }}</span>
+        <span class="item-links">
+          <a href="{{ nb.colab_url }}" target="_blank" rel="noopener">Abrir no Colab</a>
+          <span class="sep">·</span>
+          <a href="{{ nb.raw_url|replace(aula.slug + '/', '') }}" target="_blank" rel="noopener">Baixar .ipynb</a>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Nenhum notebook nesta aula.</p>
+    {% endif %}
+  </section>
+
+  <section class="block">
+    <h2>Tarefas</h2>
+    {% if aula.tarefas %}
+    <ul class="list">
+      {% for t in aula.tarefas %}
+      <li>
+        <span class="item-title">{{ t.titulo }}</span>
+        {% if t.link %}
+        <span class="item-links">
+          <a href="{{ t.link|replace(aula.slug + '/', '') }}" target="_blank" rel="noopener">Abrir</a>
+        </span>
+        {% endif %}
+        {% if t.html %}<div class="tarefa-body">{{ t.html|safe }}</div>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Nenhuma tarefa nesta aula.</p>
+    {% endif %}
+  </section>
+</article>
+{% endblock %}

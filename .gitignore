@@ -1,3 +1,21 @@
+# Site build output
+dist/
+
+# LaTeX build artifacts (aulas devem versionar apenas o .tex, .bib e imagens)
+*.aux
+*.log
+*.nav
+*.snm
+*.toc
+*.out
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.vrb
+content/aulas/**/slides/*.pdf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -163,9 +181,6 @@ venv.bak/
 
 # Rope project settings
 .ropeproject
-
-# mkdocs documentation
-/site
 
 # mypy
 .mypy_cache/

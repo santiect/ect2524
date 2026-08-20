@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">{{ course.codigo }}</p>
+  <h1>{{ course.nome }}</h1>
+  <p class="lead">{{ course.descricao }}</p>
+</section>
+
+<section class="aulas">
+  {% if aulas %}
+  <div class="aula-grid">
+    {% for aula in aulas %}
+    <a class="aula-card" href="{{ aula.slug }}/index.html">
+      <div class="aula-card-head">
+        <span class="aula-data">{{ aula.data }}</span>
+        {% if aula.slides_pdf %}<span class="badge">slides</span>{% endif %}
+        {% if aula.notebooks %}<span class="badge">notebook</span>{% endif %}
+      </div>
+      <h2>{{ aula.titulo }}</h2>
+      {% if aula.resumo %}<p>{{ aula.resumo }}</p>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="empty">Nenhuma aula publicada ainda.</p>
+  {% endif %}
+</section>
+{% endblock %}
