@@ -53,19 +53,13 @@
 
 \begin{frame}
 	\frametitle{O que significa otimização?}
-	Um problema de otimização pode ser expresso como:
 	$$
-		\text{min}~f(x)
+		\text{min}~f(x) \quad \text{sujeito a} \quad x \in S
 	$$
-	sujeito a
-	$$
-		x \in S
-	$$
-	em que:
 	\begin{itemize}
-		\item $x$ é a \textbf{solução} do problema (variáveis de decisão);
-		\item $f(x)$ é a \textbf{função objetivo};
-		\item $S$ é o \textbf{conjunto de soluções viáveis}.
+		\item $x$ -- \textbf{solução} do problema (variáveis de decisão);
+		\item $f(x)$ -- \textbf{função objetivo};
+		\item $S$ -- \textbf{conjunto de soluções viáveis}.
 	\end{itemize}
 \end{frame}
 
@@ -84,16 +78,13 @@
 
 \begin{frame}
 	\frametitle{Restrito vs. irrestrito}
-	O conjunto de soluções viáveis $S$ é delimitado por um \textbf{conjunto de
-	restrições}.
 	\begin{itemize}
-		\item Se $S = \emptyset$ (sem restrições declaradas): problema
-			\textbf{irrestrito};
-		\item Se $S \neq \emptyset$: problema \textbf{restrito}.
+		\item $S$ é delimitado por um \textbf{conjunto de restrições};
+		\item $S = \emptyset$ $\Rightarrow$ problema \textbf{irrestrito};
+		\item $S \neq \emptyset$ $\Rightarrow$ problema \textbf{restrito};
+		\item restrito \textbf{não} significa finito -- pode haver infinitas
+			soluções viáveis.
 	\end{itemize}
-	\vspace{0.5cm}
-	\textit{Nota}: um problema restrito ainda pode ter infinitas soluções
-	viáveis -- restrito não significa finito.
 \end{frame}
 
 %------------------------------------------------------------
@@ -102,19 +93,15 @@
 
 \begin{frame}
 	\frametitle{Modelagem}
-	Qualquer situação do mundo real que possa ser representada por
-	expressões matemáticas pode ser tratada com otimização, desde que o
-	modelo permita uma aproximação satisfatória da realidade.
-	\vspace{0.3cm}
-
-	Um \textbf{modelo} é uma representação do mundo real. Em otimização,
-	falamos de um \textbf{modelo simbólico}: parâmetros, variáveis,
-	índices, funções, igualdades e desigualdades.
-	\vspace{0.3cm}
-
-	Modelar é um misto de \textbf{arte e ciência}: exige criatividade para
-	observar, entender e traduzir a realidade, além de conhecimento técnico
-	para tratá-la adequadamente.
+	\begin{itemize}
+		\item Situações do mundo real viram otimização quando expressas
+			por equações -- desde que aproximem bem a realidade;
+		\item Um \textbf{modelo} é uma representação do mundo real;
+		\item Em otimização: \textbf{modelo simbólico} (parâmetros,
+			variáveis, índices, funções, (des)igualdades);
+		\item Modelar é \textbf{arte e ciência}: criatividade +
+			conhecimento técnico.
+	\end{itemize}
 \end{frame}
 
 %------------------------------------------------------------
@@ -124,31 +111,25 @@
 \begin{frame}
 	\frametitle{Linguagem de modelagem e solver}
 	\begin{itemize}
-		\item \textbf{Linguagem de modelagem}: escrever a formulação de
-			forma próxima da notação matemática (AMPL, GAMS, ZIMPL, OPL, ...);
-		\item \textbf{Resolvedor (\textit{solver})}: programa
-			especializado que, dados os parâmetros e a formulação, busca
-			os valores das variáveis de decisão (CPLEX, Gurobi, HiGHS,
-			CBC, ...).
+		\item \textbf{Linguagem de modelagem}: formulação próxima da
+			notação matemática (AMPL, GAMS, ZIMPL, OPL, ...);
+		\item \textbf{Solver}: resolve o modelo, dados parâmetros +
+			formulação (CPLEX, Gurobi, HiGHS, CBC, ...);
+		\item Neste curso: \textbf{AMPL} -- simples, gratuito, plugável
+			com vários solvers.
 	\end{itemize}
-	\vspace{0.4cm}
-	Neste curso usaremos \textbf{AMPL}: linguagem simples de aprender,
-	com versão gratuita, e que permite usar diversos \textit{solvers}.
 \end{frame}
 
 \begin{frame}
 	\frametitle{Estrutura básica de um projeto AMPL}
 	\begin{itemize}
-		\item \texttt{.mod} -- formulação do modelo (parâmetros, variáveis,
+		\item \texttt{.mod} -- formulação (parâmetros, variáveis,
 			objetivo, restrições);
-		\item \texttt{.dat} -- dados de entrada (valores dos parâmetros);
-		\item \texttt{.run} -- comandos para carregar modelo + dados e
-			resolver.
+		\item \texttt{.dat} -- dados de entrada;
+		\item \texttt{.run} -- carrega modelo + dados e resolve;
+		\item \textit{Atenção}: AMPL termina instruções em \texttt{;},
+			Python não -- cuidado ao alternar as duas no Colab.
 	\end{itemize}
-	\vspace{0.4cm}
-	\textit{Nota}: instruções AMPL terminam em \texttt{;} -- diferente de
-	Python, que não usa isso. Atenção ao alternar entre as duas linguagens
-	no Colab.
 \end{frame}
 
 %------------------------------------------------------------
@@ -157,19 +138,18 @@
 
 \begin{frame}
 	\frametitle{Um ``Hello World'' diferente}
-	Você vai acampar no fim de semana e encontra uma mochila com
-	capacidade de \textbf{10Kg} e 6 itens candidatos, cada um com peso e
-	uma pontuação de importância (1 a 10):
 	\begin{itemize}
+		\item Mochila com capacidade de \textbf{10Kg}, 6 itens candidatos
+			(peso, pontuação de 1 a 10):
 		\item Item 1: Lanterna (1Kg, 8 pontos)
 		\item Item 2: Barraca (4Kg, 10 pontos)
 		\item Item 3: Reservatório de água (3Kg, 10 pontos)
 		\item Item 4: Reservatório de água (2Kg, 8 pontos)
 		\item Item 5: Colchão inflável (0.5Kg, 7 pontos)
 		\item Item 6: Caixa de som (2Kg, 4 pontos)
+		\item Objetivo: \textbf{maximizar} pontuação sem
+			\textbf{ultrapassar} a capacidade.
 	\end{itemize}
-	Decida quais itens levar, \textbf{maximizando} a soma das pontuações
-	sem \textbf{ultrapassar} a capacidade da mochila.
 \end{frame}
 
 \begin{frame}
@@ -275,19 +255,17 @@ display x;
 
 \begin{frame}
 	\frametitle{Do refeitório à sua tarefa}
-	Sua equipe atua no planejamento do refeitório de uma fábrica, junto
-	com a nutricionista responsável. É preciso \textbf{reduzir o custo}
-	das refeições \textbf{sem prejudicar a saúde} dos trabalhadores.
-	\vspace{0.3cm}
-
-	A nutricionista fixou, por dia, quantidades mínimas de:
 	\begin{itemize}
-		\item Proteínas, cálcio, sódio, ferro e vitaminas;
+		\item Planejamento do refeitório de uma fábrica, com
+			nutricionista;
+		\item Objetivo: \textbf{reduzir custo} sem \textbf{prejudicar a
+			saúde};
+		\item Mínimos diários: proteínas, cálcio, sódio, ferro,
+			vitaminas;
+		\item Máximo diário: calorias;
+		\item Problema da Dieta: alimentos + quantidades de menor custo
+			que atendem às exigências nutricionais.
 	\end{itemize}
-	e um limite \textbf{máximo} de calorias.
-	\vspace{0.3cm}
-	Esse é o clássico \textbf{Problema da Dieta}: escolher alimentos e
-	quantidades que atendam às exigências nutricionais ao menor custo.
 \end{frame}
 
 \begin{frame}
@@ -295,14 +273,11 @@ display x;
 	\begin{itemize}
 		\item Mochila: \textbf{maximiza} benefício sob um limite (peso);
 		\item Dieta: \textbf{minimiza} custo sob \textbf{vários} limites
-			(um para cada nutriente), com limite inferior e superior;
-		\item Mochila: variáveis \textbf{binárias} (leva ou não leva);
-		\item Dieta: variáveis \textbf{contínuas} não-negativas (quantidade
-			de cada alimento).
+			(um por nutriente), com mínimo e máximo;
+		\item Mochila: variáveis \textbf{binárias};
+		\item Dieta: variáveis \textbf{contínuas} não-negativas;
+		\item Mesma estrutura de modelagem -- muda o que se decide.
 	\end{itemize}
-	\vspace{0.3cm}
-	A estrutura de modelagem (parâmetros, variáveis, objetivo,
-	restrições) é a mesma ideia -- muda o que está sendo decidido.
 \end{frame}
 
 %------------------------------------------------------------
