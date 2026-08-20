@@ -31,7 +31,7 @@ verifica apenas o HTML/CSS, não os slides.
 
 - `content/course.yaml` — nome da disciplina, professor, descrição do site.
 - `content/aulas/NN-slug/aula.yaml` — metadados de cada aula (título, data,
-  resumo, caminho do `.tex` principal, lista de notebooks, lista de tarefas).
+  resumo, caminho do `.tex` principal, lista de tarefas).
 - `content/aulas/NN-slug/slides/*.tex` — slides Beamer. **Sempre
   `\usepackage[utf8]{inputenc}`** (não `latin1`) — os arquivos são salvos em
   UTF-8; usar `latin1` quebra a compilação com "Missing $ inserted" em
@@ -67,6 +67,17 @@ verifica apenas o HTML/CSS, não os slides.
   texto corrido normalmente — é material para leitura assíncrona pelo
   aluno, não apoio de fala em aula. Bullets só onde fizer sentido (listas
   de itens, passos), não como regra geral.
+
+## Sem citação de notebooks/Colab no corpo do material
+
+- Nenhum material (slides `.tex`, tarefas `.md`, resumos em `aula.yaml`)
+  pode citar notebooks específicos pelo nome (ex.: "OPT001_intro") nem
+  mencionar "Colab" no meio do texto. O único lugar onde notebooks
+  aparecem é o link geral pra pasta do Drive (nav do site + seção
+  "Notebooks" da aula, ver seção acima) — nunca citados dentro de uma
+  explicação, tarefa ou slide. Motivo: o professor trabalha a partir de
+  notebooks em branco, criados ao vivo, então citar um nome fixo no
+  material publicado fica desatualizado/sem sentido.
 
 ## Formato de arquivos para download
 

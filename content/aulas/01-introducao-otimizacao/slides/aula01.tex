@@ -128,7 +128,7 @@
 		\item \texttt{.dat} -- dados de entrada;
 		\item \texttt{.run} -- carrega modelo + dados e resolve;
 		\item \textit{Atenção}: AMPL termina instruções em \texttt{;},
-			Python não -- cuidado ao alternar as duas no Colab.
+			Python não -- cuidado ao alternar entre as duas linguagens.
 	\end{itemize}
 \end{frame}
 
@@ -236,17 +236,14 @@ display x;
 
 \begin{frame}
 	\frametitle{Hoje em aula}
-	Vamos construir tudo isso \textbf{ao vivo}, a partir de um Colab
-	vazio:
+	Vamos construir tudo isso \textbf{ao vivo}, do zero:
 	\begin{enumerate}
-		\item Criar conta / logar no site do AMPL e ver como obter a
-			licença e instalar o \texttt{amplpy};
+		\item Ver como obter a licença do AMPL e instalar as ferramentas
+			necessárias;
 		\item Escrever o \texttt{.mod}, \texttt{.dat} e \texttt{.run} da
-			mochila, célula por célula;
+			mochila, passo a passo;
 		\item Resolver com HiGHS e interpretar o resultado.
 	\end{enumerate}
-	\vspace{0.3cm}
-	Acompanhem em: \textbf{OPT001\_intro} e \textbf{OPT002\_knapsack\_compact}.
 \end{frame}
 
 %------------------------------------------------------------
@@ -352,8 +349,6 @@ display x;
 \begin{frame}
 	\frametitle{Referências}
 	\begin{itemize}
-		\item Notebooks \texttt{OPT001\_intro} e
-			\texttt{OPT002\_knapsack\_compact} (material da disciplina);
 		\item AMPL: \url{https://ampl.com};
 		\item Dados de referência do problema da dieta: Tirone (2019),
 			\url{https://imef.furg.br/images/stories/Monografias/Matematica_aplicada/2019/2019-2_Giulia.pdf}.
