@@ -21,20 +21,12 @@
 
   <section class="block">
     <h2>Notebooks</h2>
-    {% if aula.notebooks %}
-    <ul class="list">
-      {% for nb in aula.notebooks %}
-      <li><span class="item-title">{{ nb.titulo }}</span></li>
-      {% endfor %}
-    </ul>
     {% if course.notebooks_url %}
-    <p class="empty">
-      Disponíveis na
-      <a href="{{ course.notebooks_url }}" target="_blank" rel="noopener">pasta de notebooks no Google Drive</a>.
-    </p>
-    {% endif %}
+    <a class="pdf-link" href="{{ course.notebooks_url }}" target="_blank" rel="noopener">
+      Abrir pasta de notebooks
+    </a>
     {% else %}
-    <p class="empty">Nenhum notebook nesta aula.</p>
+    <p class="empty">Nenhum notebook disponível.</p>
     {% endif %}
   </section>
 

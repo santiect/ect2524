@@ -10,7 +10,3 @@ slides: "slides/aula01.tex"
 tarefas:
   - titulo: "Tarefa 1 — Problema da Dieta (dados próprios)"
     arquivo: "tarefas/tarefa01-dieta.md"
-
-notebooks:
-  - titulo: "OPT001 — Introdução à otimização e AMPL"
-  - titulo: "OPT002 — Modelagem: mochila (compacta) e dieta"

@@ -38,12 +38,15 @@ verifica apenas o HTML/CSS, não os slides.
   qualquer acento (já aconteceu, ver histórico do git).
   - Se o `.tex` usa `\bibliography{\jobname}`, o `.bib` precisa ter o
     mesmo nome-base do `.tex` (jobname = nome do arquivo sem extensão).
-- Notebooks **não** ficam neste repositório nem viram link de Colab por
-  arquivo — vivem numa pasta compartilhada do Google Drive
-  (`content/course.yaml` -> `notebooks_url`, linkada no topo do site). Em
-  `aula.yaml`, `notebooks:` é só uma lista de títulos informativos (sem
-  `caminho:`). Não reintroduzir lógica de link individual por notebook
-  sem o usuário pedir — decisão explícita dele, pra não poluir a página.
+- Notebooks **não** ficam neste repositório, não têm link de Colab por
+  arquivo, e **não são listados por título** em cada aula — o professor
+  trabalha sempre a partir de um notebook em branco, ao vivo, então não
+  há um arquivo fixo pra apontar. Existe só um link geral (a pasta
+  compartilhada do Google Drive, `content/course.yaml` ->
+  `notebooks_url`), mostrado no cabeçalho do site e repetido na seção
+  "Notebooks" de cada página de aula. `aula.yaml` não tem mais chave
+  `notebooks:`. Não reintroduzir listagem por arquivo/título sem o
+  usuário pedir — decisão explícita dele.
 - `content/aulas/NN-slug/tarefas` — cada item em `aula.yaml` pode ser só um
   título, ou apontar (`arquivo:`) para um `.md` que é renderizado como HTML
   direto na página (o aluno lê ali, não precisa baixar nada).

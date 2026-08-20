@@ -14,7 +14,6 @@
       <div class="aula-card-head">
         <span class="aula-data">{{ aula.data }}</span>
         {% if aula.slides_pdf %}<span class="badge">slides</span>{% endif %}
-        {% if aula.notebooks %}<span class="badge">notebook</span>{% endif %}
       </div>
       <h2>{{ aula.titulo }}</h2>
       {% if aula.resumo %}<p>{{ aula.resumo }}</p>{% endif %}
