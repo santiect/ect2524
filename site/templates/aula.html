@@ -45,12 +45,14 @@
       {% for t in aula.tarefas %}
       <li>
         <span class="item-title">{{ t.titulo }}</span>
-        {% if t.link %}
+        {% if t.html %}
+        <div class="tarefa-body">{{ t.html|safe }}</div>
+        {% elif t.link %}
+        {# arquivo sem versão renderizada (ex.: não é .md) -- só resta linkar #}
         <span class="item-links">
-          <a href="{{ t.link|replace(aula.slug + '/', '') }}" target="_blank" rel="noopener">Abrir</a>
+          <a href="{{ t.link|replace(aula.slug + '/', '') }}" target="_blank" rel="noopener">Abrir arquivo</a>
         </span>
         {% endif %}
-        {% if t.html %}<div class="tarefa-body">{{ t.html|safe }}</div>{% endif %}
       </li>
       {% endfor %}
     </ul>
