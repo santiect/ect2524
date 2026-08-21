@@ -1,12 +1,8 @@
 titulo: "Aula 1 — Introdução à Otimização e o Problema da Mochila"
-data: "2026-08-25"  # TODO: ajustar para a data real da aula
+data: "2026-08-21"
 resumo: >
   O que é um problema de otimização, modelagem, AMPL (.mod/.dat/.run) e o
-  Problema da Mochila (formulação expandida e compacta). Introduz o
-  Problema da Dieta, tema da tarefa da aula.
+  Problema da Mochila (formulação expandida e compacta), construído ao
+  vivo em aula.
 
 slides: "slides/aula01.tex"
-
-tarefas:
-  - titulo: "Tarefa 1 — Problema da Dieta (dados próprios)"
-    arquivo: "tarefas/tarefa01-dieta.md"

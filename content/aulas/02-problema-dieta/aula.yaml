@@ -1,0 +1,13 @@
+titulo: "Aula 2 — O Problema da Dieta"
+data: "2026-08-28"  # TODO: ajustar para a data real da aula
+resumo: >
+  Estudo de caso: o desafio de montar, para uma nutricionista, o cardápio
+  de menor custo que atende exigências nutricionais mínimas e máximas.
+  Formulação do Problema da Dieta e sua semelhança com o Problema da
+  Mochila visto na Aula 1.
+
+slides: "slides/aula02.tex"
+
+tarefas:
+  - titulo: "Tarefa 2 — Problema da Dieta (dados próprios)"
+    arquivo: "tarefas/tarefa02-dieta.md"
