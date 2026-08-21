@@ -27,6 +27,30 @@ usuário em vez de pular a checagem — não é seguro assumir que o `.tex`
 vai compilar sem testar. Rodar só `python3 site/build.py` (sem LaTeX)
 verifica apenas o HTML/CSS, não os slides.
 
+## GitHub Pages precisa estar em "Source: GitHub Actions"
+
+O GitHub tem dois modos de publicar Pages: "Deploy from a branch" (build
+Jekyll interno do próprio GitHub, a partir do `README.md` da raiz) ou
+"GitHub Actions" (usa o artefato que `.github/workflows/pages.yml`
+gera em `dist/`). Este repo depende do segundo modo.
+
+Se o Source cair (ou nunca tiver sido trocado) para "Deploy from a
+branch", o site ao vivo passa a mostrar o `README.md` renderizado pelo
+Jekyll padrão do GitHub -- não o site gerado por `site/build.py` --
+mesmo que o workflow `Publicar site` continue rodando com sucesso a
+cada push (nesse caso, no histórico do Actions aparece também um
+workflow separado chamado `pages-build-deployment`, sinal de que o
+Source está em modo branch). Sintoma: `https://santiect.github.io/ect2524/`
+mostra o conteúdo do README em vez do site, ou o HTML da página tem
+`<meta name="generator" content="Jekyll ...">`.
+
+Correção (manual, feita direto no GitHub, sem passar por commit/push):
+**Settings → Pages → Build and deployment → Source → "GitHub Actions"**.
+Trocar o Source sozinho não redispara o deploy -- depois de trocar, é
+preciso rodar o workflow de novo (`Actions → Publicar site → Run
+workflow`, ou um novo push na `main`) pra ele publicar o `dist/`
+correto.
+
 ## Como o pipeline funciona
 
 - `content/course.yaml` — nome da disciplina, professor, descrição do site.
