@@ -23,7 +23,7 @@ depois validado com dados reais que vocês mesmos vão levantar.
 ## O que fazer
 
 1. **Pesquisem os dados.** Escolham pelo menos **10 alimentos** e busquem,
-   em fontes confiáveis (ex.: [Tabela TACO](https://www.nepa.unicamp.br/taco/),
+   em fontes confiáveis (ex.: [Tabela TACO](https://cfn.org.br/wp-content/uploads/2017/03/taco_4_edicao_ampliada_e_revisada.pdf),
    rótulos nutricionais, bases de dados nutricionais), os seguintes valores
    por unidade/porção de cada alimento:
    - custo (defina uma fonte de preço, ex.: preço de mercado por porção);
