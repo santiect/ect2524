@@ -7,18 +7,30 @@ e receberam a seguinte encomenda:
 > serve milhares de refeições por dia. Gastamos muito dinheiro por mês
 > com isso, e a diretoria está cobrando um corte de custos — mas eu não
 > posso simplesmente cortar comida, ou vou colocar a saúde dos
-> trabalhadores em risco. Preciso montar cardápios que respeitem
-> quantidades mínimas de proteína, cálcio, sódio, ferro e vitaminas, além
-> de um limite máximo de calorias. O problema é que tenho dezenas de
-> alimentos possíveis pra escolher, em quantidades variáveis, e testar
-> combinações à mão é inviável. Vocês conseguem me entregar uma
-> ferramenta que, a partir de uma lista de alimentos (com custo e
-> composição nutricional), me diga quais alimentos usar e em que
-> quantidade, gastando o mínimo possível e sem violar essas exigências?"
+> trabalhadores em risco. Levantei, com base nas necessidades diárias de
+> um adulto, os seguintes limites que o cardápio precisa respeitar:
+>
+> | Nutriente | Mínimo | Máximo |
+> |---|---|---|
+> | Calorias (kcal) | 1800 | 2400 |
+> | Proteínas (g) | 50 | 175 |
+> | Cálcio (g) | 1,0 | 2,5 |
+> | Sódio (g) | 1,5 | 2,3 |
+> | Ferro (g) | 0,008 | 0,045 |
+> | Vitaminas (g) | 0,77 | 2,0 |
+>
+> O problema é que tenho dezenas de alimentos possíveis pra escolher, em
+> quantidades variáveis, e testar combinações à mão é inviável. Vocês
+> conseguem me entregar uma ferramenta que, a partir de uma lista de
+> alimentos (com custo e composição nutricional), me diga quais
+> alimentos usar e em que quantidade, gastando o mínimo possível e sem
+> violar nenhum desses limites (nem para cima, nem para baixo)?"
 
 Essa é a encomenda de vocês nesta tarefa: construir, para essa
 nutricionista, o modelo de otimização que resolve esse problema —
-depois validado com dados reais que vocês mesmos vão levantar.
+depois validado com dados reais que vocês mesmos vão levantar. (Os
+valores da tabela acima são uma simplificação para efeito da tarefa,
+não uma recomendação nutricional real.)
 
 ## O que fazer
 

@@ -54,7 +54,8 @@ def load_aulas():
                 md_path = aula_dir / tarefa["arquivo"]
                 if md_path.exists():
                     tarefa["html"] = markdown.markdown(
-                        md_path.read_text(encoding="utf-8")
+                        md_path.read_text(encoding="utf-8"),
+                        extensions=["tables", "fenced_code"],
                     )
                     tarefa["link"] = f"{aula_dir.name}/{tarefa['arquivo']}"
 
