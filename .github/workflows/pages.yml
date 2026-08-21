@@ -21,13 +21,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Compilar slides (LaTeX -> PDF)
-        uses: xu-cheng/latex-action@v3
+      - name: Cache de pacotes apt do TeX Live
+        uses: actions/cache@v4
         with:
-          root_file: |
-            content/aulas/**/slides/*.tex
-          work_in_root_file_dir: true
-          latexmk_use_xelatex: false
+          path: /var/cache/apt/archives
+          key: apt-texlive-v1-${{ runner.os }}
+
+      - name: Instalar TeX Live (subconjunto necessário)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-base texlive-latex-base texlive-latex-recommended \
+            texlive-pictures texlive-lang-portuguese latexmk
+        # Só o suficiente para compilar os slides (beamer, babel, amsmath,
+        # booktabs, listings, xcolor). NÃO usar texlive-full/-fonts-extra:
+        # texlive-fonts-extra sozinho tem ~670MB e só é puxado pelo beamer
+        # de forma opcional (\IfFileExists{sansmathaccent.sty}, ver
+        # beamerbasefont.sty) -- sem ele, o build funciona igual, só sem
+        # um ajuste cosmético de acento matemático em fonte sans-serif que
+        # o conteúdo atual nem usa. Se um .tex novo precisar de um pacote
+        # que não está aqui, o erro do pdflatex diz exatamente qual
+        # arquivo .sty faltou -- adicione o pacote Debian correspondente
+        # (`apt-file search nome.sty` ou `dpkg -S` num TeX Live completo).
+
+      - name: Compilar slides (LaTeX -> PDF)
+        run: |
+          shopt -s globstar nullglob
+          for tex in content/aulas/**/slides/*.tex; do
+            echo "--- $tex"
+            latexmk -pdf -interaction=nonstopmode -halt-on-error -cd "$tex"
+          done
 
       - name: Configurar Python
         uses: actions/setup-python@v5

@@ -52,9 +52,33 @@ verifica apenas o HTML/CSS, não os slides.
   direto na página (o aluno lê ali, não precisa baixar nada).
 - `site/build.py` lê tudo isso e gera `dist/` usando os templates Jinja2 em
   `site/templates/` e o CSS em `site/static/css/style.css`.
-- `.github/workflows/pages.yml` faz: compila LaTeX (imagem Docker
-  `ghcr.io/xu-cheng/texlive-full`) → `python3 site/build.py` → publica
-  `dist/` no GitHub Pages.
+- `.github/workflows/pages.yml` faz: instala um subconjunto mínimo de
+  TeX Live via `apt` (com cache, ver seção de performance abaixo) →
+  compila os `.tex` com `latexmk` → `python3 site/build.py` → publica
+  `dist/` no GitHub Pages. **Não** usa `texlive-full` nem uma imagem
+  Docker -- foi trocado de propósito por ser muito mais lento (imagem de
+  vários GB, sem cache entre runs).
+
+## Performance do build no CI
+
+- O workflow instala só `texlive-base`, `texlive-latex-base`,
+  `texlive-latex-recommended`, `texlive-pictures`,
+  `texlive-lang-portuguese` e `latexmk` -- o suficiente pro conteúdo
+  atual (beamer, babel brazilian, amsmath, booktabs, listings, xcolor).
+  Isso é uma fração do tamanho de `texlive-full`
+  (que inclui `texlive-fonts-extra`, ~670MB sozinho, puxado só por um
+  ajuste cosmético opcional do beamer que o conteúdo nem usa).
+- Os `.deb` baixados ficam em cache (`actions/cache`, chave
+  `apt-texlive-v1-...`) entre runs.
+- **Se um `.tex` novo usar um pacote que não está nessa lista**, o
+  `pdflatex` vai falhar dizendo exatamente qual `.sty`/`.cls` faltou.
+  Não é bug -- é só adicionar o pacote Debian correspondente na lista de
+  `apt-get install` do workflow (descobrir o nome do pacote: instalar
+  `texlive-full` localmente uma vez, compilar, e rodar `dpkg -S
+  caminho/do/arquivo.sty` para achar de qual pacote Debian ele veio; ou
+  usar `apt-file search nome.sty`). Não adicionar `texlive-full` de
+  volta como atalho -- isso reintroduziria o problema de performance que
+  motivou essa mudança.
 
 ## Estilo de escrita do conteúdo
 
