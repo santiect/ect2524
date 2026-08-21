@@ -10,25 +10,6 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
-\usepackage{listings}
-\usepackage{xcolor}
-
-\lstdefinelanguage{AMPL}{
-	morekeywords={param, var, subject, to, maximize, minimize, model, data,
-		option, solve, display, solver, sum, in, binary, symbolic, Infinity, printf, for, if, then},
-	sensitive=true,
-	morecomment=[l]{\#},
-	morestring=[b]",
-}
-\lstset{
-	basicstyle=\ttfamily\scriptsize,
-	keywordstyle=\color{blue!70!black}\bfseries,
-	commentstyle=\color{gray},
-	stringstyle=\color{orange!70!black},
-	breaklines=true,
-	frame=single,
-	backgroundcolor=\color{black!3},
-}
 
 \title[Aula 1 -- Introdução à Otimização]{Introdução à Otimização}
 \subtitle{Modelagem, AMPL e o Problema da Mochila}
@@ -186,52 +167,6 @@
 	$$
 		\sum_{i=1}^{n} p_i x_i \leq C, \qquad x_i \in \{0,1\},~\forall i=1,\dots,n
 	$$
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Arquivo \texttt{mochila.mod}}
-	\begin{lstlisting}[language=AMPL]
-param n > 0;
-param C > 0;
-param b{1..n};
-param p{1..n};
-
-var x{1..n} binary;
-
-maximize Z: sum{i in 1..n} b[i]*x[i];
-
-subject to capacidade: sum{i in 1..n} p[i]*x[i] <= C;
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Arquivo \texttt{mochila.dat}}
-	\begin{lstlisting}[language=AMPL]
-param n := 6;
-param C := 10;
-
-param : b   p  :=
-        1   8  1
-        2  10  4
-        3  10  3
-        4   8  2
-        5   7  0.5
-        6   4  2;
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Arquivo \texttt{mochila.run}}
-	\begin{lstlisting}[language=AMPL]
-model mochila.mod;
-data mochila.dat;
-option solver highs;
-solve;
-display Z;
-display x;
-	\end{lstlisting}
-	\vspace{0.3cm}
-	No terminal (Windows ou Linux): \texttt{ampl mochila.run}
 \end{frame}
 
 \begin{frame}
