@@ -30,7 +30,9 @@ e receberam a seguinte encomenda:
 > | Cálcio (g) | 1,0 | 2,5 |
 > | Sódio (g) | 1,5 | 2,3 |
 > | Ferro (g) | 0,008 | 0,045 |
-> | Vitaminas (g) | 0,77 | 2,0 |
+> | Vitamina A (mcg RE) | 600 | 3000 |
+> | Vitamina C (mg) | 75 | 2000 |
+> | Vitamina B1 -- Tiamina (mg) | 1,1 | 50 |
 >
 > O problema é que tenho dezenas de alimentos possíveis pra escolher, em
 > quantidades variáveis, e testar combinações à mão é inviável. Vocês
@@ -57,8 +59,9 @@ não uma recomendação nutricional real.)
    - cálcio (g);
    - sódio (g);
    - ferro (g);
-   - vitaminas (g) — ou outro conjunto de nutrientes, desde que
-     justifiquem a escolha.
+   - vitamina A (mcg RE);
+   - vitamina C (mg);
+   - vitamina B1 -- tiamina (mg).
 
    Façam esse levantamento como se estivessem de fato pesquisando o
    cardápio disponível para essa nutricionista.
