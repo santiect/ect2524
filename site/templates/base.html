@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{{ course.codigo }} — {{ course.nome }}{% endblock %}</title>
 <link rel="stylesheet" href="{{ base_path|default('') }}static/css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 </head>
 <body>
 <header class="site-header">
@@ -28,5 +29,12 @@
   <span>{{ course.instituicao }}</span>
   <a href="https://github.com/{{ course.repo }}" target="_blank" rel="noopener">github.com/{{ course.repo }}</a>
 </footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+  onload="renderMathInElement(document.body, {delimiters: [
+    {left: '$$', right: '$$', display: true},
+    {left: '$', right: '$', display: false}
+  ]});"></script>
 </body>
 </html>

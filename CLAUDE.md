@@ -127,6 +127,22 @@ correto.
   notebooks em branco, criados ao vivo, então citar um nome fixo no
   material publicado fica desatualizado/sem sentido.
 
+## Fórmulas matemáticas nas tarefas
+
+- As tarefas (`.md`) podem usar notação LaTeX para fórmulas: `$...$`
+  para fórmulas inline, `$$...$$` para fórmulas em bloco. O site renderiza
+  isso em runtime, no navegador, via KaTeX carregado por CDN em
+  `site/templates/base.html` (script `auto-render` varre a página
+  procurando esses delimitadores depois que o HTML carrega) — não há
+  passo de build envolvido, e o `.md` cru continua sendo markdown normal
+  fora dos trechos `$...$`.
+- Cuidado com o caractere `$`: como o auto-render trata qualquer par de
+  `$...$` como fórmula, não use `$` para outra coisa (ex.: valores em
+  reais) dentro de um `.md` de tarefa sem escapar/evitar ambiguidade.
+- Os slides (`.tex`) continuam sendo LaTeX de verdade, compilado pelo
+  workflow para PDF — isso aqui é só para as tarefas em Markdown
+  renderizadas na página HTML, que antes só suportavam texto puro.
+
 ## Formato de arquivos para download
 
 - Sempre que houver a opção de o aluno **baixar** algo (slides, material
@@ -140,7 +156,12 @@ correto.
 
 - Design é intencionalmente simples/moderno (ver `site/static/css/style.css`,
   suporta light/dark via `prefers-color-scheme`). Não adicionar
-  frameworks/JS de build — o site é puramente estático.
+  frameworks/JS de build — o site é puramente estático (HTML gerado, sem
+  passo de bundling). Exceção deliberada: KaTeX via CDN em
+  `site/templates/base.html`, carregado em runtime no navegador (sem
+  build), usado para renderizar fórmulas LaTeX (`$...$` / `$$...$$`) nas
+  tarefas em Markdown — ver seção "Fórmulas matemáticas nas tarefas"
+  abaixo.
 - `antigos/` é o material antigo (slides, notebooks) ainda não migrado —
   não editar diretamente; é a fonte para futuras aulas em `content/aulas/`.
 - Nunca commitar artefatos de build: `dist/`, `.aux`/`.log`/`.nav`/etc. de
