@@ -39,14 +39,15 @@ fica mais realista.
      dia a dia, ex.: menos refeições numa sexta-feira).
 
 3. **Escrevam a formulação compacta estendida**, no mesmo estilo da
-   Tarefa 2a, mas agora indexada também pelo dia (use um índice
-   $t \in \{1, \dots, 5\}$ além do índice de alimento). Pensem em:
+   Tarefa 2a, mas agora indexada também pelo dia (use um índice de dia
+   `t`, com `t` variando de 1 a 5, além do índice de alimento). Pensem
+   em:
    - variáveis de decisão: quanto usar de cada alimento, em cada dia;
    - como o **estoque** de cada alimento evolui entre um dia e o
-     seguinte (o que sobra de estoque em $t$ é o que estava disponível
-     em $t$ menos o que foi usado em $t$, e passa a ser o estoque
-     disponível em $t+1$ — não há reposição no meio da semana, só o
-     estoque inicial);
+     seguinte (o que sobra de estoque no dia `t` é o que estava
+     disponível no dia `t` menos o que foi usado no dia `t`, e passa a
+     ser o estoque disponível no dia `t+1` — não há reposição no meio
+     da semana, só o estoque inicial);
    - como as exigências nutricionais mínimas/máximas de cada dia
      dependem do total de refeições daquele dia;
    - a função objetivo: custo total ao longo dos 5 dias.
