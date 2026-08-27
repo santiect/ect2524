@@ -60,9 +60,8 @@ não uma recomendação nutricional real.)
    - vitaminas (g) — ou outro conjunto de nutrientes, desde que
      justifiquem a escolha.
 
-   Não vale usar uma lista de dados pronta de outra fonte — a pesquisa
-   dos valores é parte da tarefa, como se vocês estivessem de fato
-   levantando o cardápio disponível para essa nutricionista.
+   Façam esse levantamento como se estivessem de fato pesquisando o
+   cardápio disponível para essa nutricionista.
 
 2. **Escrevam a formulação compacta** do problema (parâmetros, variáveis
    de decisão, função objetivo, restrições), no mesmo estilo usado em
