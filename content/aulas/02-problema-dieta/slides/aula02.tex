@@ -117,11 +117,26 @@
 \end{frame}
 
 %------------------------------------------------------------
-\section{Tarefa da Aula 2}
+\section{Tarefas da Aula 2}
 %------------------------------------------------------------
 
 \begin{frame}
-	\frametitle{Tarefa da Aula 2}
+	\frametitle{Duas tarefas nesta aula}
+	\begin{enumerate}
+		\item \textbf{Tarefa 2a} -- a dieta de \textbf{um único dia},
+			sem se preocupar com estoque de alimentos;
+		\item \textbf{Tarefa 2b} -- a mesma dieta, mas considerando
+			\textbf{estoque} de alimentos, \textbf{total de refeições}
+			por dia e um \textbf{horizonte de 5 dias} (uma semana
+			útil).
+	\end{enumerate}
+	\vspace{0.2cm}
+	A Tarefa 2b usa a formulação e os dados da Tarefa 2a como ponto de
+	partida -- resolvam-nas nessa ordem.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Tarefa 2a -- Problema da Dieta (um dia, sem estoque)}
 	\begin{enumerate}
 		\item Pesquisem, por conta própria, dados nutricionais reais de
 			alimentos (tabela TACO, rótulos, bases nutricionais, etc.);
@@ -133,8 +148,24 @@
 			\texttt{.run}) e resolvam com HiGHS;
 	\end{enumerate}
 	\vspace{0.2cm}
-	Detalhes completos em \texttt{tarefas/tarefa02-dieta.md} na página
-	da aula.
+	Detalhes completos na página da aula, no site do curso.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Tarefa 2b -- Dieta com estoque (horizonte de 5 dias)}
+	\begin{enumerate}
+		\item Reaproveitem os alimentos e dados da Tarefa 2a;
+		\item Definam um \textbf{estoque inicial} de cada alimento e o
+			\textbf{total de refeições} a servir em cada um dos 5 dias;
+		\item Estendam a formulação: um índice a mais para o
+			\textbf{dia}, restrições de \textbf{balanço de estoque}
+			entre os dias, e exigências nutricionais multiplicadas
+			pelo total de refeições de cada dia;
+		\item Implementem em AMPL (\texttt{dieta\_estoque.mod/.dat/.run})
+			e resolvam com HiGHS, para os 5 dias;
+	\end{enumerate}
+	\vspace{0.2cm}
+	Detalhes completos na página da aula, no site do curso.
 \end{frame}
 
 \begin{frame}

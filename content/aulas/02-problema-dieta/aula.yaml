@@ -4,10 +4,14 @@ resumo: >
   Estudo de caso: o desafio de montar, para uma nutricionista, o cardápio
   de menor custo que atende exigências nutricionais mínimas e máximas.
   Formulação do Problema da Dieta e sua semelhança com o Problema da
-  Mochila visto na Aula 1.
+  Mochila visto na Aula 1. Duas tarefas: a dieta de um único dia e, em
+  seguida, a mesma dieta considerando estoque de alimentos e um horizonte
+  de planejamento de 5 dias (uma semana útil).
 
 slides: "slides/aula02.tex"
 
 tarefas:
-  - titulo: "Tarefa 2 — Problema da Dieta (dados próprios)"
-    arquivo: "tarefas/tarefa02-dieta.md"
+  - titulo: "Tarefa 2a — Problema da Dieta (um dia, sem estoque)"
+    arquivo: "tarefas/tarefa02a-dieta.md"
+  - titulo: "Tarefa 2b — Problema da Dieta com Estoque (horizonte de 5 dias)"
+    arquivo: "tarefas/tarefa02b-dieta-estoque.md"

@@ -1,3 +1,16 @@
+## Duas tarefas nesta aula
+
+A Aula 2 tem **duas tarefas**, nesta ordem:
+
+1. **Tarefa 2a** (esta aqui): a dieta de **um único dia**, sem se preocupar
+   com estoque de alimentos.
+2. **Tarefa 2b**: a mesma dieta, mas agora considerando o **estoque** de
+   alimentos, o **total de refeições diárias** a servir e um
+   **horizonte de planejamento de 5 dias** (uma semana útil).
+
+A Tarefa 2b usa a formulação e os dados desta Tarefa 2a como ponto de
+partida, então resolvam esta primeiro.
+
 ## O pedido
 
 Imaginem que vocês formam uma pequena equipe de consultoria em otimização,
@@ -75,8 +88,8 @@ não uma recomendação nutricional real.)
 
 1. Quais as limitações da solução obtida?
 2. O que poderia ser melhorado no modelo?
-3. Como poderia ser pensado o cardápio de um refeitório real (ex.: o
-   restaurante universitário do campus), servindo milhares de refeições
-   ao longo de uma semana, mês ou ano?
+3. Esta dieta vale só para um dia. O que muda se o refeitório precisar
+   planejar vários dias seguidos, com estoque de alimentos limitado?
+   (essa extensão é o assunto da Tarefa 2b)
 4. Este modelo poderia ser aplicado na sua casa ou no seu trabalho?
 5. Há semelhança com o Problema da Mochila visto em aula?
