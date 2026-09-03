@@ -326,28 +326,66 @@ ampl.param["c"] = {(i+1, j+1): dados["c"][i][j]
 \begin{frame}[fragile]
 	\frametitle{Resolver e ler a solução}
 	\begin{lstlisting}[language=Python]
+import time
+
 ampl.set_option("solver", "highs")
 ampl.set_option("highs_options", "timelim=60 outlev=1")
 
+t0 = time.perf_counter()
 ampl.solve()
+tempo = time.perf_counter() - t0          # tempo de execucao (s)
 
-# status: 'solved', 'limit', 'infeasible', ...
-print(ampl.solve_result)
+print(ampl.solve_result)                  # 'solved', 'limit', 'infeasible'...
 
-# valor da funcao objetivo
-custo = ampl.get_objective("custo").value()
+custo = ampl.get_objective("custo").value()          # UB
+lb    = ampl.get_value("custo.bestbound")             # limitante inferior
+gap   = ampl.get_value("custo.relmipgap")             # gap relativo
 
-# valores das variaveis
 x = ampl.get_variable("x").get_values().to_pandas()
 y = ampl.get_variable("y").get_values().to_list()
-
-# limitante inferior / gap (quando o solver expoe)
-lb = ampl.get_value("custo.bestbound")
-gap = ampl.get_value("custo.relmipgap")
 	\end{lstlisting}
 	\begin{itemize}
-		\item para rodar várias instâncias: pôr tudo numa função e
-			chamar num laço sobre a lista de arquivos.
+		\item \texttt{custo.bestbound} / \texttt{custo.relmipgap}: só
+			depois de um \texttt{solve} de modelo inteiro;
+		\item alternativa ao cronômetro: \texttt{ampl.get\_value("\_total\_solve\_time")}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Rodar várias instâncias em laço}
+	\begin{lstlisting}[language=Python]
+import pandas as pd
+
+arquivos = ["inst1.txt", "inst2.txt", "inst3.txt"]
+linhas = []
+
+for arq in arquivos:
+    dados = ler_dados(arq)
+
+    ampl = AMPL()                 # modelo NOVO a cada instancia
+    ampl.read("modelo.mod")       # (ou ampl.reset() antes de reusar)
+    ampl.param["m"] = dados["m"]
+    # ... injetar os demais parametros ...
+
+    ampl.set_option("solver", "highs")
+    ampl.set_option("highs_options", "timelim=60")
+    t0 = time.perf_counter()
+    ampl.solve()
+    linhas.append({
+        "instancia": arq,
+        "objetivo":  ampl.get_objective("custo").value(),
+        "lb":        ampl.get_value("custo.bestbound"),
+        "gap":       ampl.get_value("custo.relmipgap"),
+        "tempo":     time.perf_counter() - t0,
+        "status":    ampl.solve_result,
+    })
+
+tabela = pd.DataFrame(linhas)
+print(tabela)
+	\end{lstlisting}
+	\begin{itemize}
+		\item criar \texttt{AMPL()} de novo a cada volta evita erro de
+			parâmetro/modelo ``já definido''.
 	\end{itemize}
 \end{frame}
 
@@ -366,9 +404,10 @@ gap = ampl.get_value("custo.relmipgap")
 		\item Escrever o \textbf{script Python}: lê os dados, injeta nos
 			parâmetros, resolve;
 		\item \textbf{Ler a solução}: quais fábricas e centros abriram,
-			quanto passa em cada trecho, custo total;
-		\item Discutir: como isso escala para \textbf{muitas instâncias}
-			e para \textbf{experimentos} (tempo limite, gap, comparação).
+			quanto passa em cada trecho, custo total, e também
+			\texttt{solve\_result}, LB, gap e tempo;
+		\item Fechar com o \textbf{laço sobre várias instâncias}
+			montando a tabela de resultados.
 	\end{enumerate}
 \end{frame}
 
