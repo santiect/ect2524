@@ -272,87 +272,146 @@
 \end{frame}
 
 %------------------------------------------------------------
-\section{amplpy: a colinha}
+\section{amplpy: passo a passo}
 %------------------------------------------------------------
 
 \begin{frame}[fragile]
 	\frametitle{Preparar o ambiente}
-	\begin{lstlisting}[language=Python]
-# instalar uma vez no ambiente
+	\begin{itemize}
+		\item \texttt{amplpy} = ponte Python $\leftrightarrow$ AMPL; o
+			módulo \texttt{highs} traz o solver HiGHS;
+		\item licença acadêmica gratuita em \url{https://ampl.com}.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
 pip install amplpy
 
-# ativar a licenca e os modulos de solver (uma vez)
 python -m amplpy.modules install highs
 python -m amplpy.modules activate <sua-licenca-uuid>
 	\end{lstlisting}
-	\begin{itemize}
-		\item \texttt{amplpy} = ponte Python $\leftrightarrow$ AMPL;
-		\item o módulo \texttt{highs} traz o solver HiGHS (mesmo das
-			aulas anteriores);
-		\item a licença acadêmica é gratuita em \url{https://ampl.com}.
-	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Criar o modelo e passar os dados}
-	\begin{lstlisting}[language=Python]
+	\frametitle{Passo 1 -- importar e instanciar}
+	\begin{itemize}
+		\item Todo o trabalho passa por um objeto \texttt{AMPL}.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
 from amplpy import AMPL
 
 ampl = AMPL()
-
-# opcao A: escrever o modelo inline
-ampl.eval(r"""
-    param m > 0;
-    param d{1..m} >= 0;
-    var x{1..m} >= 0;
-    minimize custo: sum{i in 1..m} c[i]*x[i];
-    ...
-""")
-# opcao B: ler de um arquivo .mod
-ampl.read("transbordo.mod")
-
-# parametro escalar
-ampl.param["m"] = dados["m"]
-
-# vetor  -> dict {indice: valor}
-ampl.param["d"] = {k+1: v for k, v in enumerate(dados["d"])}
-
-# matriz -> dict {(i, j): valor}
-ampl.param["c"] = {(i+1, j+1): dados["c"][i][j]
-                   for i in range(m) for j in range(n)}
 	\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Resolver e ler a solução}
-	\begin{lstlisting}[language=Python]
-import time
+	\frametitle{Passo 2 -- carregar o modelo}
+	\begin{itemize}
+		\item Duas formas: escrever o modelo \textbf{inline} ou ler de um
+			arquivo \texttt{.mod}.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+# opcao 1: inline
+ampl.eval(r"""
+    param n > 0;
+    var x{1..n} >= 0;
+    minimize custo: ...;
+""")
 
+# opcao 2: de um arquivo
+ampl.read("modelo.mod")
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Passo 3 -- passar um escalar}
+	\begin{itemize}
+		\item A chave entre colchetes é o nome do \texttt{param} no modelo.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+ampl.param["n"] = dados["n"]
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Passo 4 -- passar um vetor}
+	\begin{itemize}
+		\item Um vetor vira um \texttt{dict} \{índice: valor\};
+		\item no AMPL os índices começam em \textbf{1}.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+# dados["c"] == [10, 8, 20]
+ampl.param["c"] = {j + 1: dados["c"][j]
+                   for j in range(dados["n"])}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Passo 5 -- passar uma matriz}
+	\begin{itemize}
+		\item Uma matriz vira um \texttt{dict} \{(i, j): valor\}.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+# dados["d"][i][j]
+ampl.param["d"] = {(i + 1, j + 1): dados["d"][i][j]
+                   for i in range(dados["m"])
+                   for j in range(dados["n"])}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Passo 6 -- escolher e configurar o solver}
+	\begin{itemize}
+		\item \texttt{timelim}: tempo limite em segundos.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
 ampl.set_option("solver", "highs")
 ampl.set_option("highs_options", "timelim=60 outlev=1")
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Passo 7 -- resolver (e cronometrar)}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+import time
 
 t0 = time.perf_counter()
 ampl.solve()
-tempo = time.perf_counter() - t0          # tempo de execucao (s)
-
-print(ampl.solve_result)                  # 'solved', 'limit', 'infeasible'...
-
-custo = ampl.get_objective("custo").value()          # UB
-lb    = ampl.get_value("custo.bestbound")             # limitante inferior
-gap   = ampl.get_value("custo.relmipgap")             # gap relativo
-
-x = ampl.get_variable("x").get_values().to_pandas()
-y = ampl.get_variable("y").get_values().to_list()
+tempo = time.perf_counter() - t0
 	\end{lstlisting}
-	\begin{itemize}
-		\item \texttt{custo.bestbound} / \texttt{custo.relmipgap}: só
-			depois de um \texttt{solve} de modelo inteiro;
-		\item alternativa ao cronômetro: \texttt{ampl.get\_value("\_total\_solve\_time")}.
-	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Rodar várias instâncias em laço}
+	\frametitle{Passo 8 -- ler o status}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+ampl.solve_result   # 'solved', 'limit', 'infeasible', ...
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Passo 9 -- objetivo, limitante inferior e gap}
+	\begin{itemize}
+		\item \texttt{bestbound} e \texttt{relmipgap}: só após resolver
+			um modelo \textbf{inteiro}.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+custo = ampl.get_objective("custo").value()
+lb    = ampl.get_value("custo.bestbound")
+gap   = ampl.get_value("custo.relmipgap")
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Passo 10 -- valores das variáveis}
+	\begin{itemize}
+		\item Variável binária: considerar aberta quando o valor $> 0{,}5$.
+	\end{itemize}
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+y = ampl.get_variable("y").get_values().to_list()
+x = ampl.get_variable("x").get_values().to_pandas()
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Juntando tudo: laço sobre as instâncias}
 	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\tiny]
 import time, pandas as pd
 
