@@ -129,6 +129,15 @@ correto.
   Tom-alvo: o de um livro-texto ou de notas de aula de um professor —
   direto, preciso, sóbrio. Isso não proíbe estudo de caso nem linguagem
   acessível; proíbe o floreio.
+- **Apresentar um módulo / API / ferramenta nos slides = tutorial em
+  fragmentos, não bloco grande de código.** Um slide por passo, na ordem
+  em que o professor vai montar o código ao vivo: cada slide tem uma
+  linha de intenção (o que este passo faz) + um fragmento curto (poucas
+  linhas) com só aquele comando. Nunca um slide com o script inteiro —
+  fragmentar por etapa (ex.: importar/instanciar; carregar; passar
+  escalar; passar vetor; passar matriz; configurar; executar; ler
+  resultado). Um slide final "juntando tudo" com o fluxo completo é ok.
+  Ver a seção `amplpy: passo a passo` da Aula 3 como referência.
 
 ## Sem citação de notebooks/Colab no corpo do material
 
