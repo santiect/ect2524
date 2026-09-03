@@ -106,12 +106,8 @@ Cada arquivo segue o formato:
 
 Ou seja: a primeira linha tem três inteiros; a segunda tem as capacidades
 dos locais; e as `n_candidatos` linhas seguintes são a matriz de
-distâncias (uma linha por candidato, uma coluna por local).
-
-**Atenção:** o separador não é o mesmo nos três arquivos — a instância 1
-usa **espaço** e as instâncias 2 e 3 usam **tabulação**. A função
-`ler_dados` precisa tratar os dois casos (dica: normalizar a linha antes
-de dividir).
+distâncias (uma linha por candidato, uma coluna por local). Os valores em
+cada linha são separados por **espaço**.
 
 ## Entrega
 
