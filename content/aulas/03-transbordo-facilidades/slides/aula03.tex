@@ -83,6 +83,28 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Por que isso importa (além do experimento)}
+	\begin{itemize}
+		\item Trocar dados em experimentos é só \textbf{um} dos usos;
+		\item O ponto maior: chamar solver a partir de uma linguagem de
+			\textbf{propósito geral} deixa a otimização virar
+			\textbf{parte de um software};
+		\item Ou seja, dá para \textbf{embarcar} o modelo em:
+		\begin{itemize}
+			\item um \textbf{app} ou site onde o usuário final entra com
+				os dados e recebe a solução;
+			\item um \textbf{sistema de apoio à decisão} de uma empresa
+				(roteirização, escalas, estoque\dots) que roda sozinho;
+			\item um \textbf{pipeline} que lê banco de dados / API,
+				otimiza e grava o resultado de volta;
+		\end{itemize}
+		\item O solver deixa de ser uma ferramenta que \emph{nós}
+			operamos e passa a ser um \textbf{componente} que entrega
+			decisão para \textbf{outras pessoas}.
+	\end{itemize}
+\end{frame}
+
 %------------------------------------------------------------
 \section{O Problema de Transbordo}
 %------------------------------------------------------------
