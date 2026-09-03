@@ -84,13 +84,13 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Por que isso importa (além do experimento)}
+	\frametitle{Otimização como componente de software}
 	\begin{itemize}
-		\item Trocar dados em experimentos é só \textbf{um} dos usos;
-		\item O ponto maior: chamar solver a partir de uma linguagem de
-			\textbf{propósito geral} deixa a otimização virar
-			\textbf{parte de um software};
-		\item Ou seja, dá para \textbf{embarcar} o modelo em:
+		\item A troca de dados em experimentos é apenas um dos usos;
+		\item Chamar o solver a partir de uma linguagem de \textbf{propósito
+			geral} permite que a otimização seja \textbf{parte de um
+			software};
+		\item O modelo pode ser \textbf{embarcado} em:
 		\begin{itemize}
 			\item um \textbf{app} ou site onde o usuário final entra com
 				os dados e recebe a solução;
@@ -356,7 +356,7 @@ gap = ampl.get_value("custo.relmipgap")
 %------------------------------------------------------------
 
 \begin{frame}
-	\frametitle{O que vamos fazer ao vivo}
+	\frametitle{Roteiro do exemplo}
 	\begin{enumerate}
 		\item Escrever \texttt{ler\_dados(arquivo)}: abre o
 			\texttt{transbordo.txt} e devolve um dicionário

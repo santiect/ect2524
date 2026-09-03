@@ -115,6 +115,20 @@ correto.
   texto corrido normalmente — é material para leitura assíncrona pelo
   aluno, não apoio de fala em aula. Bullets só onde fizer sentido (listas
   de itens, passos), não como regra geral.
+- **Registro formal/acadêmico em todo material publicado** (slides `.tex`,
+  tarefas `.md`, títulos de frame/seção, resumos em `aula.yaml`). Evitar
+  os maneirismos típicos de texto gerado por IA:
+  - títulos que soam a post de blog / marketing: "Por que isso importa",
+    "O poder de...", "Desvendando...", "Um mergulho em...", "TL;DR". Use
+    um sintagma nominal que nomeia o assunto (ex.: "Otimização como
+    componente de software", "Motivação").
+  - clichês de transição: "Vale a pena notar que", "Em resumo", "No mundo
+    de hoje", "Não se trata apenas de X, mas de Y".
+  - entusiasmo performático (exclamações, "incrível", "poderoso") e
+    perguntas retóricas como recheio.
+  Tom-alvo: o de um livro-texto ou de notas de aula de um professor —
+  direto, preciso, sóbrio. Isso não proíbe estudo de caso nem linguagem
+  acessível; proíbe o floreio.
 
 ## Sem citação de notebooks/Colab no corpo do material
 
