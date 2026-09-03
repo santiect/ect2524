@@ -1,10 +1,14 @@
 ## Tarefa 3 — Localização de Facilidades
 
 Nesta tarefa vocês vão repetir, para um **problema diferente**, exatamente
-os passos que fizemos em aula com o Problema de Transbordo: modelar,
-escrever o modelo em AMPL, escrever uma função Python que lê os dados de um
-arquivo e um script que, usando o `amplpy`, resolve o modelo — só que agora
-para **três instâncias** fornecidas.
+os passos que fizemos em aula com o Problema de Transbordo:
+
+1. **modelar** o problema (identificar parâmetros, variáveis de decisão,
+   função objetivo e restrições);
+2. **escrever o modelo em AMPL**;
+3. **escrever o código Python** (a função que lê os dados de um arquivo e
+   o script que, usando o `amplpy`, resolve o modelo) — só que agora para
+   **três instâncias** fornecidas.
 
 ## O pedido
 
@@ -23,51 +27,43 @@ e receberam a seguinte encomenda:
 >
 > Preciso decidir **quais locais abrir** e **em qual local cada candidato
 > vai fazer a prova**, respeitando a capacidade de cada local e o limite
-> de equipes, de forma que os candidatos, no geral, se desloquem o
-> **menos possível**. Vocês conseguem me entregar uma ferramenta que
-> leia os dados de um local e me devolva essa decisão?"
+> de equipes, de forma que os candidatos se **desloquem pouco**. Aí eu
+> tenho duas visões possíveis do que é "deslocar pouco", e não sei qual
+> usar: uma é fazer a **soma de todas as distâncias** percorridas ser a
+> menor possível; a outra é olhar para o **candidato mais prejudicado** e
+> fazer a **maior distância** que alguém precisa percorrer ser a menor
+> possível. Escolham uma dessas duas visões, me expliquem por que, e me
+> entreguem uma ferramenta que leia os dados de um local e me devolva a
+> decisão."
 
 ## O que fazer
 
-1. **Modelem o problema.** Apresentem, no mesmo estilo usado em aula:
-   - os **parâmetros**: número de candidatos, número de locais, número de
-     locais que podem ser abertos ($p$), capacidade de cada local, e a
-     distância $d_{ij}$ do candidato $i$ ao local $j$;
-   - as **variáveis de decisão**: uma binária indicando se o local $j$ é
-     aberto, e uma binária indicando se o candidato $i$ é alocado ao
-     local $j$;
-   - as **restrições**: abrir exatamente $p$ locais; a soma dos
-     candidatos alocados a um local não passa da capacidade dele; cada
-     candidato é alocado a **exatamente um** local, e só a um local
-     **aberto**;
-   - a **função objetivo** (ver item 2).
+1. **Modelem o problema.** A partir da descrição acima, vocês é que
+   precisam identificar e apresentar, no mesmo estilo usado em aula:
+   - quais são os **parâmetros** (os dados de entrada do problema);
+   - quais são as **variáveis de decisão**;
+   - qual é a **função objetivo** — aqui entra a escolha entre as duas
+     visões que o cliente descreveu (na literatura, minimizar a soma das
+     distâncias é a *p-mediana*; minimizar a maior distância é o
+     *p-centro*). Escolham uma, **justifiquem** no contexto do problema e
+     comentem como a solução mudaria com a outra;
+   - quais são as **restrições**.
 
    Expliquem em uma linha o papel de cada restrição.
 
-2. **Escolham e justifiquem o objetivo.** Há duas formas clássicas de
-   medir "os candidatos se deslocam pouco":
-   - **p-mediana**: minimizar a **soma** de todas as distâncias
-     percorridas, $\sum_{i}\sum_{j} d_{ij}\,x_{ij}$;
-   - **p-centro** (minimax): minimizar a **maior** distância que algum
-     candidato precisa percorrer, $\min z$ com $z \ge d_{ij}\,x_{ij}$
-     para todo $i,j$.
+2. **Escrevam o modelo em AMPL** (`facilidades.mod`), a partir da
+   formulação do item 1.
 
-   Escolham uma das duas, **justifiquem** a escolha no contexto do
-   problema e comentem como a solução mudaria com a outra.
-
-3. **Escrevam o modelo em AMPL** (`facilidades.mod`), com a formulação do
-   item 1 e o objetivo do item 2.
-
-4. **Escrevam a função `ler_dados(arquivo)`** em Python, que abre um dos
+3. **Escrevam a função `ler_dados(arquivo)`** em Python, que abre um dos
    arquivos de instância e devolve um dicionário com os dados prontos
    para uso (número de candidatos, de locais, $p$, o vetor de capacidades
    e a matriz de distâncias) — mesmo papel da função que usamos em aula
    para o transbordo.
 
-5. **Escrevam o script Python com `amplpy`** que, para **cada uma das três
+4. **Escrevam o script Python com `amplpy`** que, para **cada uma das três
    instâncias** (`instancia_facilidades1.txt`, `instancia_facilidades2.txt`
    e `instancia_facilidades3.txt`):
-   - lê os dados com a função do item 4;
+   - lê os dados com a função do item 3;
    - carrega o modelo e injeta os parâmetros;
    - resolve com o HiGHS, definindo um **tempo limite** (ex.: 60 ou 120
      segundos);
@@ -75,7 +71,7 @@ e receberam a seguinte encomenda:
      inferior (LB), o GAP, o tempo de execução e o status
      (`ampl.solve_result`).
 
-6. **Montem uma tabela de resultados** com uma linha por instância:
+5. **Montem uma tabela de resultados** com uma linha por instância:
 
    | Instância | Tempo limite | Solver | Objetivo (UB) | LB | GAP | Tempo | Status |
    |---|---|---|---|---|---|---|---|

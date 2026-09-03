@@ -363,13 +363,16 @@ gap = ampl.get_value("custo.relmipgap")
 			usados, e a \textbf{distância} de cada candidato a cada local;
 		\item Sigam \textbf{os mesmos passos do exemplo de hoje}:
 		\begin{enumerate}
-			\item modelar (parâmetros, variáveis, objetivo, restrições);
-			\item escolher e \textbf{justificar} o objetivo: soma das
-				distâncias (p-mediana) ou a maior distância (p-centro);
-			\item escrever \texttt{facilidades.mod};
-			\item escrever \texttt{ler\_dados} e o script \texttt{amplpy};
-			\item resolver as \textbf{3 instâncias} e montar uma tabela
-				de resultados (objetivo, LB, GAP, tempo, status).
+			\item \textbf{modelar} -- vocês identificam parâmetros,
+				variáveis, objetivo e restrições (o enunciado dá
+				\textbf{duas opções de objetivo}: soma das distâncias ou
+				a maior distância -- escolham e justifiquem);
+			\item escrever o \textbf{modelo em AMPL}
+				(\texttt{facilidades.mod});
+			\item escrever o \textbf{código Python}: \texttt{ler\_dados}
+				+ script \texttt{amplpy} que resolve as \textbf{3
+				instâncias} e monta a tabela de resultados (objetivo, LB,
+				GAP, tempo, status).
 		\end{enumerate}
 		\item Enunciado completo e arquivos \texttt{.txt} na página da
 			aula, no site do curso.
