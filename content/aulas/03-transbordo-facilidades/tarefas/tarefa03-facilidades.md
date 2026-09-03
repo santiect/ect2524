@@ -1,14 +1,14 @@
 ## Tarefa 3 — Localização de Facilidades
 
 Nesta tarefa vocês vão repetir, para um **problema diferente**, exatamente
-os passos que fizemos em aula com o Problema de Transbordo:
+os três passos que fizemos em aula com o Problema de Transbordo:
 
-1. **modelar** o problema (identificar parâmetros, variáveis de decisão,
-   função objetivo e restrições);
-2. **escrever o modelo em AMPL**;
-3. **escrever o código Python** (a função que lê os dados de um arquivo e
-   o script que, usando o `amplpy`, resolve o modelo) — só que agora para
-   **três instâncias** fornecidas.
+- **Passo 1 — Modelar** o problema (identificar parâmetros, variáveis de
+  decisão, função objetivo e restrições);
+- **Passo 2 — Escrever o modelo em AMPL**;
+- **Passo 3 — Escrever o código Python** (a função que lê os dados de um
+  arquivo e o script que, usando o `amplpy`, resolve o modelo) — só que
+  agora para **três instâncias** fornecidas.
 
 ## O pedido
 
@@ -36,52 +36,55 @@ e receberam a seguinte encomenda:
 > entreguem uma ferramenta que leia os dados de um local e me devolva a
 > decisão."
 
-## O que fazer
+## Passo 1 — Modelar o problema
 
-1. **Modelem o problema.** A partir da descrição acima, vocês é que
-   precisam identificar e apresentar, no mesmo estilo usado em aula:
-   - quais são os **parâmetros** (os dados de entrada do problema);
-   - quais são as **variáveis de decisão**;
-   - qual é a **função objetivo** — aqui entra a escolha entre as duas
-     visões que o cliente descreveu (na literatura, minimizar a soma das
-     distâncias é a *p-mediana*; minimizar a maior distância é o
-     *p-centro*). Escolham uma, **justifiquem** no contexto do problema e
-     comentem como a solução mudaria com a outra;
-   - quais são as **restrições**.
+A partir da descrição acima, vocês é que precisam identificar e
+apresentar, no mesmo estilo usado em aula:
 
-   Expliquem em uma linha o papel de cada restrição.
+- quais são os **parâmetros** (os dados de entrada do problema);
+- quais são as **variáveis de decisão**;
+- qual é a **função objetivo**. Aqui entra a escolha entre as duas visões
+  que o cliente descreveu (na literatura, minimizar a soma das distâncias
+  é a *p-mediana*; minimizar a maior distância é o *p-centro*). Escolham
+  uma, **justifiquem** no contexto do problema e comentem como a solução
+  mudaria com a outra;
+- quais são as **restrições** — expliquem em uma linha o papel de cada uma.
 
-2. **Escrevam o modelo em AMPL** (`facilidades.mod`), a partir da
-   formulação do item 1.
+## Passo 2 — Escrever o modelo em AMPL
 
-3. **Escrevam a função `ler_dados(arquivo)`** em Python, que abre um dos
-   arquivos de instância e devolve um dicionário com os dados prontos
-   para uso (número de candidatos, de locais, $p$, o vetor de capacidades
-   e a matriz de distâncias) — mesmo papel da função que usamos em aula
-   para o transbordo.
+Transcrevam a formulação do Passo 1 para um arquivo `facilidades.mod`.
 
-4. **Escrevam o script Python com `amplpy`** que, para **cada uma das três
-   instâncias** (`instancia_facilidades1.txt`, `instancia_facilidades2.txt`
-   e `instancia_facilidades3.txt`):
-   - lê os dados com a função do item 3;
-   - carrega o modelo e injeta os parâmetros;
-   - resolve com o HiGHS, definindo um **tempo limite** (ex.: 60 ou 120
-     segundos);
-   - imprime: os locais abertos, o valor da função objetivo, o limitante
-     inferior (LB), o GAP, o tempo de execução e o status
-     (`ampl.solve_result`).
+## Passo 3 — Escrever o código Python
 
-5. **Montem uma tabela de resultados** com uma linha por instância:
+**3.1. Função `ler_dados(arquivo)`** — abre um dos arquivos de instância e
+devolve um dicionário com os dados prontos para uso (número de candidatos,
+de locais, $p$, o vetor de capacidades e a matriz de distâncias) — mesmo
+papel da função que usamos em aula para o transbordo. Ver o formato dos
+arquivos mais abaixo.
 
-   | Instância | Tempo limite | Solver | Objetivo (UB) | LB | GAP | Tempo | Status |
-   |---|---|---|---|---|---|---|---|
-   | 1 | ... | HiGHS | ... | ... | ... | ... | ... |
-   | 2 | ... | ... | ... | ... | ... | ... | ... |
-   | 3 | ... | ... | ... | ... | ... | ... | ... |
+**3.2. Script com `amplpy`** — para **cada uma das três instâncias**
+(`instancia_facilidades1.txt`, `instancia_facilidades2.txt` e
+`instancia_facilidades3.txt`), o script deve:
 
-   e escrevam um parágrafo curto de análise: as três foram resolvidas na
-   otimalidade (GAP zero)? A instância 3, bem maior, foi tratável dentro
-   do tempo limite?
+- ler os dados com a função de 3.1;
+- carregar o modelo e injetar os parâmetros;
+- resolver com o HiGHS, definindo um **tempo limite** (ex.: 60 ou 120
+  segundos);
+- imprimir: os locais abertos, o valor da função objetivo, o limitante
+  inferior (LB), o GAP, o tempo de execução e o status
+  (`ampl.solve_result`).
+
+**3.3. Tabela de resultados** — uma linha por instância:
+
+| Instância | Tempo limite | Solver | Objetivo (UB) | LB | GAP | Tempo | Status |
+|---|---|---|---|---|---|---|---|
+| 1 | ... | HiGHS | ... | ... | ... | ... | ... |
+| 2 | ... | ... | ... | ... | ... | ... | ... |
+| 3 | ... | ... | ... | ... | ... | ... | ... |
+
+Acompanhada de um parágrafo curto de análise: as três foram resolvidas na
+otimalidade (GAP zero)? A instância 3, bem maior, foi tratável dentro do
+tempo limite?
 
 ## Formato dos arquivos de dados
 
