@@ -353,40 +353,32 @@ y = ampl.get_variable("y").get_values().to_list()
 
 \begin{frame}[fragile]
 	\frametitle{Rodar várias instâncias em laço}
-	\begin{lstlisting}[language=Python]
-import pandas as pd
+	\begin{lstlisting}[language=Python,basicstyle=\ttfamily\tiny]
+import time, pandas as pd
 
 arquivos = ["inst1.txt", "inst2.txt", "inst3.txt"]
 linhas = []
-
 for arq in arquivos:
     dados = ler_dados(arq)
-
-    ampl = AMPL()                 # modelo NOVO a cada instancia
-    ampl.read("modelo.mod")       # (ou ampl.reset() antes de reusar)
+    ampl = AMPL()                     # modelo NOVO a cada instancia:
+    ampl.read("modelo.mod")           # evita erro de parametro "ja definido"
     ampl.param["m"] = dados["m"]
     # ... injetar os demais parametros ...
-
     ampl.set_option("solver", "highs")
     ampl.set_option("highs_options", "timelim=60")
     t0 = time.perf_counter()
     ampl.solve()
     linhas.append({
         "instancia": arq,
-        "objetivo":  ampl.get_objective("custo").value(),
-        "lb":        ampl.get_value("custo.bestbound"),
-        "gap":       ampl.get_value("custo.relmipgap"),
-        "tempo":     time.perf_counter() - t0,
-        "status":    ampl.solve_result,
-    })
+        "objetivo": ampl.get_objective("custo").value(),
+        "lb": ampl.get_value("custo.bestbound"),
+        "gap": ampl.get_value("custo.relmipgap"),
+        "tempo": time.perf_counter() - t0,
+        "status": ampl.solve_result})
 
-tabela = pd.DataFrame(linhas)
+tabela = pd.DataFrame(linhas)         # uma linha por instancia
 print(tabela)
 	\end{lstlisting}
-	\begin{itemize}
-		\item criar \texttt{AMPL()} de novo a cada volta evita erro de
-			parâmetro/modelo ``já definido''.
-	\end{itemize}
 \end{frame}
 
 %------------------------------------------------------------
