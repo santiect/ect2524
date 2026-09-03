@@ -145,12 +145,19 @@ correto.
 
 ## Formato de arquivos para download
 
-- Sempre que houver a opção de o aluno **baixar** algo (slides, material
-  auxiliar de tarefa), o arquivo tem que ser **PDF** — nunca `.tex`, `.md`
-  cru, `.docx`, etc. Slides já seguem isso (compilados para PDF pelo
-  workflow). Se uma tarefa precisar de um material auxiliar baixável além
-  do `.md` renderizado na página, gere/forneça um PDF, não linke o
-  arquivo-fonte diretamente.
+- **Material didático para leitura** (slides, apostila/material auxiliar
+  de tarefa): sempre que o aluno puder **baixar** para ler, tem que ser
+  **PDF** — nunca `.tex`, `.md` cru, `.docx`, etc. Slides já seguem isso
+  (compilados para PDF pelo workflow). Se uma tarefa precisar de um
+  material auxiliar de leitura baixável além do `.md` renderizado na
+  página, gere/forneça um PDF, não linke o arquivo-fonte diretamente.
+- **Arquivos de dados / instâncias** que o aluno baixa para o programa
+  dele **ler como entrada** (ex.: os `.txt` de instâncias de um problema
+  de otimização) ficam no **formato nativo** (`.txt`, `.csv`, `.dat`,
+  `.json`…) — a regra do PDF não se aplica, não faz sentido "PDF-ificar"
+  dados que serão parseados por código. Basta colocar o arquivo na pasta
+  da aula (o `build.py` copia tudo para `dist/<slug>/`) e linká-lo do
+  `.md` da tarefa por caminho relativo.
 
 ## Convenções
 

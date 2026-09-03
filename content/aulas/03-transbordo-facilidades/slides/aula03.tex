@@ -1,0 +1,387 @@
+\documentclass[fleqn]{beamer}
+
+\mode<presentation> {
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+	basicstyle=\ttfamily\scriptsize,
+	breaklines=true,
+	keywordstyle=\color{blue!60!black},
+	commentstyle=\color{gray},
+	stringstyle=\color{green!45!black},
+	showstringspaces=false,
+	columns=fullflexible,
+	frame=single,
+	framesep=4pt,
+	aboveskip=6pt,
+	belowskip=2pt,
+}
+
+\title[Aula 3 -- AMPL + Python]{Transbordo e Localização de Facilidades}
+\subtitle{Rodando o AMPL de dentro do Python}
+\author[Santi]{Prof. \'Everton Santi}
+\institute[UFRN/ECT]{ECT2524 -- Introdução à Otimização \\ Escola de Ciências e Tecnologia -- UFRN}
+\date{Aula 3}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sumário}
+	\tableofcontents
+\end{frame}
+
+%------------------------------------------------------------
+\section{Recapitulando}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Até aqui}
+	\begin{itemize}
+		\item Aulas 1 e 2: modelar $\rightarrow$ escrever em AMPL
+			(\texttt{.mod}, \texttt{.dat}, \texttt{.run}) $\rightarrow$
+			resolver com HiGHS pela linha de comando;
+		\item Isso funciona bem para \textbf{um} conjunto de dados escrito
+			à mão no \texttt{.dat};
+		\item Mas e quando temos \textbf{dezenas de instâncias}, em um
+			formato de arquivo que não é \texttt{.dat}, e queremos rodar
+			todas e comparar?
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Hoje: AMPL chamado de dentro do Python}
+	\begin{itemize}
+		\item Mesmo AMPL, mesmo solver -- só que dirigido por um
+			\textbf{script Python} (biblioteca \texttt{amplpy});
+		\item Ganhos:
+		\begin{itemize}
+			\item ler dados de \textbf{qualquer formato} (\texttt{.txt},
+				\texttt{.csv}, planilha\dots) com código Python;
+			\item montar os parâmetros do modelo \textbf{por programa},
+				não copiando número a número;
+			\item rodar \textbf{um laço} sobre várias instâncias e
+				coletar resultados numa tabela;
+		\end{itemize}
+		\item A formulação e o modelo vamos construir \textbf{ao vivo},
+			em Python, durante a aula;
+		\item Estes slides trazem só a \textbf{descrição do problema} e a
+			\textbf{colinha de comandos} do \texttt{amplpy}.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{O Problema de Transbordo}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{O contexto}
+	\begin{itemize}
+		\item Uma empresa do ramo de \textbf{bebidas} precisa organizar a
+			distribuição para o feriado de \textbf{carnaval};
+		\item A rede tem \textbf{três camadas}:
+		\begin{itemize}
+			\item \textbf{fábricas} produzem o produto;
+			\item \textbf{centros de distribuição} recebem das fábricas e
+				repassam;
+			\item \textbf{clientes} têm uma demanda a ser atendida;
+		\end{itemize}
+		\item O produto só chega ao cliente \textbf{passando por um
+			centro} -- daí o nome \emph{transbordo} (troca de veículo /
+			ponto intermediário).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Custos envolvidos}
+	\begin{itemize}
+		\item \textbf{Transporte} (custo variável, por unidade):
+		\begin{itemize}
+			\item $c_{ij}$: produzir na fábrica $i$ e levar ao centro $j$;
+			\item $t_{jk}$: armazenar no centro $j$ e entregar ao cliente $k$;
+		\end{itemize}
+		\item \textbf{Custo fixo} (pago uma vez, só se a instalação for usada):
+		\begin{itemize}
+			\item $f_i$: abrir/operar a fábrica $i$;
+			\item $h_j$: abrir/operar o centro $j$;
+		\end{itemize}
+		\item \textbf{Capacidade} (limite de quanto passa pela instalação):
+		\begin{itemize}
+			\item $g_i$: capacidade da fábrica $i$;
+			\item $q_j$: capacidade do centro $j$;
+		\end{itemize}
+		\item \textbf{Demanda}: $d_k$ unidades exigidas pelo cliente $k$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O que precisamos decidir}
+	\begin{itemize}
+		\item Quais \textbf{fábricas} abrir e quais \textbf{centros} abrir;
+		\item Quanto produto enviar em \textbf{cada trecho}
+			fábrica~$\rightarrow$~centro e centro~$\rightarrow$~cliente;
+		\item Regras que a solução tem que respeitar:
+		\begin{itemize}
+			\item nenhuma instalação passa mais do que sua capacidade;
+			\item a demanda de cada cliente é atendida \textbf{exatamente};
+			\item \textbf{conservação de fluxo} no centro: tudo que entra
+				sai (o centro não acumula estoque);
+			\item só há fluxo saindo de uma instalação se ela estiver
+				\textbf{aberta}.
+		\end{itemize}
+		\item \textbf{Objetivo}: minimizar o custo total (fixos + variáveis).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Dados da instância do exemplo}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		2 fábricas, 3 centros, 3 clientes.
+		\medskip
+
+		Demanda dos clientes:
+		\begin{center}
+		\begin{tabular}{cccc}
+			\toprule
+			$k$ & 1 & 2 & 3 \\
+			$d_k$ & 80 & 90 & 40 \\
+			\bottomrule
+		\end{tabular}
+		\end{center}
+
+		Fábricas:
+		\begin{center}
+		\begin{tabular}{ccc}
+			\toprule
+			 & $i{=}1$ & $i{=}2$ \\
+			\midrule
+			$g_i$ & 120 & 100 \\
+			$f_i$ & 300 & 250 \\
+			\bottomrule
+		\end{tabular}
+		\end{center}
+
+		Centros:
+		\begin{center}
+		\begin{tabular}{cccc}
+			\toprule
+			 & $j{=}1$ & $j{=}2$ & $j{=}3$ \\
+			\midrule
+			$q_j$ & 70 & 90 & 66 \\
+			$h_j$ & 60 & 80 & 100 \\
+			\bottomrule
+		\end{tabular}
+		\end{center}
+
+		\column{0.5\textwidth}
+		Custo fábrica $\rightarrow$ centro $c_{ij}$:
+		\begin{center}
+		\begin{tabular}{cccc}
+			\toprule
+			$c_{ij}$ & $j{=}1$ & $j{=}2$ & $j{=}3$ \\
+			\midrule
+			$i{=}1$ & 10 & 8 & 20 \\
+			$i{=}2$ & 20 & 6 & 11 \\
+			\bottomrule
+		\end{tabular}
+		\end{center}
+		\medskip
+
+		Custo centro $\rightarrow$ cliente $t_{jk}$:
+		\begin{center}
+		\begin{tabular}{cccc}
+			\toprule
+			$t_{jk}$ & $k{=}1$ & $k{=}2$ & $k{=}3$ \\
+			\midrule
+			$j{=}1$ & 7 & 5 & 10 \\
+			$j{=}2$ & 5 & 4 & 3 \\
+			$j{=}3$ & 10 & 8 & 6 \\
+			\bottomrule
+		\end{tabular}
+		\end{center}
+		\medskip
+
+		\footnotesize Demanda total $= 210$; capacidade das fábricas
+		$= 220$; dos centros $= 226$.
+	\end{columns}
+\end{frame}
+
+%------------------------------------------------------------
+\section{O arquivo de dados}
+%------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Formato do \texttt{transbordo.txt}}
+	\begin{lstlisting}
+2 3 3
+80 90 40
+120 100
+300 250
+70 90 66
+60 80 100
+10 8 20
+20 6 11
+7 5 10
+5 4 3
+10 8 6
+	\end{lstlisting}
+	\begin{itemize}
+		\item linha 1: \texttt{m n p} -- nº de fábricas, centros, clientes;
+		\item linha 2: demandas $d_k$ ($p$ valores);
+		\item linhas 3--4: $g_i$ e $f_i$ das fábricas ($m$ valores cada);
+		\item linhas 5--6: $q_j$ e $h_j$ dos centros ($n$ valores cada);
+		\item próximas $m$ linhas: matriz $c_{ij}$ ($n$ colunas);
+		\item próximas $n$ linhas: matriz $t_{jk}$ ($p$ colunas).
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{amplpy: a colinha}
+%------------------------------------------------------------
+
+\begin{frame}[fragile]
+	\frametitle{Preparar o ambiente}
+	\begin{lstlisting}[language=Python]
+# instalar uma vez no ambiente
+pip install amplpy
+
+# ativar a licenca e os modulos de solver (uma vez)
+python -m amplpy.modules install highs
+python -m amplpy.modules activate <sua-licenca-uuid>
+	\end{lstlisting}
+	\begin{itemize}
+		\item \texttt{amplpy} = ponte Python $\leftrightarrow$ AMPL;
+		\item o módulo \texttt{highs} traz o solver HiGHS (mesmo das
+			aulas anteriores);
+		\item a licença acadêmica é gratuita em \url{https://ampl.com}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Criar o modelo e passar os dados}
+	\begin{lstlisting}[language=Python]
+from amplpy import AMPL
+
+ampl = AMPL()
+
+# opcao A: escrever o modelo inline
+ampl.eval(r"""
+    param m > 0;
+    param d{1..m} >= 0;
+    var x{1..m} >= 0;
+    minimize custo: sum{i in 1..m} c[i]*x[i];
+    ...
+""")
+# opcao B: ler de um arquivo .mod
+ampl.read("transbordo.mod")
+
+# parametro escalar
+ampl.param["m"] = dados["m"]
+
+# vetor  -> dict {indice: valor}
+ampl.param["d"] = {k+1: v for k, v in enumerate(dados["d"])}
+
+# matriz -> dict {(i, j): valor}
+ampl.param["c"] = {(i+1, j+1): dados["c"][i][j]
+                   for i in range(m) for j in range(n)}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Resolver e ler a solução}
+	\begin{lstlisting}[language=Python]
+ampl.set_option("solver", "highs")
+ampl.set_option("highs_options", "timelim=60 outlev=1")
+
+ampl.solve()
+
+# status: 'solved', 'limit', 'infeasible', ...
+print(ampl.solve_result)
+
+# valor da funcao objetivo
+custo = ampl.get_objective("custo").value()
+
+# valores das variaveis
+x = ampl.get_variable("x").get_values().to_pandas()
+y = ampl.get_variable("y").get_values().to_list()
+
+# limitante inferior / gap (quando o solver expoe)
+lb = ampl.get_value("custo.bestbound")
+gap = ampl.get_value("custo.relmipgap")
+	\end{lstlisting}
+	\begin{itemize}
+		\item para rodar várias instâncias: pôr tudo numa função e
+			chamar num laço sobre a lista de arquivos.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Roteiro do exemplo}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{O que vamos fazer ao vivo}
+	\begin{enumerate}
+		\item Escrever \texttt{ler\_dados(arquivo)}: abre o
+			\texttt{transbordo.txt} e devolve um dicionário
+			(\texttt{m, n, p, d, g, f, q, h, c, t});
+		\item Escrever o \textbf{modelo AMPL} do transbordo (variáveis de
+			abertura, variáveis de fluxo, objetivo, restrições);
+		\item Escrever o \textbf{script Python}: lê os dados, injeta nos
+			parâmetros, resolve;
+		\item \textbf{Ler a solução}: quais fábricas e centros abriram,
+			quanto passa em cada trecho, custo total;
+		\item Discutir: como isso escala para \textbf{muitas instâncias}
+			e para \textbf{experimentos} (tempo limite, gap, comparação).
+	\end{enumerate}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Tarefa}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Tarefa 3 -- Localização de Facilidades}
+	\begin{itemize}
+		\item Estudo de caso: escolher \textbf{locais de prova} para um
+			exame nacional -- há candidatos, locais candidatos com
+			\textbf{capacidade}, um limite de quantos locais podem ser
+			usados, e a \textbf{distância} de cada candidato a cada local;
+		\item Sigam \textbf{os mesmos passos do exemplo de hoje}:
+		\begin{enumerate}
+			\item modelar (parâmetros, variáveis, objetivo, restrições);
+			\item escolher e \textbf{justificar} o objetivo: soma das
+				distâncias (p-mediana) ou a maior distância (p-centro);
+			\item escrever \texttt{facilidades.mod};
+			\item escrever \texttt{ler\_dados} e o script \texttt{amplpy};
+			\item resolver as \textbf{3 instâncias} e montar uma tabela
+				de resultados (objetivo, LB, GAP, tempo, status).
+		\end{enumerate}
+		\item Enunciado completo e arquivos \texttt{.txt} na página da
+			aula, no site do curso.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Referências}
+	\begin{itemize}
+		\item AMPL: \url{https://ampl.com};
+		\item Documentação do \texttt{amplpy}: \url{https://amplpy.ampl.com}.
+	\end{itemize}
+\end{frame}
+
+\end{document}

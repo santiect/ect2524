@@ -1,0 +1,15 @@
+titulo: "Aula 3 — Transbordo e Localização de Facilidades (AMPL + Python)"
+data: "2026-09-04"
+resumo: >
+  Rodando o AMPL de dentro do Python (amplpy): ler dados de arquivos,
+  montar o modelo e resolver via script. Estudo de caso construído ao
+  vivo: o Problema de Transbordo com custos fixos e variáveis (fábricas
+  → centros de distribuição → clientes). Tarefa: o Problema de
+  Localização de Facilidades, seguindo os mesmos passos para 3
+  instâncias.
+
+slides: "slides/aula03.tex"
+
+tarefas:
+  - titulo: "Tarefa 3 — Localização de Facilidades (AMPL + Python)"
+    arquivo: "tarefas/tarefa03-facilidades.md"
