@@ -10,7 +10,7 @@ resumo: >
   reflexão. O código em AMPL + Python implementa as duas formulações e
   compara, para cada instância, tempo, LB, UB, GAP e a distribuição do
   deslocamento dos candidatos (máxima, mínima, média e desvio padrão)
-  com 5 minutos de limite.
+  com 60 segundos de limite.
 
 slides: "slides/aula04.tex"
 

@@ -109,8 +109,8 @@ deve:
 
 - ler os dados com a função de 3.1;
 - carregar o modelo, selecionar o objetivo e injetar os parâmetros;
-- resolver com o HiGHS, com **tempo limite de 5 minutos** (300 s) em
-  todas as execuções;
+- resolver com o HiGHS, com **tempo limite de 60 segundos** em todas as
+  execuções;
 - recuperar, da solução, **a alocação candidato → local** e, a partir
   dela, a distância que **cada candidato** percorre;
 - registrar, para aquela execução: o LB, o UB (valor da função
@@ -120,7 +120,7 @@ deve:
   **desvio padrão**.
 
 **3.3. Tabela de resultados** — uma linha por instância **e** por
-formulação (6 linhas), com tempo limite de 300 s e solver HiGHS em todas:
+formulação (6 linhas), com tempo limite de 60 s e solver HiGHS em todas:
 
 | Instância | Formulação | LB | UB | GAP | Tempo (s) | Status | Dist. máx. | Dist. mín. | Dist. média | Desvio padrão |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -138,7 +138,7 @@ Observações:
   (máx./mín./média/desvio) são o que torna as duas soluções
   **comparáveis** na mesma escala;
 - se numa instância a mesma formulação não fechar na otimalidade dentro
-  dos 5 min, registrem o GAP e o status (`limit`) e comparem assim mesmo.
+  dos 60 s, registrem o GAP e o status (`limit`) e comparem assim mesmo.
 
 **3.4. Análise da comparação** — um ou dois parágrafos, para cada
 instância, respondendo:
