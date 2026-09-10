@@ -136,8 +136,26 @@
 				ao custo de uma soma total maior;
 			\item na literatura: problema do \textbf{$p$-centro};
 		\end{itemize}
-		\item A escolha entre as duas é parte da tarefa -- e precisa de
-			\textbf{justificativa} no contexto do exame.
+		\item Na tarefa vocês implementam \textbf{as duas} e comparam
+			instância a instância -- não há escolha a priori.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Comparar as duas soluções}
+	\begin{itemize}
+		\item Os objetivos vivem em escalas diferentes (soma
+			\emph{vs.}\ máximo) -- comparar os valores ótimos direto não
+			diz muito;
+		\item O que se compara é o \textbf{deslocamento dos candidatos}
+			em cada solução:
+		\begin{itemize}
+			\item maior distância e menor distância percorrida;
+			\item distância média;
+			\item desvio padrão (o quão desigual é a solução);
+		\end{itemize}
+		\item Mais os indicadores de resolução, com \textbf{5 min} de
+			limite: LB, UB, GAP, tempo, status.
 	\end{itemize}
 \end{frame}
 
@@ -166,17 +184,21 @@
 	\begin{itemize}
 		\item Sigam os \textbf{mesmos três passos} da Aula 3:
 		\begin{enumerate}
-			\item \textbf{Modelar}: identificar parâmetros, variáveis de
-				decisão, função objetivo e restrições -- escolhendo e
-				justificando uma das duas visões do objetivo;
-			\item \textbf{Modelo em AMPL} (\texttt{facilidades.mod});
+			\item \textbf{Modelar}: parâmetros, variáveis e restrições --
+				comuns às duas formulações -- e as \textbf{duas} funções
+				objetivo (a do $p$-centro linearizada com variável
+				auxiliar);
+			\item \textbf{Modelo em AMPL} (\texttt{facilidades.mod}) com
+				as duas \texttt{minimize};
 			\item \textbf{Código Python}: \texttt{ler\_dados} + script
-				\texttt{amplpy} que resolve as \textbf{três instâncias} e
-				monta a tabela de resultados;
+				\texttt{amplpy} que resolve as \textbf{três instâncias}
+				nas \textbf{duas formulações} (6 execuções) e monta a
+				tabela comparativa;
 		\end{enumerate}
 		\item Reaproveitem a colinha do \texttt{amplpy} da Aula 3 (passar
 			escalar, vetor, matriz; configurar o solver; ler objetivo,
-			LB, GAP, tempo, status).
+			LB, GAP, tempo, status; ler os valores das variáveis para
+			reconstruir a alocação).
 	\end{itemize}
 \end{frame}
 
@@ -213,8 +235,8 @@
 	\end{center}
 	\begin{itemize}
 		\item A instância 3 é bem maior: parte da tarefa é observar se ela
-			é resolvida na otimalidade dentro do tempo limite, ou se
-			sobra GAP;
+			é resolvida na otimalidade dentro dos 5 min de limite, ou se
+			sobra GAP -- e se isso muda entre p-mediana e p-centro;
 		\item Enunciado completo, perguntas de reflexão e os três
 			\texttt{.txt} estão na página da aula, no site do curso.
 	\end{itemize}

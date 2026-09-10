@@ -5,9 +5,11 @@ resumo: >
   Localização de Facilidades. Apresentação conceitual do problema —
   locais candidatos com capacidade, um limite de instalações a abrir,
   demanda distribuída no espaço — e das duas visões de objetivo
-  (soma das distâncias, a p-mediana; maior distância, o p-centro). O
-  modelo e o código em AMPL + Python para as instâncias fornecidas são
-  parte da tarefa.
+  (soma das distâncias, a p-mediana; maior distância, o p-centro). Na
+  tarefa, o modelo e o código em AMPL + Python implementam as duas
+  formulações e comparam, para cada instância, tempo, LB, UB, GAP e a
+  distribuição do deslocamento dos candidatos (máxima, mínima, média e
+  desvio padrão) com 5 minutos de limite.
 
 slides: "slides/aula04.tex"
 
