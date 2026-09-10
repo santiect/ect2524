@@ -37,6 +37,33 @@ e receberam a seguinte encomenda:
 > decisão e no deslocamento dos candidatos. A partir dessa comparação eu
 > decido."
 
+## Nomenclatura: o que exatamente vamos resolver
+
+"Localização de facilidades" é o nome de uma **família** de problemas.
+Dentro dela, o que muda de um modelo para outro são três escolhas: o
+número de instalações é fixo ou é decisão? há custo fixo de abrir cada
+uma? o objetivo é minimizar a soma das distâncias ou a maior distância?
+
+| Modelo | Nº de instalações | Custo fixo | Objetivo |
+|---|---|---|---|
+| **p-mediana** | fixo, $= p$ | não | minimizar a **soma** das distâncias |
+| **p-centro** | fixo, $= p$ | não | minimizar a **maior** distância |
+| Localização com custo fixo (UFLP) | é decisão | $f_j$ por local aberto | custo fixo + transporte |
+
+Nesta tarefa, como o cliente **impõe** o número de locais ($p$ = número de
+equipes de aplicação) e não fala em custo de operar cada local, ficamos
+com as **duas primeiras linhas**: vocês vão modelar e resolver a
+**p-mediana** e o **p-centro**. O terceiro modelo (decidir *quantos*
+locais abrir, com custo fixo por local) é o que apareceria num
+planejamento real — e vocês já viram essa estrutura na Aula 3: no
+transbordo, abrir uma fábrica ($f_i$) ou um centro ($h_j$) era uma decisão
+binária com custo fixo. A pergunta de reflexão 7 volta a esse ponto.
+
+Todos esses modelos são **discretos**: os locais candidatos são um
+conjunto dado de antemão. Eles podem coincidir com os pontos de demanda
+(é o caso da p-mediana clássica em rede), mas não precisam — aqui são um
+conjunto à parte (as escolas, faculdades e centros de eventos).
+
 ## Passo 1 — Modelar o problema
 
 A partir da descrição acima, vocês precisam identificar e apresentar, no
@@ -177,3 +204,10 @@ cada linha são separados por **espaço**.
 6. Onde mais, no mundo real, aparece esse mesmo problema de "escolher
    poucos pontos para atender muita gente que está espalhada" (ex.:
    postos de saúde, centros de distribuição, antenas, escolas)?
+7. Suponha que o cliente **não** fixe o número de locais: em vez disso,
+   cada local $j$ tem um custo fixo $f_j$ para operar no dia, e ele quer
+   o melhor equilíbrio entre esse custo e o deslocamento dos candidatos.
+   Como você mudaria a formulação? (Que restrição sai, que termo entra na
+   função objetivo, o que passa a ser decisão.) Esse é o problema de
+   localização com custo fixo — compare a estrutura com o modelo de
+   transbordo da Aula 3.

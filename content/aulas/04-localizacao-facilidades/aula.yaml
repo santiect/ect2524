@@ -1,15 +1,16 @@
 titulo: "Aula 4 — Localização de Facilidades"
 data: "2026-09-11"
 resumo: >
-  Segundo estudo de caso resolvido com AMPL + Python: o Problema de
-  Localização de Facilidades. Apresentação conceitual do problema —
-  locais candidatos com capacidade, um limite de instalações a abrir,
-  demanda distribuída no espaço — e das duas visões de objetivo
-  (soma das distâncias, a p-mediana; maior distância, o p-centro). Na
-  tarefa, o modelo e o código em AMPL + Python implementam as duas
-  formulações e comparam, para cada instância, tempo, LB, UB, GAP e a
-  distribuição do deslocamento dos candidatos (máxima, mínima, média e
-  desvio padrão) com 5 minutos de limite.
+  Segundo estudo de caso resolvido com AMPL + Python, na família de
+  problemas de localização de facilidades. Apresentação conceitual e
+  distinção entre os modelos da família: p-mediana (p fixo, minissoma),
+  p-centro (p fixo, minimax) e localização com custo fixo (número de
+  instalações como decisão). Na tarefa resolve-se a p-mediana e o
+  p-centro sobre as instâncias dadas; o modelo com custo fixo fica como
+  reflexão. O código em AMPL + Python implementa as duas formulações e
+  compara, para cada instância, tempo, LB, UB, GAP e a distribuição do
+  deslocamento dos candidatos (máxima, mínima, média e desvio padrão)
+  com 5 minutos de limite.
 
 slides: "slides/aula04.tex"
 

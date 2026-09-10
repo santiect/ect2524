@@ -66,8 +66,36 @@
 \end{frame}
 
 %------------------------------------------------------------
-\section{O problema de localização de facilidades}
+\section{Localização de facilidades}
 %------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Uma família de problemas}
+	\begin{itemize}
+		\item \textbf{Localização de facilidades} nomeia uma
+			\emph{família}: decidir onde instalar um número limitado de
+			instalações que atendem uma demanda espalhada no espaço;
+		\item Dentro dela, os modelos se distinguem por três escolhas:
+	\end{itemize}
+	\begin{center}
+	\footnotesize
+	\begin{tabular}{lccc}
+		\toprule
+		 & nº de instalações & custo fixo & objetivo \\
+		\midrule
+		$p$-mediana        & fixo $= p$ & não          & minissoma das distâncias \\
+		$p$-centro         & fixo $= p$ & não          & minimizar a maior distância \\
+		Custo fixo (UFLP)  & é decisão  & $f_j$ por local & custo fixo $+$ transporte \\
+		\bottomrule
+	\end{tabular}
+	\end{center}
+	\begin{itemize}
+		\item Todos são \textbf{discretos}: os locais candidatos são um
+			conjunto dado -- podem, mas não precisam, coincidir com os
+			pontos de demanda;
+		\item Hoje resolvemos as duas primeiras linhas.
+	\end{itemize}
+\end{frame}
 
 \begin{frame}
 	\frametitle{O contexto}
@@ -122,6 +150,9 @@
 \begin{frame}
 	\frametitle{Duas visões do objetivo}
 	\begin{itemize}
+		\item No nosso caso $p$ é dado (= nº de equipes) e não há custo de
+			abrir um local -- logo, restam \textbf{$p$-mediana} e
+			\textbf{$p$-centro}, que diferem só no objetivo;
 		\item \textbf{Soma das distâncias} -- minimizar o total (ou a
 			média) percorrido por todos os candidatos;
 		\begin{itemize}
@@ -156,6 +187,27 @@
 		\end{itemize}
 		\item Mais os indicadores de resolução, com \textbf{5 min} de
 			limite: LB, UB, GAP, tempo, status.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O que este modelo deixa de fora}
+	\begin{itemize}
+		\item Aqui $p$ é imposto e todo local aberto ``custa igual'';
+		\item Num planejamento real, a pergunta seria \textbf{quantos}
+			locais abrir, pesando:
+		\begin{itemize}
+			\item o custo fixo de operar cada local (aluguel, equipe,
+				logística) -- distinto de local para local;
+			\item contra o ganho em deslocamento de abrir mais um;
+		\end{itemize}
+		\item Esse é o problema de localização com \textbf{custo fixo}
+			(UFLP) -- e a estrutura já apareceu na Aula 3: no transbordo,
+			abrir fábrica ($f_i$) e centro ($h_j$) era decisão com custo
+			fixo;
+		\item Nesta tarefa simplificamos de propósito ($p$ dado, sem
+			custo fixo) para isolar a comparação \textbf{minissoma
+			$\times$ minimax}.
 	\end{itemize}
 \end{frame}
 
