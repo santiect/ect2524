@@ -12,6 +12,7 @@
 \usepackage{booktabs}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{tikz}
 
 \lstset{
 	basicstyle=\ttfamily\scriptsize,
@@ -144,6 +145,67 @@
 		\end{itemize}
 		\item \textbf{Objetivo}: fazer os candidatos se deslocarem pouco
 			-- mas há duas leituras disso.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O problema, em diagrama}
+	\begin{center}
+	\begin{tikzpicture}[scale=0.92,
+		fac/.style={rectangle,draw,fill=blue!12,minimum size=6mm,inner sep=0pt},
+		cli/.style={circle,fill=black,inner sep=0pt,minimum size=4.2pt}]
+		\node[fac] (F1) at (0.6,3.4) {};
+		\node[fac] (F2) at (4.4,4.7) {};
+		\node[fac] (F3) at (8.0,3.0) {};
+		\node[fac] (F4) at (3.0,0.7) {};
+		\foreach \n/\x/\y in {1/0.2/1.5, 2/2.1/2.5, 3/1.8/4.6, 4/3.6/3.3,
+			5/5.6/3.6, 6/6.7/1.4, 7/4.9/0.6, 8/8.6/4.6}
+			\node[cli] (c\n) at (\x,\y) {};
+		\foreach \f in {F1,F2,F3,F4}
+			\foreach \c in {c1,c2,c3,c4,c5,c6,c7,c8}
+				\draw[gray!35,very thin] (\f) -- (\c);
+		\foreach \f/\d in {F1/{6},F2/{9},F3/{4},F4/{7}}
+			\draw[orange!85!black,thick] (c5) -- (\f)
+				node[pos=0.5,fill=white,inner sep=1pt,font=\tiny] {\d};
+		\node[cli,fill=orange!85!black,minimum size=4pt] at (c5) {};
+		\node[fac,label=right:{\footnotesize local candidato}] at (0.3,-0.7) {};
+		\node[cli,label=right:{\footnotesize candidato}] at (5.4,-0.7) {};
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item Cada par candidato--local tem uma \textbf{distância} (em
+			laranja, as de um candidato);
+		\item nada foi decidido ainda: todos os locais são só
+			\emph{candidatos}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Uma solução (ilustrativa)}
+	\begin{center}
+	\begin{tikzpicture}[scale=0.92,
+		open/.style={rectangle,draw,fill=blue!55,minimum size=6mm,inner sep=0pt},
+		closed/.style={rectangle,draw=gray,fill=gray!12,minimum size=6mm,inner sep=0pt},
+		cli/.style={circle,fill=black,inner sep=0pt,minimum size=4.2pt}]
+		\node[open]   (F1) at (0.6,3.4) {};
+		\node[closed] (F2) at (4.4,4.7) {};
+		\node[open]   (F3) at (8.0,3.0) {};
+		\node[closed] (F4) at (3.0,0.7) {};
+		\foreach \n/\x/\y in {1/0.2/1.5, 2/2.1/2.5, 3/1.8/4.6, 4/3.6/3.3,
+			5/5.6/3.6, 6/6.7/1.4, 7/4.9/0.6, 8/8.6/4.6}
+			\node[cli] (c\n) at (\x,\y) {};
+		\foreach \c in {c1,c2,c3,c4} \draw[blue!60,thick] (\c) -- (F1);
+		\foreach \c in {c5,c6,c7,c8} \draw[blue!60,thick] (\c) -- (F3);
+		\node[open,label=right:{\footnotesize local aberto}] at (0.3,-0.7) {};
+		\node[closed,label=right:{\footnotesize local não usado}] at (5.4,-0.7) {};
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item $p = 2$ locais abertos; cada candidato ligado ao local onde
+			faria a prova, sem estourar a capacidade;
+		\item os objetivos agem sobre os comprimentos dessas ligações --
+			a \textbf{soma} ($p$-mediana) ou o \textbf{maior} deles
+			($p$-centro).
 	\end{itemize}
 \end{frame}
 
