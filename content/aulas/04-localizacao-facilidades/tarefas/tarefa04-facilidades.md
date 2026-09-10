@@ -1,7 +1,7 @@
-## Tarefa 3 — Localização de Facilidades
+## Tarefa 4 — Localização de Facilidades
 
 Nesta tarefa vocês vão repetir, para um **problema diferente**, exatamente
-os três passos que fizemos em aula com o Problema de Transbordo:
+os três passos que vimos na Aula 3 com o Problema de Transbordo:
 
 - **Passo 1 — Modelar** o problema (identificar parâmetros, variáveis de
   decisão, função objetivo e restrições);

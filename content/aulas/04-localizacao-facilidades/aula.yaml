@@ -1,0 +1,16 @@
+titulo: "Aula 4 — Localização de Facilidades"
+data: "2026-09-11"
+resumo: >
+  Segundo estudo de caso resolvido com AMPL + Python: o Problema de
+  Localização de Facilidades. Apresentação conceitual do problema —
+  locais candidatos com capacidade, um limite de instalações a abrir,
+  demanda distribuída no espaço — e das duas visões de objetivo
+  (soma das distâncias, a p-mediana; maior distância, o p-centro). O
+  modelo e o código em AMPL + Python para as instâncias fornecidas são
+  parte da tarefa.
+
+slides: "slides/aula04.tex"
+
+tarefas:
+  - titulo: "Tarefa 4 — Localização de Facilidades (AMPL + Python)"
+    arquivo: "tarefas/tarefa04-facilidades.md"

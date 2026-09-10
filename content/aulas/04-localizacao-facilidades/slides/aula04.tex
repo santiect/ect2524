@@ -1,0 +1,237 @@
+\documentclass[fleqn]{beamer}
+
+\mode<presentation> {
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+	basicstyle=\ttfamily\scriptsize,
+	breaklines=true,
+	keywordstyle=\color{blue!60!black},
+	commentstyle=\color{gray},
+	stringstyle=\color{green!45!black},
+	showstringspaces=false,
+	columns=fullflexible,
+	frame=single,
+	framesep=4pt,
+	aboveskip=6pt,
+	belowskip=2pt,
+}
+
+\title[Aula 4 -- Localização de Facilidades]{Localização de Facilidades}
+\subtitle{Estudo de caso e enunciado da tarefa}
+\author[Santi]{Prof. \'Everton Santi}
+\institute[UFRN/ECT]{ECT2524 -- Introdução à Otimização \\ Escola de Ciências e Tecnologia -- UFRN}
+\date{Aula 4}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sumário}
+	\tableofcontents
+\end{frame}
+
+%------------------------------------------------------------
+\section{Recapitulando}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Da Aula 3}
+	\begin{itemize}
+		\item Chamamos o AMPL de dentro do Python (\texttt{amplpy}):
+		\begin{itemize}
+			\item \texttt{ler\_dados} lê a instância de um \texttt{.txt};
+			\item o script injeta os parâmetros no modelo e resolve;
+			\item um laço percorre várias instâncias e monta uma tabela
+				de resultados (objetivo, LB, GAP, tempo, status);
+		\end{itemize}
+		\item Estudo de caso: o Problema de Transbordo (fábricas
+			$\rightarrow$ centros $\rightarrow$ clientes);
+		\item Hoje: um segundo estudo de caso, que será a \textbf{tarefa}
+			-- mesmos passos, problema diferente.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{O problema de localização de facilidades}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{O contexto}
+	\begin{itemize}
+		\item Um órgão aplica um \textbf{exame nacional} e precisa
+			organizar, em cada cidade, onde a prova acontece;
+		\item Existe uma lista de \textbf{locais candidatos} -- escolas,
+			faculdades, centros de eventos;
+		\item Cada candidato mora em algum ponto da cidade e será alocado
+			a \textbf{um} local para fazer a prova;
+		\item Decisão anual: quais locais usar e como distribuir os
+			candidatos entre eles.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Elementos do problema}
+	\begin{itemize}
+		\item \textbf{Candidatos}: conjunto de pessoas a alocar (sabe-se
+			onde cada uma mora);
+		\item \textbf{Locais candidatos}: cada um com uma
+			\textbf{capacidade} -- número máximo de candidatos que
+			comporta;
+		\item \textbf{Limite de locais}: o número de equipes de aplicação
+			disponíveis fixa quantos locais podem funcionar no dia
+			(chamamos esse número de $p$);
+		\item \textbf{Distâncias}: para cada par candidato--local, a
+			distância que o candidato percorreria se fosse alocado ali.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O que precisa ser decidido}
+	\begin{itemize}
+		\item Quais \textbf{locais abrir} (no máximo $p$);
+		\item Para cada candidato, \textbf{em qual local aberto} ele faz a
+			prova;
+		\item Regras que a solução tem que respeitar:
+		\begin{itemize}
+			\item cada candidato é alocado a exatamente um local;
+			\item um candidato só pode ser alocado a um local que esteja
+				\textbf{aberto};
+			\item nenhum local recebe mais candidatos do que sua
+				\textbf{capacidade};
+			\item no máximo $p$ locais são abertos;
+		\end{itemize}
+		\item \textbf{Objetivo}: fazer os candidatos se deslocarem pouco
+			-- mas há duas leituras disso.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Duas visões do objetivo}
+	\begin{itemize}
+		\item \textbf{Soma das distâncias} -- minimizar o total (ou a
+			média) percorrido por todos os candidatos;
+		\begin{itemize}
+			\item favorece o resultado \textbf{agregado}: bom para a
+				maioria, pode deixar poucos candidatos muito longe;
+			\item na literatura: problema da \textbf{$p$-mediana};
+		\end{itemize}
+		\item \textbf{Maior distância} -- minimizar a distância do
+			candidato \textbf{mais prejudicado};
+		\begin{itemize}
+			\item foca no \textbf{pior caso}: ninguém fica longe demais,
+				ao custo de uma soma total maior;
+			\item na literatura: problema do \textbf{$p$-centro};
+		\end{itemize}
+		\item A escolha entre as duas é parte da tarefa -- e precisa de
+			\textbf{justificativa} no contexto do exame.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Onde mais esse problema aparece}
+	\begin{itemize}
+		\item Escolher poucos pontos para atender muita gente espalhada:
+		\begin{itemize}
+			\item postos de saúde ou pronto-atendimento numa região;
+			\item centros de distribuição de uma varejista;
+			\item antenas de telefonia, estações de recarga;
+			\item escolas, bibliotecas, pontos de coleta;
+		\end{itemize}
+		\item Sempre a mesma estrutura: um número limitado de
+			instalações, demanda distribuída no espaço, custo ligado à
+			distância.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{A tarefa}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{O que entregar}
+	\begin{itemize}
+		\item Sigam os \textbf{mesmos três passos} da Aula 3:
+		\begin{enumerate}
+			\item \textbf{Modelar}: identificar parâmetros, variáveis de
+				decisão, função objetivo e restrições -- escolhendo e
+				justificando uma das duas visões do objetivo;
+			\item \textbf{Modelo em AMPL} (\texttt{facilidades.mod});
+			\item \textbf{Código Python}: \texttt{ler\_dados} + script
+				\texttt{amplpy} que resolve as \textbf{três instâncias} e
+				monta a tabela de resultados;
+		\end{enumerate}
+		\item Reaproveitem a colinha do \texttt{amplpy} da Aula 3 (passar
+			escalar, vetor, matriz; configurar o solver; ler objetivo,
+			LB, GAP, tempo, status).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Formato dos arquivos de instância}
+	\begin{lstlisting}
+10 5 3
+2 3 5 1 4
+62.70 111.19 59.65 97.79 4.73
+9.23 43.95 39.23 108.70 29.87
+...
+	\end{lstlisting}
+	\begin{itemize}
+		\item linha 1: \texttt{n\_candidatos  n\_locais  p};
+		\item linha 2: capacidade de cada local ($n\_locais$ valores);
+		\item próximas $n\_candidatos$ linhas: matriz de distâncias
+			candidato $\times$ local;
+		\item valores separados por espaço.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{As três instâncias}
+	\begin{center}
+	\begin{tabular}{cccc}
+		\toprule
+		Instância & Candidatos & Locais & $p$ \\
+		\midrule
+		1 & 10 & 5 & 3 \\
+		2 & 100 & 10 & 4 \\
+		3 & 5000 & 50 & 30 \\
+		\bottomrule
+	\end{tabular}
+	\end{center}
+	\begin{itemize}
+		\item A instância 3 é bem maior: parte da tarefa é observar se ela
+			é resolvida na otimalidade dentro do tempo limite, ou se
+			sobra GAP;
+		\item Enunciado completo, perguntas de reflexão e os três
+			\texttt{.txt} estão na página da aula, no site do curso.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Referências}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Referências}
+	\begin{itemize}
+		\item AMPL: \url{https://ampl.com};
+		\item Documentação do \texttt{amplpy}: \url{https://amplpy.ampl.com};
+		\item Daskin, M. S. \emph{Network and Discrete Location}. 2.\,ed.
+			Wiley, 2013 (capítulos de $p$-mediana e $p$-centro).
+	\end{itemize}
+\end{frame}
+
+\end{document}

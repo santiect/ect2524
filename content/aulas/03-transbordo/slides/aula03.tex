@@ -27,7 +27,7 @@
 	belowskip=2pt,
 }
 
-\title[Aula 3 -- AMPL + Python]{Transbordo e Localização de Facilidades}
+\title[Aula 3 -- AMPL + Python]{Problema de Transbordo}
 \subtitle{Rodando o AMPL de dentro do Python}
 \author[Santi]{Prof. \'Everton Santi}
 \institute[UFRN/ECT]{ECT2524 -- Introdução à Otimização \\ Escola de Ciências e Tecnologia -- UFRN}
@@ -463,33 +463,8 @@ print(tabela)
 \end{frame}
 
 %------------------------------------------------------------
-\section{Tarefa}
+\section{Referências}
 %------------------------------------------------------------
-
-\begin{frame}
-	\frametitle{Tarefa 3 -- Localização de Facilidades}
-	\begin{itemize}
-		\item Estudo de caso: escolher \textbf{locais de prova} para um
-			exame nacional -- há candidatos, locais candidatos com
-			\textbf{capacidade}, um limite de quantos locais podem ser
-			usados, e a \textbf{distância} de cada candidato a cada local;
-		\item Sigam \textbf{os mesmos passos do exemplo de hoje}:
-		\begin{enumerate}
-			\item \textbf{modelar} -- vocês identificam parâmetros,
-				variáveis, objetivo e restrições (o enunciado dá
-				\textbf{duas opções de objetivo}: soma das distâncias ou
-				a maior distância -- escolham e justifiquem);
-			\item escrever o \textbf{modelo em AMPL}
-				(\texttt{facilidades.mod});
-			\item escrever o \textbf{código Python}: \texttt{ler\_dados}
-				+ script \texttt{amplpy} que resolve as \textbf{3
-				instâncias} e monta a tabela de resultados (objetivo, LB,
-				GAP, tempo, status).
-		\end{enumerate}
-		\item Enunciado completo e arquivos \texttt{.txt} na página da
-			aula, no site do curso.
-	\end{itemize}
-\end{frame}
 
 \begin{frame}
 	\frametitle{Referências}
