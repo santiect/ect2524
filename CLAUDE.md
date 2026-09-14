@@ -3,6 +3,26 @@
 Repositório de material didático (slides LaTeX, tarefas, notebooks)
 publicado como site estático em GitHub Pages via GitHub Actions.
 
+## Fluxo de branches: `dev` para trabalhar, `main` para publicar
+
+O workflow `.github/workflows/pages.yml` só dispara em `push` para a branch
+`main` (ver `on.push.branches`). Por isso o trabalho do dia a dia — editar
+slides, tarefas, criar novas aulas — deve acontecer na branch `dev`, nunca
+direto em `main`:
+
+- **`dev`**: branch de trabalho. Commits e pushes aqui não publicam nada no
+  site ao vivo. É onde o material é criado/editado, inclusive coisas em
+  progresso ou ainda não revisadas.
+- **`main`**: branch publicada. Só recebe conteúdo pronto para o site, via
+  merge de `dev` (`git checkout main && git merge dev`). Só depois desse
+  merge é que um `git push` em `main` deve ser proposto — e, como sempre,
+  rodando `scripts/build-local.sh` antes (ver regra abaixo), já que é esse
+  push que aciona o deploy.
+
+Recomendação para o usuário (fora do escopo de commits/push, feito direto no
+GitHub): configurar `main` como branch protegida em Settings → Branches, para
+evitar push acidental direto nela.
+
 ## Regra principal: sempre testar localmente antes do push
 
 Este repo publica direto: um push na `main` dispara
