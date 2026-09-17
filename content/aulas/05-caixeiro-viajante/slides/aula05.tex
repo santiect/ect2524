@@ -440,7 +440,7 @@
 			(coordenadas $\to$ matriz de distâncias $d_{ij}$);
 		\item \textbf{Tentar} resolver as \textbf{duas formulações} nas
 			\textbf{quatro} instâncias (8 combinações), com 1 thread e
-			tempo limite de 10 min no solver;
+			tempo limite de 30 min no solver;
 		\item Reportar LB, UB, GAP, tempo e status numa única tabela (8
 			linhas) -- registrando como \textbf{impraticável} qualquer
 			combinação que travar ou estourar a memória.
@@ -456,9 +456,9 @@
 		Instância (TSPLIB) & Cidades & Ótimo conhecido \\
 		\midrule
 		\texttt{berlin52} & 52 & 7\,542 \\
+		\texttt{kroA100} & 100 & 21\,282 \\
+		\texttt{ch150} & 150 & 6\,528 \\
 		\texttt{kroA200} & 200 & 29\,368 \\
-		\texttt{pr439} & 439 & 107\,217 \\
-		\texttt{pr1002} & 1\,002 & 259\,045 \\
 		\bottomrule
 	\end{tabular}
 	\end{center}
@@ -477,11 +477,11 @@
 	\frametitle{Quando a MCF fica impraticável}
 	\begin{itemize}
 		\item A MCF tem $O(n^3)$ variáveis de fluxo -- em \texttt{berlin52}
-			($n=52$) são só cerca de 140 mil; em \texttt{kroA200}
-			($n=200$), 8 milhões; em \texttt{pr439} ($n=439$), já 85
-			milhões; em \texttt{pr1002} ($n=1002$), passa de \textbf{1
-			bilhão};
-		\item O limite de \textbf{10 min} vale para o \textbf{solver} --
+			($n=52$) são só cerca de 140 mil; em \texttt{kroA100}
+			($n=100$), 1 milhão; em \texttt{ch150} ($n=150$), 3,3
+			milhões; em \texttt{kroA200} ($n=200$), já \textbf{8
+			milhões};
+		\item O limite de \textbf{30 min} vale para o \textbf{solver} --
 			não protege a fase de \textbf{montar} o modelo, que pode
 			travar ou esgotar a memória bem antes disso nas instâncias
 			maiores;

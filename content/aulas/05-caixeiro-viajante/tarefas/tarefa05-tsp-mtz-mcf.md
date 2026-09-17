@@ -1,9 +1,20 @@
 ## Tarefa avaliativa — Caixeiro Viajante: MTZ x Fluxo Multi-Produto
 
+## Instruções de entrega
+
+Estas instruções valem para **todas as tarefas ao longo do semestre**, não
+só esta:
+
+- O aluno (ou, em tarefas de equipe, um dos integrantes em nome do grupo)
+  deve criar um **repositório privado no GitHub** e adicionar o professor
+  como colaborador, usando o e-mail **everton.santi@ufrn.br**.
+- Cada tarefa a ser entregue corresponde a uma **pasta dentro desse
+  repositório**.
+
+**Prazo desta tarefa (Aula 5):** até o dia **25**, às **8h50**.
+
 **Caráter avaliativo.** Esta tarefa vale **25% da nota da Unidade 1** da
-disciplina. Pode ser realizada em equipes de até 3 pessoas. A data de
-entrega e o formato de submissão serão informados pelo professor
-**(a definir)**.
+disciplina. Pode ser realizada em equipes de até 3 pessoas.
 
 Diferente das tarefas anteriores, aqui as formulações matemáticas **são
 fornecidas prontas** (Passo 1 abaixo). O que se avalia é a capacidade de
@@ -194,9 +205,9 @@ que a diferença entre uma e a próxima seja bem perceptível:
 | Instância | Cidades ($n$) | Ótimo conhecido |
 |---|---|---|
 | `berlin52` | 52 | 7.542 |
+| `kroA100` | 100 | 21.282 |
+| `ch150` | 150 | 6.528 |
 | `kroA200` | 200 | 29.368 |
-| `pr439` | 439 | 107.217 |
-| `pr1002` | 1.002 | 259.045 |
 
 Os ótimos acima são os publicados pela própria TSPLIB (todas as quatro
 instâncias já estão resolvidas até a otimalidade comprovada) — usem-nos
@@ -244,13 +255,21 @@ Escrevam um script que, usando `amplpy`, tente resolver **as duas
 formulações em cada uma das quatro instâncias** (8 execuções no total):
 para cada combinação instância/formulação, ler a instância com a função
 do Passo 3, carregar o `.mod` correspondente, injetar $n$ e $d$, e
-resolver com o HiGHS, **1 thread** e **tempo limite de 600 segundos (10
-minutos)** passado como opção do solver.
+resolver com **1 thread** e **tempo limite de 1800 segundos (30 minutos)**
+passado como opção do solver.
+
+**Escolha do solver.** Pode ser usado o HiGHS (gratuito) ou, para quem
+tiver licença disponível, o Gurobi — em geral mais eficiente para
+problemas de programação inteira mista como o TSP. Não há obrigação de
+usar um ou outro; o importante é registrar na tabela do Passo 5 qual
+solver foi usado em cada execução (mesmo que seja o mesmo em todas), já
+que isso pode explicar diferenças de tempo/GAP entre grupos que usaram
+ferramentas diferentes para a mesma instância e formulação.
 
 Esse tempo limite vale para o **solver**, não para a geração do modelo
 em si — a MCF tem $O(n^3)$ variáveis de fluxo: cerca de 140 mil em
-`berlin52`, 8 milhões em `kroA200`, 85 milhões em `pr439` e passa de 1
-bilhão em `pr1002`. Nas instâncias maiores, montar esse modelo pode ser
+`berlin52`, 1 milhão em `kroA100`, 3,3 milhões em `ch150` e 8 milhões em
+`kroA200`. Nas instâncias maiores, montar esse modelo pode ser
 lento ou consumir toda a memória disponível **antes mesmo** de o solver
 ser chamado. Isso é esperado, e faz parte do que a tarefa pede para
 observar: tentem rodar as 8 combinações e constatem, na prática, até
@@ -265,7 +284,7 @@ pelo sistema, etc.) e registrem essa combinação na tabela de resultados
 como **impraticável**, em vez de LB/UB/GAP. Não é preciso — nem é
 seguro — insistir em forçar a execução até o fim nessas situações.
 
-Nas combinações que terminam mas não fecham a otimalidade dentro dos 10
+Nas combinações que terminam mas não fecham a otimalidade dentro dos 30
 minutos, registrem o GAP e o status (`limit`) normalmente.
 
 ## Passo 5 — Tabela de resultados
@@ -273,16 +292,16 @@ minutos, registrem o GAP e o status (`limit`) normalmente.
 Uma linha por instância **e** por formulação (8 linhas), em ordem
 crescente de tamanho da instância:
 
-| Instância | Cidades ($n$) | Formulação | LB | UB | GAP | Tempo (s) | Status |
-|---|---|---|---|---|---|---|---|
-| berlin52 | 52 | MTZ | ... | ... | ... | ... | ... |
-| berlin52 | 52 | MCF | ... | ... | ... | ... | ... |
-| kroA200 | 200 | MTZ | ... | ... | ... | ... | ... |
-| kroA200 | 200 | MCF | ... | ... | ... | ... | ... |
-| pr439 | 439 | MTZ | ... | ... | ... | ... | ... |
-| pr439 | 439 | MCF | ... | ... | ... | ... | ... |
-| pr1002 | 1.002 | MTZ | ... | ... | ... | ... | ... |
-| pr1002 | 1.002 | MCF | ... | ... | ... | ... | ... |
+| Instância | Cidades ($n$) | Formulação | Solver | LB | UB | GAP | Tempo (s) | Status |
+|---|---|---|---|---|---|---|---|---|
+| berlin52 | 52 | MTZ | ... | ... | ... | ... | ... | ... |
+| berlin52 | 52 | MCF | ... | ... | ... | ... | ... | ... |
+| kroA100 | 100 | MTZ | ... | ... | ... | ... | ... | ... |
+| kroA100 | 100 | MCF | ... | ... | ... | ... | ... | ... |
+| ch150 | 150 | MTZ | ... | ... | ... | ... | ... | ... |
+| ch150 | 150 | MCF | ... | ... | ... | ... | ... | ... |
+| kroA200 | 200 | MTZ | ... | ... | ... | ... | ... | ... |
+| kroA200 | 200 | MCF | ... | ... | ... | ... | ... | ... |
 
 Para as combinações marcadas como impraticáveis, preencham a coluna
 `Status` com **impraticável** e descrevam o sintoma observado (travou,
@@ -302,6 +321,10 @@ Em dois ou três parágrafos, comentem:
 - nas instâncias em que **ambas** as formulações terminaram, o LB da MCF
   ficou mais próximo do UB do que o LB da MTZ, no mesmo tempo? Isso é
   coerente com a MCF ser uma formulação mais forte?
+- se o grupo usou o Gurobi em vez do (ou além do) HiGHS, o que se notou
+  de diferença — tempo, GAP atingido em 30 minutos, ou o ponto em que a
+  MCF virou impraticável? Se só usaram um solver, também vale comentar
+  que essa comparação não foi feita.
 - para as execuções em que o solver encontrou a rota ótima (GAP = 0),
   compare o UB obtido com o ótimo conhecido da tabela do Passo 3
   (lembrando de usar a distância `EUC_2D` arredondada) — os valores
@@ -313,9 +336,21 @@ Em dois ou três parágrafos, comentem:
 
 ## Entrega
 
+Na pasta desta tarefa dentro do repositório (ver "Instruções de entrega"
+no início deste enunciado), incluam dois grupos de arquivos:
+
+**Código**
+
 - `tsp_mtz.mod` e `tsp_mcf.mod`;
 - o script Python (função `ler_instancia` + laço que tenta as 8
-  combinações de instância e formulação);
-- a tabela de resultados preenchida (incluindo as combinações marcadas
-  como impraticáveis, com o sintoma observado);
-- a análise do Passo 6.
+  combinações de instância e formulação).
+
+**Relatório**
+
+Um arquivo Markdown (ex.: `relatorio.md`) na raiz da pasta desta tarefa,
+reunindo:
+
+- a tabela de resultados do Passo 5, preenchida (incluindo as combinações
+  marcadas como impraticáveis, com o sintoma observado registrado logo
+  abaixo da tabela);
+- a análise do Passo 6, respondendo aos cinco pontos pedidos.
