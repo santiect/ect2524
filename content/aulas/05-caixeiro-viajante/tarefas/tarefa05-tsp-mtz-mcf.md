@@ -233,49 +233,53 @@ passar para as demais.
 
 ## Passo 4 — Escrever o script de resolução
 
-**4.1. MTZ nas quatro instâncias.** Escrevam um script que, usando
-`amplpy`, para **cada uma das quatro instâncias**:
+Escrevam um script que, usando `amplpy`, tente resolver **as duas
+formulações em cada uma das quatro instâncias** (8 execuções no total):
+para cada combinação instância/formulação, ler a instância com a função
+do Passo 3, carregar o `.mod` correspondente, injetar $n$ e $d$, e
+resolver com o HiGHS, **1 thread** e **tempo limite de 600 segundos (10
+minutos)** passado como opção do solver.
 
-- lê a instância com a função do Passo 3;
-- carrega `tsp_mtz.mod`, injeta $n$ e $d$;
-- resolve com o HiGHS, com **tempo limite de 300 segundos (5 minutos)** e
-  **1 thread**;
-- registra o LB, o UB (valor da função objetivo), o GAP, o tempo de
-  execução e o status (`ampl.solve_result`).
+Esse tempo limite vale para o **solver**, não para a geração do modelo
+em si — a MCF tem $O(n^3)$ variáveis de fluxo, e montar esse modelo para
+as instâncias maiores (Luxemburgo, Omã, e possivelmente já Uruguai) pode
+ser lento ou consumir toda a memória disponível **antes mesmo** de o
+solver ser chamado. Isso é esperado, e faz parte do que a tarefa pede
+para observar: tentem rodar as 8 combinações e constatem, na prática,
+até onde a MCF é tratável.
 
-Nas instâncias maiores é esperado que o solver **não feche** a
-otimalidade dentro do tempo limite — registrem o GAP e o status (`limit`)
-normalmente; isso faz parte do que a tarefa pede para observar.
+**O que fazer se travar ou faltar memória.** Se a geração do modelo ou a
+resolução não terminar em um tempo razoável, ou se o processo for
+encerrado por falta de memória, interrompam a execução daquela
+combinação, anotem o que aconteceu (nome da instância, formulação, e o
+sintoma: travou, ficou consumindo memória sem terminar, foi encerrado
+pelo sistema, etc.) e registrem essa combinação na tabela de resultados
+como **impraticável**, em vez de LB/UB/GAP. Não é preciso — nem é
+seguro — insistir em forçar a execução até o fim nessas situações.
 
-**4.2. MCF — só na instância de Djibouti.** Por causa do crescimento
-$O(n^3)$ do número de variáveis de fluxo, a formulação MCF só é tratável,
-nesta tarefa, para a **menor** instância: resolvam Djibouti (`dj38`) com
-`tsp_mcf.mod`, mesmo solver (HiGHS), **mesmo tempo limite de 300 segundos**
-e **1 thread**, para que a comparação com a MTZ seja justa (mesmas
-condições de execução, só muda o modelo). **Não é esperado** que vocês
-rodem a MCF em Uruguai, Luxemburgo ou Omã — se quiserem tentar como
-exercício extra, tudo bem, mas isso não é parte da entrega obrigatória
-(nem é necessariamente factível: já para Uruguai, $n^3$ passa de 390
-milhões de variáveis de fluxo).
+Nas combinações que terminam mas não fecham a otimalidade dentro dos 10
+minutos, registrem o GAP e o status (`limit`) normalmente.
 
-## Passo 5 — Tabelas de resultados
+## Passo 5 — Tabela de resultados
 
-**Tabela A — MTZ nas quatro instâncias**, em ordem crescente de tamanho:
+Uma linha por instância **e** por formulação (8 linhas), em ordem
+crescente de tamanho da instância:
 
-| Instância | Cidades ($n$) | LB | UB | GAP | Tempo (s) | Status |
-|---|---|---|---|---|---|---|
-| Djibouti (dj38) | 38 | ... | ... | ... | ... | ... |
-| Uruguai (uy734) | 734 | ... | ... | ... | ... | ... |
-| Luxemburgo (lu980) | 980 | ... | ... | ... | ... | ... |
-| Omã (mu1979) | 1.979 | ... | ... | ... | ... | ... |
+| Instância | Cidades ($n$) | Formulação | LB | UB | GAP | Tempo (s) | Status |
+|---|---|---|---|---|---|---|---|
+| Djibouti (dj38) | 38 | MTZ | ... | ... | ... | ... | ... |
+| Djibouti (dj38) | 38 | MCF | ... | ... | ... | ... | ... |
+| Uruguai (uy734) | 734 | MTZ | ... | ... | ... | ... | ... |
+| Uruguai (uy734) | 734 | MCF | ... | ... | ... | ... | ... |
+| Luxemburgo (lu980) | 980 | MTZ | ... | ... | ... | ... | ... |
+| Luxemburgo (lu980) | 980 | MCF | ... | ... | ... | ... | ... |
+| Omã (mu1979) | 1.979 | MTZ | ... | ... | ... | ... | ... |
+| Omã (mu1979) | 1.979 | MCF | ... | ... | ... | ... | ... |
 
-**Tabela B — MTZ x MCF em Djibouti** (mesma instância, mesmo tempo
-limite):
-
-| Formulação | Variáveis (aprox.) | LB | UB | GAP | Tempo (s) | Status |
-|---|---|---|---|---|---|---|
-| MTZ | ... | ... | ... | ... | ... | ... |
-| MCF | ... | ... | ... | ... | ... | ... |
+Para as combinações marcadas como impraticáveis, preencham a coluna
+`Status` com **impraticável** e descrevam o sintoma observado (travou,
+sem memória, etc.) logo abaixo da tabela, em vez de tentar preencher
+LB/UB/GAP/Tempo.
 
 ## Passo 6 — Análise
 
@@ -284,9 +288,12 @@ Em dois ou três parágrafos, comentem:
 - como o GAP da MTZ evoluiu da menor para a maior instância, dentro do
   mesmo tempo limite — isso é coerente com o que se discutiu em aula
   sobre a força do seu limitante inferior?
-- na Tabela B, o LB da MCF ficou mais próximo do UB do que o LB da MTZ,
-  para a mesma instância e o mesmo tempo? Isso é coerente com a MCF ser
-  uma formulação mais forte?
+- em que instâncias a MCF se tornou impraticável, e em quê isso se
+  manifestou (tempo de geração, memória, ou ambos)? Isso é coerente com
+  o crescimento $O(n^3)$ do número de variáveis de fluxo?
+- nas instâncias em que **ambas** as formulações terminaram, o LB da MCF
+  ficou mais próximo do UB do que o LB da MTZ, no mesmo tempo? Isso é
+  coerente com a MCF ser uma formulação mais forte?
 - para as execuções em que o solver encontrou a rota ótima (GAP = 0),
   compare o UB obtido com a rota ótima conhecida publicada na página da
   TSPLIB (lembrando de usar a distância `EUC_2D` arredondada) — os
@@ -299,7 +306,8 @@ Em dois ou três parágrafos, comentem:
 ## Entrega
 
 - `tsp_mtz.mod` e `tsp_mcf.mod`;
-- o script Python (função `ler_instancia` + execução da MTZ nas quatro
-  instâncias e da MCF em Djibouti);
-- as Tabelas A e B preenchidas;
+- o script Python (função `ler_instancia` + laço que tenta as 8
+  combinações de instância e formulação);
+- a tabela de resultados preenchida (incluindo as combinações marcadas
+  como impraticáveis, com o sintoma observado);
 - a análise do Passo 6.

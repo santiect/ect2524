@@ -386,11 +386,12 @@
 			\texttt{tsp\_mtz.mod} e \texttt{tsp\_mcf.mod};
 		\item Escrever, em Python, a leitura de uma instância TSPLIB
 			(coordenadas $\to$ matriz de distâncias $d_{ij}$);
-		\item Resolver a \textbf{MTZ} nas \textbf{quatro} instâncias e a
-			\textbf{MCF} só na \textbf{menor} delas, com tempo limite e
-			número de threads fixados;
-		\item Reportar LB, UB, GAP, tempo e status em duas tabelas: MTZ
-			nas quatro instâncias, e MTZ \emph{vs.} MCF na menor.
+		\item \textbf{Tentar} resolver as \textbf{duas formulações} nas
+			\textbf{quatro} instâncias (8 combinações), com 1 thread e
+			tempo limite de 10 min no solver;
+		\item Reportar LB, UB, GAP, tempo e status numa única tabela (8
+			linhas) -- registrando como \textbf{impraticável} qualquer
+			combinação que travar ou estourar a memória.
 	\end{enumerate}
 \end{frame}
 
@@ -398,14 +399,14 @@
 	\frametitle{As instâncias}
 	\begin{center}
 	\footnotesize
-	\begin{tabular}{lcc}
+	\begin{tabular}{lc}
 		\toprule
-		Instância (TSPLIB) & Cidades & Formulações \\
+		Instância (TSPLIB) & Cidades \\
 		\midrule
-		Djibouti (\texttt{dj38}) & 38 & MTZ e MCF \\
-		Uruguai (\texttt{uy734}) & 734 & só MTZ \\
-		Luxemburgo (\texttt{lu980}) & 980 & só MTZ \\
-		Omã (\texttt{mu1979}) & 1\,979 & só MTZ \\
+		Djibouti (\texttt{dj38}) & 38 \\
+		Uruguai (\texttt{uy734}) & 734 \\
+		Luxemburgo (\texttt{lu980}) & 980 \\
+		Omã (\texttt{mu1979}) & 1\,979 \\
 		\bottomrule
 	\end{tabular}
 	\end{center}
@@ -413,24 +414,32 @@
 		\item Quatro instâncias reais da coleção \emph{National TSP}
 			(formato TSPLIB, \texttt{EUC\_2D}), em ordem crescente de
 			tamanho;
+		\item As duas formulações são tentadas nas quatro -- não há
+			instância reservada só para uma delas;
 		\item Fonte e formato dos arquivos: ver o enunciado da tarefa, no
 			site do curso.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Por que a MCF só em Djibouti}
+	\frametitle{Quando a MCF fica impraticável}
 	\begin{itemize}
 		\item A MCF tem $O(n^3)$ variáveis de fluxo -- em Djibouti
-			($n=38$) são só dezenas de milhares; em Uruguai ($n=734$),
-			$n^3$ já passa de \textbf{390 milhões};
-		\item Por isso a comparação MTZ \emph{vs.} MCF é feita numa única
-			instância, pequena o bastante para as duas serem tratáveis;
-		\item Nas instâncias maiores, só a MTZ é rodada -- e é aí que se
-			observa o outro lado do compromisso: o GAP da MTZ tende a
-			\textbf{crescer} com $n$, dentro do mesmo tempo limite;
-		\item A análise pedida junta as duas observações: a MCF fecha
-			melhor (mas não escala); a MTZ escala (mas fecha pior).
+			($n=38$) são dezenas de milhares; em Luxemburgo ($n=980$),
+			já passa de \textbf{940 milhões}; em Omã ($n=1979$), de
+			\textbf{7,7 bilhões};
+		\item O limite de \textbf{10 min} vale para o \textbf{solver} --
+			não protege a fase de \textbf{montar} o modelo, que pode
+			travar ou esgotar a memória bem antes disso nas instâncias
+			maiores;
+		\item Isso é esperado: se acontecer, interrompam a execução,
+			anotem o sintoma e registrem a combinação como
+			\textbf{impraticável} na tabela -- não precisam forçar até o
+			fim;
+		\item Combinado ao outro lado do compromisso -- o GAP da MTZ
+			\textbf{crescendo} com $n$, dentro do mesmo tempo -- a tabela
+			completa mostra os dois limites na prática: a MCF fecha
+			melhor, mas não escala; a MTZ escala, mas fecha pior.
 	\end{itemize}
 \end{frame}
 

@@ -6,8 +6,10 @@ resumo: >
   compacta e fraca, e Fluxo de Mercadorias Multi-Produto (MCF), compacta
   e forte. Ambas as formulações são fornecidas prontas: a tarefa desta
   aula é avaliativa (peso de 25% na Unidade 1) e consiste em implementar
-  as duas em AMPL + Python, resolvê-las para instâncias da TSPLIB e
-  comparar LB, UB, GAP e tempo entre elas.
+  as duas em AMPL + Python e tentar resolvê-las nas quatro instâncias da
+  TSPLIB, registrando LB, UB, GAP e tempo — ou constatando, na prática,
+  quando a MCF se torna impraticável pelo crescimento cúbico do número
+  de variáveis de fluxo.
 
 slides: "slides/aula05.tex"
 
