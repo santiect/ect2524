@@ -296,27 +296,43 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Restrições da MCF}
-	Conservação de fluxo, para cada produto $k = 2,\ldots,n$ e cada cidade
-	$i = 1,\ldots,n$:
+	\frametitle{Conservação de fluxo: origem e destino}
+	Para cada produto $k = 2,\ldots,n$:
+	\begin{itemize}
+		\item \textbf{Origem} -- a cidade 1 emite 1 unidade do produto
+			$k$ (saída menos entrada $=1$):
+	\end{itemize}
 	$$
-		\sum_{j\neq i} f_{ij}^{k} - \sum_{j\neq i} f_{ji}^{k} =
-		\begin{cases}
-			1, & i = 1 \\
-			-1, & i = k \\
-			0, & \text{caso contrário}
-		\end{cases}
+		\sum_{j\neq 1} f_{1j}^{k} - \sum_{j\neq 1} f_{j1}^{k} = 1
 	$$
-	Acoplamento com a rota:
+	\begin{itemize}
+		\item \textbf{Destino} -- a cidade $k$ absorve essa unidade
+			(saída menos entrada $=-1$):
+	\end{itemize}
+	$$
+		\sum_{j\neq k} f_{kj}^{k} - \sum_{j\neq k} f_{jk}^{k} = -1
+	$$
+\end{frame}
+
+\begin{frame}
+	\frametitle{Conservação de fluxo: demais cidades, e acoplamento}
+	\begin{itemize}
+		\item \textbf{Demais cidades} -- toda $i \neq 1,k$ só repassa o
+			que recebe (saída menos entrada $=0$):
+	\end{itemize}
+	$$
+		\sum_{j\neq i} f_{ij}^{k} - \sum_{j\neq i} f_{ji}^{k} = 0,~i \neq 1,k
+	$$
+	\begin{itemize}
+		\item \textbf{Acoplamento com a rota} -- só há fluxo num arco que
+			a rota realmente usa:
+	\end{itemize}
 	$$
 		f_{ij}^{k} \leq x_{ij},~\forall i,j = 1,\ldots,n;~i\neq j
 	$$
 	\begin{itemize}
-		\item A cidade 1 emite 1 unidade do produto $k$, a cidade $k$
-			absorve essa unidade, as demais só repassam;
-		\item Só há fluxo de um produto num arco que a rota realmente usa
-			($x_{ij}=1$); se $x_{ij}=0$, o acoplamento zera $f_{ij}^{k}$
-			para todo $k$.
+		\item Se $x_{ij}=0$, o acoplamento zera $f_{ij}^{k}$ para todo
+			$k$ -- só a rota escolhida pode carregar fluxo.
 	\end{itemize}
 \end{frame}
 

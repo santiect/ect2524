@@ -116,17 +116,37 @@ Variáveis adicionais:
   2,\ldots,n$ (um produto para cada cidade que não seja a cidade 1,
   a cidade $k$ sendo o destino do produto $k$).
 
-Restrições adicionais, para cada produto $k = 2,\ldots,n$:
+A conservação de fluxo do produto $k$ é feita em três blocos, um para
+cada papel que uma cidade pode ter em relação a esse produto: a origem
+(cidade 1), o destino (cidade $k$) e todas as demais.
+
+**Origem.** A cidade 1 emite uma unidade do produto $k$ — sua saída total
+supera a entrada total em exatamente 1:
 
 $$
-\sum_{j=1,j\neq i}^{n} f_{ij}^{k} - \sum_{j=1,j\neq i}^{n} f_{ji}^{k} =
-\begin{cases}
-1, & \text{se } i = 1 \\
--1, & \text{se } i = k \\
-0, & \text{caso contrário}
-\end{cases}
-,~\forall~i = 1,\ldots,n
+\sum_{j=1,j\neq 1}^{n} f_{1j}^{k} - \sum_{j=1,j\neq 1}^{n} f_{j1}^{k} = 1,
+~\forall~k = 2,\ldots,n
 $$
+
+**Destino.** A cidade $k$ absorve essa unidade — sua entrada total supera
+a saída total em exatamente 1 (equivalentemente, saída menos entrada
+$=-1$):
+
+$$
+\sum_{j=1,j\neq k}^{n} f_{kj}^{k} - \sum_{j=1,j\neq k}^{n} f_{jk}^{k} = -1,
+~\forall~k = 2,\ldots,n
+$$
+
+**Demais cidades.** Toda cidade $i$ que não seja a origem nem o destino
+do produto $k$ apenas repassa o que recebe — sua saída e sua entrada do
+produto $k$ são iguais:
+
+$$
+\sum_{j=1,j\neq i}^{n} f_{ij}^{k} - \sum_{j=1,j\neq i}^{n} f_{ji}^{k} = 0,
+~\forall~i = 2,\ldots,n;~i \neq k;~\forall~k = 2,\ldots,n
+$$
+
+E, para cada produto $k = 2,\ldots,n$, o acoplamento do fluxo com a rota:
 
 $$
 f_{ij}^{k} \leq x_{ij},~\forall~i,j = 1,\ldots,n;~i\neq j
@@ -136,13 +156,12 @@ $$
 f_{ij}^{k} \geq 0,~\forall~i,j = 1,\ldots,n;~i \neq j
 $$
 
-A primeira família é a **conservação de fluxo**: a cidade 1 emite uma
-unidade do produto $k$ (saída menos entrada $= 1$), a cidade $k$ absorve
-essa unidade (saída menos entrada $= -1$), e toda cidade intermediária
-repassa o que recebe (saída menos entrada $= 0$). A segunda família
-**acopla** o fluxo à rota: só pode haver fluxo de um produto num arco que
-a rota realmente usa ($x_{ij}=1$); se $x_{ij}=0$, a restrição força
-$f_{ij}^{k}=0$ para todo $k$.
+As três primeiras famílias, juntas, são a **conservação de fluxo**: o que
+sai da cidade 1 é 1 unidade a mais do que entra; o que entra na cidade $k$
+é 1 unidade a mais do que sai; em qualquer outra cidade, entra e sai a
+mesma quantidade. A última família **acopla** o fluxo à rota: só pode
+haver fluxo de um produto num arco que a rota realmente usa ($x_{ij}=1$);
+se $x_{ij}=0$, a restrição força $f_{ij}^{k}=0$ para todo $k$.
 
 Essa formulação é conhecida por ser **tão forte quanto** a formulação
 clássica de Dantzig–Fulkerson–Johnson (que usa um número exponencial de
