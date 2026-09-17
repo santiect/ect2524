@@ -1,0 +1,441 @@
+\documentclass[fleqn]{beamer}
+
+\mode<presentation> {
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+\lstset{
+	basicstyle=\ttfamily\scriptsize,
+	breaklines=true,
+	keywordstyle=\color{blue!60!black},
+	commentstyle=\color{gray},
+	stringstyle=\color{green!45!black},
+	showstringspaces=false,
+	columns=fullflexible,
+	frame=single,
+	framesep=4pt,
+	aboveskip=6pt,
+	belowskip=2pt,
+}
+
+\title[Aula 5 -- Caixeiro Viajante]{O Problema do Caixeiro Viajante}
+\subtitle{Formulações MTZ e de Fluxo Multi-Produto}
+\author[Santi]{Prof. \'Everton Santi}
+\institute[UFRN/ECT]{ECT2524 -- Introdução à Otimização \\ Escola de Ciências e Tecnologia -- UFRN}
+\date{Aula 5}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sumário}
+	\tableofcontents
+\end{frame}
+
+%------------------------------------------------------------
+\section{Contexto}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Um cenário}
+	\begin{itemize}
+		\item Uma campanha eleitoral no Rio Grande do Norte planeja uma
+			série de eventos, um em cada uma das cidades mais populosas do
+			estado;
+		\item A comitiva sai de Natal, visita cada cidade \textbf{uma
+			única vez} e retorna a Natal ao final;
+		\item Deseja-se a sequência de visitas que percorre a
+			\textbf{menor distância total} -- menos combustível, menos
+			tempo, menos desgaste da equipe;
+		\item O mesmo padrão aparece em entrega de encomendas, roteamento
+			de veículos, inspeção de equipamentos, fabricação de placas de
+			circuito (sequência de furos de uma broca).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O Problema do Caixeiro Viajante}
+	\begin{itemize}
+		\item \textbf{Travelling Salesman Problem} (TSP): um dos problemas
+			mais estudados em otimização combinatória;
+		\item Dado um conjunto de cidades e a distância entre cada par,
+			encontrar a rota que:
+		\begin{itemize}
+			\item parte de uma cidade;
+			\item visita todas as demais exatamente uma vez;
+			\item retorna à cidade de origem;
+			\item minimiza a distância total percorrida;
+		\end{itemize}
+		\item Fácil de \textbf{enunciar}, difícil de \textbf{resolver}: o
+			número de rotas possíveis cresce como $(n-1)!/2$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Uma rota}
+	\begin{center}
+	\begin{tikzpicture}[scale=0.95,
+		cid/.style={circle,draw,fill=blue!15,minimum size=6mm,inner sep=0pt}]
+		\node[cid] (c1) at (0.5,2.2) {1};
+		\node[cid] (c2) at (2.6,3.6) {2};
+		\node[cid] (c3) at (5.2,3.2) {3};
+		\node[cid] (c4) at (6.6,1.2) {4};
+		\node[cid] (c5) at (4.4,0.2) {5};
+		\node[cid] (c6) at (1.9,0.6) {6};
+		\draw[blue!60,thick,->] (c1) -- (c2);
+		\draw[blue!60,thick,->] (c2) -- (c3);
+		\draw[blue!60,thick,->] (c3) -- (c4);
+		\draw[blue!60,thick,->] (c4) -- (c5);
+		\draw[blue!60,thick,->] (c5) -- (c6);
+		\draw[blue!60,thick,->] (c6) -- (c1);
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item Uma rota válida visita cada cidade uma vez e fecha o ciclo;
+		\item O objetivo compara o \textbf{comprimento total} de rotas
+			como esta.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Duas formulações}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Duas formas de eliminar subrotas}
+	\begin{itemize}
+		\item Toda formulação de PLI para o TSP precisa, além de escolher
+			os arcos da rota, impedir \textbf{subrotas} -- vários ciclos
+			desconexos cobrindo só parte das cidades;
+		\item Hoje vemos \textbf{duas} formulações que fazem isso de
+			jeitos diferentes:
+		\begin{itemize}
+			\item \textbf{MTZ} (Miller--Tucker--Zemlin) -- compacta, fácil
+				de implementar, limitante inferior \textbf{fraco};
+			\item \textbf{MCF} (Fluxo de Mercadorias Multi-Produto) --
+				compacta, limitante inferior \textbf{forte}, mas com muito
+				mais variáveis;
+		\end{itemize}
+		\item Ambas são \textbf{fornecidas prontas} -- a tarefa é
+			\textbf{implementá-las e comparar}, não derivá-las.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Miller--Tucker--Zemlin (1960)}
+	\begin{itemize}
+		\item Uma das formulações de programação linear inteira mais
+			conhecidas para o TSP;
+		\item Vantagem: número \textbf{polinomial} de restrições e fácil
+			de implementar;
+		\item Limitação: o limitante inferior que ela produz é
+			relativamente \textbf{fraco} -- é o que a MCF, vista mais
+			adiante, corrige, ao custo de muito mais variáveis.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Parâmetros e variáveis (MTZ)}
+	Parâmetros:
+	\begin{itemize}
+		\item $n$ -- número de cidades;
+		\item $d_{ij}$ -- distância entre as cidades $i$ e $j$, $\forall
+			i,j = 1,\ldots,n$;
+	\end{itemize}
+	Variáveis de decisão:
+	\begin{itemize}
+		\item $x_{ij} \in \{0,1\}$ -- vale 1 se a rota vai da cidade $i$
+			para a cidade $j$, $\forall i,j = 1,\ldots,n$;
+		\item $u_i \in \{1,\ldots,n-1\}$ -- posição da cidade $i$ na rota,
+			$\forall i = 2,\ldots,n$ (a cidade 1 é sempre a origem/retorno,
+			por isso não precisa de $u_1$).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Função objetivo e restrições de grau}
+	$$
+		\text{minimize}~Z = \sum_{i=1}^{n}\sum_{j=1,j\neq i}^{n} d_{ij}x_{ij}
+	$$
+	sujeito a:
+	$$
+		\sum_{i=1,i\neq j}^{n} x_{ij} = 1,~\forall~j = 1,\ldots,n
+	$$
+	$$
+		\sum_{j=1,j\neq i}^{n} x_{ij} = 1,~\forall~i = 1,\ldots,n
+	$$
+	\begin{itemize}
+		\item A primeira igualdade garante que toda cidade $j$ é
+			\textbf{alcançada} a partir de exatamente uma outra;
+		\item A segunda garante que toda cidade $i$ tem exatamente uma
+			\textbf{saída};
+		\item Sozinhas, porém, essas restrições não impedem uma solução
+			partida em vários pedaços.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O problema das subrotas}
+	Suponha $n=4$ e a solução:
+	$$
+		x = \begin{pmatrix}
+			0 & 0 & 1 & 0 \\
+			0 & 0 & 0 & 1 \\
+			1 & 0 & 0 & 0 \\
+			0 & 1 & 0 & 0
+		\end{pmatrix}
+	$$
+	\begin{itemize}
+		\item Toda linha e toda coluna somam 1 -- as restrições de grau
+			estão satisfeitas;
+		\item Mas a solução descreve \textbf{duas} rotas separadas: $1
+			\to 3 \to 1$ e $2 \to 4 \to 2$, cada uma cobrindo só parte das
+			cidades;
+		\item Precisamos de restrições que \textbf{proíbam} esse tipo de
+			solução, deixando só o ciclo único com as $n$ cidades.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Duas subrotas \emph{vs.} uma rota}
+	\begin{columns}
+	\begin{column}{0.48\textwidth}
+	\centering
+	\begin{tikzpicture}[scale=0.7,
+		cid/.style={circle,draw,fill=red!12,minimum size=6mm,inner sep=0pt}]
+		\node[cid] (c1) at (0,1.6) {1};
+		\node[cid] (c3) at (1.8,1.6) {3};
+		\node[cid] (c2) at (0,0) {2};
+		\node[cid] (c4) at (1.8,0) {4};
+		\draw[red!70!black,thick,->] (c1) to[bend left=25] (c3);
+		\draw[red!70!black,thick,->] (c3) to[bend left=25] (c1);
+		\draw[red!70!black,thick,->] (c2) to[bend left=25] (c4);
+		\draw[red!70!black,thick,->] (c4) to[bend left=25] (c2);
+	\end{tikzpicture}
+	\\[0.3cm] \footnotesize inválida: duas subrotas
+	\end{column}
+	\begin{column}{0.48\textwidth}
+	\centering
+	\begin{tikzpicture}[scale=0.7,
+		cid/.style={circle,draw,fill=blue!12,minimum size=6mm,inner sep=0pt}]
+		\node[cid] (c1) at (0,1.6) {1};
+		\node[cid] (c3) at (1.8,1.6) {3};
+		\node[cid] (c2) at (0,0) {2};
+		\node[cid] (c4) at (1.8,0) {4};
+		\draw[blue!60,thick,->] (c1) -- (c3);
+		\draw[blue!60,thick,->] (c3) -- (c4);
+		\draw[blue!60,thick,->] (c4) -- (c2);
+		\draw[blue!60,thick,->] (c2) -- (c1);
+	\end{tikzpicture}
+	\\[0.3cm] \footnotesize válida: um único ciclo
+	\end{column}
+	\end{columns}
+	\vspace{0.3cm}
+	Ambas satisfazem as restrições de grau -- só as restrições de
+	eliminação de subrota descartam a da esquerda.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Restrições MTZ de eliminação de subrota}
+	$$
+		u_i - u_j + (n-1)x_{ij} \leq n-2,~\forall~i,j = 2,\ldots,n;~i\neq j
+	$$
+	$$
+		1 \leq u_i \leq n-1,~\forall~i = 2,\ldots,n
+	$$
+	\begin{itemize}
+		\item $u_i$ marca em que \textbf{posição} da rota a cidade $i$ é
+			visitada -- se $u_3 = 4$, a cidade 3 é a quarta a ser visitada;
+		\item Se $x_{ij}=1$ (a rota vai de $i$ para $j$), a restrição
+			força $u_j \geq u_i + 1$: $j$ só pode vir \textbf{depois} de
+			$i$ na sequência;
+		\item Isso é impossível de satisfazer numa subrota que não passa
+			pela cidade 1 -- daí a eliminação.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Formulação MTZ completa}
+	\begin{align*}
+		\text{minimize}~Z &= \sum_{i=1}^{n}\sum_{j=1,j\neq i}^{n} d_{ij}x_{ij} \\
+		\text{sujeito a: } \sum_{i=1,i\neq j}^{n} x_{ij} &= 1,~\forall j = 1,\ldots,n \\
+		\sum_{j=1,j\neq i}^{n} x_{ij} &= 1,~\forall i = 1,\ldots,n \\
+		u_i - u_j + (n-1)x_{ij} &\leq n-2,~\forall i,j = 2,\ldots,n;~i\neq j \\
+		1 \leq u_i &\leq n-1,~\forall i = 2,\ldots,n \\
+		x_{ij} &\in \{0,1\},~\forall i,j = 1,\ldots,n \\
+		u_i &\in \mathbb{Z},~\forall i = 2,\ldots,n
+	\end{align*}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Fluxo de Mercadorias Multi-Produto (MCF)}
+	\begin{itemize}
+		\item Ideia: a cidade 1 é uma central que envia \textbf{um produto
+			diferente} para cada uma das outras $n-1$ cidades, usando só
+			os arcos que a rota percorre;
+		\item Se a rota se quebrasse em subrotas, o produto destinado a
+			uma cidade de uma subrota sem a cidade 1 \textbf{nunca
+			chegaria} -- daí a eliminação;
+		\item Variável nova: $f_{ij}^{k} \geq 0$ -- quantidade do produto
+			$k$ no arco $(i,j)$, $\forall i,j = 1,\ldots,n,~i\neq j$ e
+			$\forall k = 2,\ldots,n$ (um produto por cidade destino).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Restrições da MCF}
+	Conservação de fluxo, para cada produto $k = 2,\ldots,n$ e cada cidade
+	$i = 1,\ldots,n$:
+	$$
+		\sum_{j\neq i} f_{ij}^{k} - \sum_{j\neq i} f_{ji}^{k} =
+		\begin{cases}
+			1, & i = 1 \\
+			-1, & i = k \\
+			0, & \text{caso contrário}
+		\end{cases}
+	$$
+	Acoplamento com a rota:
+	$$
+		f_{ij}^{k} \leq x_{ij},~\forall i,j = 1,\ldots,n;~i\neq j
+	$$
+	\begin{itemize}
+		\item A cidade 1 emite 1 unidade do produto $k$, a cidade $k$
+			absorve essa unidade, as demais só repassam;
+		\item Só há fluxo de um produto num arco que a rota realmente usa
+			($x_{ij}=1$); se $x_{ij}=0$, o acoplamento zera $f_{ij}^{k}$
+			para todo $k$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MTZ \emph{vs.} MCF}
+	\begin{center}
+	\footnotesize
+	\begin{tabular}{lcc}
+		\toprule
+		 & MTZ & MCF \\
+		\midrule
+		Variáveis extras & $u_i$ ($O(n)$) & $f_{ij}^{k}$ ($O(n^3)$) \\
+		Restrições extras & $O(n^2)$ & $O(n^3)$ \\
+		Limitante inferior (relaxação) & fraco & forte \\
+		Equivalente, em força, a & -- & Dantzig--Fulkerson--Johnson \\
+		\bottomrule
+	\end{tabular}
+	\end{center}
+	\begin{itemize}
+		\item A MCF dá um limitante tão bom quanto o da formulação
+			clássica com restrições exponenciais de subrota -- \textbf{sem}
+			precisar de plano de cortes;
+		\item O preço é o crescimento cúbico do número de variáveis --
+			inviável para instâncias grandes.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{A tarefa (avaliativa)}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Caráter avaliativo}
+	\begin{itemize}
+		\item A tarefa desta aula \textbf{vale nota}: peso de
+			\textbf{25\%} na Unidade 1 da disciplina;
+		\item As formulações MTZ e MCF (slides anteriores) são
+			\textbf{fornecidas prontas} -- não é preciso derivá-las;
+		\item O que se avalia é a \textbf{implementação} das duas, a
+			execução nas instâncias corretas e a qualidade da comparação
+			entre elas;
+		\item Detalhes de formato de entrega e prazo: ver o enunciado
+			completo na página da aula, no site do curso.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O que é pedido}
+	\begin{enumerate}
+		\item Escrever as duas formulações em AMPL:
+			\texttt{tsp\_mtz.mod} e \texttt{tsp\_mcf.mod};
+		\item Escrever, em Python, a leitura de uma instância TSPLIB
+			(coordenadas $\to$ matriz de distâncias $d_{ij}$);
+		\item Resolver a \textbf{MTZ} nas \textbf{quatro} instâncias e a
+			\textbf{MCF} só na \textbf{menor} delas, com tempo limite e
+			número de threads fixados;
+		\item Reportar LB, UB, GAP, tempo e status em duas tabelas: MTZ
+			nas quatro instâncias, e MTZ \emph{vs.} MCF na menor.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{As instâncias}
+	\begin{center}
+	\footnotesize
+	\begin{tabular}{lcc}
+		\toprule
+		Instância (TSPLIB) & Cidades & Formulações \\
+		\midrule
+		Djibouti (\texttt{dj38}) & 38 & MTZ e MCF \\
+		Uruguai (\texttt{uy734}) & 734 & só MTZ \\
+		Luxemburgo (\texttt{lu980}) & 980 & só MTZ \\
+		Omã (\texttt{mu1979}) & 1\,979 & só MTZ \\
+		\bottomrule
+	\end{tabular}
+	\end{center}
+	\begin{itemize}
+		\item Quatro instâncias reais da coleção \emph{National TSP}
+			(formato TSPLIB, \texttt{EUC\_2D}), em ordem crescente de
+			tamanho;
+		\item Fonte e formato dos arquivos: ver o enunciado da tarefa, no
+			site do curso.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Por que a MCF só em Djibouti}
+	\begin{itemize}
+		\item A MCF tem $O(n^3)$ variáveis de fluxo -- em Djibouti
+			($n=38$) são só dezenas de milhares; em Uruguai ($n=734$),
+			$n^3$ já passa de \textbf{390 milhões};
+		\item Por isso a comparação MTZ \emph{vs.} MCF é feita numa única
+			instância, pequena o bastante para as duas serem tratáveis;
+		\item Nas instâncias maiores, só a MTZ é rodada -- e é aí que se
+			observa o outro lado do compromisso: o GAP da MTZ tende a
+			\textbf{crescer} com $n$, dentro do mesmo tempo limite;
+		\item A análise pedida junta as duas observações: a MCF fecha
+			melhor (mas não escala); a MTZ escala (mas fecha pior).
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Referências}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Referências}
+	\begin{itemize}
+		\item Miller, C. E.; Tucker, A. W.; Zemlin, R. A. \emph{Integer
+			Programming Formulation of Traveling Salesman Problems}.
+			Journal of the ACM, 1960.
+		\item Wong, R. T. \emph{Integer Programming Formulations of the
+			Travelling Salesman Problem}. IEEE ICCC, 1980 (formulação de
+			fluxo multi-produto);
+		\item TSPLIB / National TSP instances:
+			\url{https://www.math.uwaterloo.ca/tsp/world/countries.html};
+		\item AMPL: \url{https://ampl.com};
+		\item Documentação do \texttt{amplpy}: \url{https://amplpy.ampl.com}.
+	\end{itemize}
+\end{frame}
+
+\end{document}

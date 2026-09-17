@@ -1,0 +1,16 @@
+titulo: "Aula 5 — Caixeiro Viajante (TSP): MTZ e Fluxo Multi-Produto"
+data: "2026-09-18"
+resumo: >
+  Apresentação do Problema do Caixeiro Viajante (TSP) e de duas
+  formulações para eliminar subrotas: Miller–Tucker–Zemlin (MTZ),
+  compacta e fraca, e Fluxo de Mercadorias Multi-Produto (MCF), compacta
+  e forte. Ambas as formulações são fornecidas prontas: a tarefa desta
+  aula é avaliativa (peso de 25% na Unidade 1) e consiste em implementar
+  as duas em AMPL + Python, resolvê-las para instâncias da TSPLIB e
+  comparar LB, UB, GAP e tempo entre elas.
+
+slides: "slides/aula05.tex"
+
+tarefas:
+  - titulo: "Tarefa avaliativa — TSP: MTZ x Fluxo Multi-Produto (AMPL + Python) — 25% da Unidade 1"
+    arquivo: "tarefas/tarefa05-tsp-mtz-mcf.md"
