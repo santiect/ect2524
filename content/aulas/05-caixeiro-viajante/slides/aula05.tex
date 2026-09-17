@@ -266,15 +266,81 @@
 \begin{frame}
 	\frametitle{Fluxo de Mercadorias Multi-Produto (MCF)}
 	\begin{itemize}
-		\item Ideia: a cidade 1 é uma central que envia \textbf{um produto
-			diferente} para cada uma das outras $n-1$ cidades, usando só
-			os arcos que a rota percorre;
-		\item Se a rota se quebrasse em subrotas, o produto destinado a
-			uma cidade de uma subrota sem a cidade 1 \textbf{nunca
-			chegaria} -- daí a eliminação;
-		\item Variável nova: $f_{ij}^{k} \geq 0$ -- quantidade do produto
-			$k$ no arco $(i,j)$, $\forall i,j = 1,\ldots,n,~i\neq j$ e
-			$\forall k = 2,\ldots,n$ (um produto por cidade destino).
+		\item Ideia: a cidade 1 é uma \textbf{central de distribuição} que
+			despacha, pelos arcos da própria rota, \textbf{uma
+			encomenda diferente para cada uma} das outras $n-1$ cidades
+			-- a encomenda $k$ só pode ser entregue na cidade $k$;
+		\item Cada encomenda é um \textbf{produto} distinto -- daí
+			``multi-produto'': não é uma quantidade genérica de carga, é
+			uma carga \textbf{rotulada} com o destino;
+		\item Variável nova: $f_{ij}^{k} \geq 0$ -- quantidade da
+			encomenda (produto) $k$ transportada no arco $(i,j)$, $\forall
+			i,j = 1,\ldots,n,~i\neq j$ e $\forall k = 2,\ldots,n$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O que o produto $k$ representa}
+	\begin{center}
+	\begin{tikzpicture}[scale=0.95,
+		cid/.style={circle,draw,fill=blue!15,minimum size=6mm,inner sep=0pt}]
+		\node[cid] (c1) at (0.5,2.2) {1};
+		\node[cid] (c2) at (2.6,3.6) {2};
+		\node[cid] (c3) at (5.2,3.2) {3};
+		\node[cid] (c4) at (6.6,1.2) {4};
+		\node[cid] (c5) at (4.4,0.2) {5};
+		\node[cid] (c6) at (1.9,0.6) {6};
+		\draw[orange!85!black,very thick,->] (c1) -- (c2)
+			node[pos=0.5,above,font=\tiny] {$f^{4}=1$};
+		\draw[orange!85!black,very thick,->] (c2) -- (c3)
+			node[pos=0.5,above,font=\tiny] {$f^{4}=1$};
+		\draw[orange!85!black,very thick,->] (c3) -- (c4)
+			node[pos=0.5,right,font=\tiny] {$f^{4}=1$};
+		\draw[gray!50,thick,->] (c4) -- (c5);
+		\draw[gray!50,thick,->] (c5) -- (c6);
+		\draw[gray!50,thick,->] (c6) -- (c1);
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item Numa rota \textbf{válida} (um único ciclo), o produto $k$
+			simplesmente ``pega carona'' na rota, saindo da cidade 1 e
+			andando arco a arco até a cidade $k$ -- aqui, o produto
+			\textbf{4} usa os arcos $1\to2\to3\to4$ ($f_{12}^{4} =
+			f_{23}^{4} = f_{34}^{4} = 1$) e não precisa dos arcos depois
+			de 4 ($f^4 = 0$ neles);
+		\item Cada cidade $k$ tem o \textbf{seu próprio} produto,
+			seguindo o mesmo trecho inicial da rota até ``descer'' em $k$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Por que produtos separados eliminam subrotas}
+	\begin{center}
+	\begin{tikzpicture}[scale=0.8,
+		cid/.style={circle,draw,fill=red!12,minimum size=6mm,inner sep=0pt}]
+		\node[cid] (c1) at (0,1.6) {1};
+		\node[cid] (c3) at (1.8,1.6) {3};
+		\node[cid] (c2) at (4.2,1.6) {2};
+		\node[cid] (c4) at (6.0,1.6) {4};
+		\draw[red!70!black,thick,->] (c1) to[bend left=25] (c3);
+		\draw[red!70!black,thick,->] (c3) to[bend left=25] (c1);
+		\draw[red!70!black,thick,->] (c2) to[bend left=25] (c4);
+		\draw[red!70!black,thick,->] (c4) to[bend left=25] (c2);
+		\draw[gray,dashed] (2.85,1.6) -- (3.15,1.6);
+		\node[font=\tiny,gray] at (3.0,2.1) {nenhum arco liga os dois grupos};
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item Subrotas $1 \to 3 \to 1$ e $2 \to 4 \to 2$ (mesmo exemplo de
+			antes) -- nenhum arco liga um grupo ao outro;
+		\item O produto \textbf{2} precisa sair da cidade 1 (origem, sua
+			restrição exige emitir 1 unidade) e chegar à cidade 2
+			(destino, precisa absorver 1 unidade);
+		\item Mas a cidade 1 só tem arcos para/de a cidade 3 -- o produto
+			2 fica \textbf{preso} nesse grupo e nunca alcança a cidade 2;
+		\item As restrições de conservação ficam \textbf{impossíveis} de
+			satisfazer ao mesmo tempo -- é exatamente isso que descarta a
+			solução com subrotas.
 	\end{itemize}
 \end{frame}
 
