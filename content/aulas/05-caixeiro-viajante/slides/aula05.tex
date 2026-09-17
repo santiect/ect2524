@@ -112,7 +112,7 @@
 				compacta, limitante inferior \textbf{forte}, mas com muito
 				mais variáveis;
 		\end{itemize}
-		\item Ambas são \textbf{fornecidas prontas} -- a tarefa é
+		\item Ambas são \textbf{fornecidas} -- a tarefa é
 			\textbf{implementá-las e comparar}, não derivá-las.
 	\end{itemize}
 \end{frame}
@@ -286,14 +286,16 @@
 			$k$ (saída menos entrada $=1$):
 	\end{itemize}
 	$$
-		\sum_{j\neq 1} f_{1j}^{k} - \sum_{j\neq 1} f_{j1}^{k} = 1
+		\sum_{j=1,j\neq 1}^{n} f_{1j}^{k} - \sum_{j=1,j\neq 1}^{n} f_{j1}^{k} = 1,
+		~\forall~k = 2,\ldots,n
 	$$
 	\begin{itemize}
 		\item \textbf{Destino} -- a cidade $k$ absorve essa unidade
 			(saída menos entrada $=-1$):
 	\end{itemize}
 	$$
-		\sum_{j\neq k} f_{kj}^{k} - \sum_{j\neq k} f_{jk}^{k} = -1
+		\sum_{j=1,j\neq k}^{n} f_{kj}^{k} - \sum_{j=1,j\neq k}^{n} f_{jk}^{k} = -1,
+		~\forall~k = 2,\ldots,n
 	$$
 \end{frame}
 
@@ -304,7 +306,8 @@
 			que recebe (saída menos entrada $=0$):
 	\end{itemize}
 	$$
-		\sum_{j\neq i} f_{ij}^{k} - \sum_{j\neq i} f_{ji}^{k} = 0,~i \neq 1,k
+		\sum_{j=1,j\neq i}^{n} f_{ij}^{k} - \sum_{j=1,j\neq i}^{n} f_{ji}^{k} = 0,
+		~\forall~i = 2,\ldots,n;~i \neq k;~\forall~k = 2,\ldots,n
 	$$
 	\begin{itemize}
 		\item \textbf{Acoplamento com a rota} -- só há fluxo num arco que
