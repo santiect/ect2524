@@ -187,29 +187,36 @@ e `tsp_mcf.mod`.
 
 ## Passo 3 — Ler as instâncias
 
-As instâncias desta tarefa vêm da coleção *National TSP* da University of
-Waterloo, no formato padrão da TSPLIB:
+As instâncias desta tarefa vêm da TSPLIB clássica (Reinelt), mantida pela
+Universidade de Heidelberg, escolhidas em ordem crescente de tamanho para
+que a diferença entre uma e a próxima seja bem perceptível:
 
-- **Djibouti** (`dj38`) — 38 cidades;
-- **Uruguai** (`uy734`) — 734 cidades;
-- **Luxemburgo** (`lu980`) — 980 cidades;
-- **Omã** (`mu1979`) — 1.979 cidades.
+| Instância | Cidades ($n$) | Ótimo conhecido |
+|---|---|---|
+| `berlin52` | 52 | 7.542 |
+| `kroA200` | 200 | 29.368 |
+| `pr439` | 439 | 107.217 |
+| `pr1002` | 1.002 | 259.045 |
 
-Os quatro arquivos `.tsp` estão disponíveis em
-[https://www.math.uwaterloo.ca/tsp/world/countries.html](https://www.math.uwaterloo.ca/tsp/world/countries.html)
-(a página também traz, para cada instância, um link para a rota ótima
-conhecida — útil para conferir seus resultados). Um arquivo `.tsp` segue
-o formato:
+Os ótimos acima são os publicados pela própria TSPLIB (todas as quatro
+instâncias já estão resolvidas até a otimalidade comprovada) — usem-nos
+no Passo 6 para conferir seus resultados, sem precisar visitar outra
+página.
+
+Os quatro arquivos `.tsp` (compactados em `.gz`) estão disponíveis no
+índice da TSPLIB, em
+[http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/tsp/tspindex.html](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/tsp/tspindex.html).
+Um arquivo `.tsp` segue o formato (exemplo com `berlin52`):
 
 ```
-NAME: dj38
-COMMENT: 38 locations in Djibouti
+NAME: berlin52
+COMMENT: 52 locations in Berlin (Groetschel)
 TYPE: TSP
-DIMENSION: 38
+DIMENSION: 52
 EDGE_WEIGHT_TYPE: EUC_2D
 NODE_COORD_SECTION
-1 11003.611100 42102.500000
-2 11108.611100 42373.888900
+1 565.0 575.0
+2 25.0 185.0
 ...
 EOF
 ```
@@ -224,12 +231,12 @@ Escrevam uma função `ler_instancia(arquivo)` que:
 - calcula a matriz de distâncias $d_{ij}$ a partir das coordenadas,
   usando a distância euclidiana **arredondada ao inteiro mais próximo**
   (é assim que o tipo `EUC_2D` da TSPLIB define $d_{ij}$, e é o valor
-  usado para calcular a rota ótima conhecida — arredondar é necessário
-  para que seus resultados sejam comparáveis a ela);
+  usado para calcular o ótimo publicado — arredondar é necessário para
+  que seus resultados sejam comparáveis a ele);
 - devolve $n$ e a matriz $d$, prontos para uso nos dois modelos.
 
-Testem a função primeiro com a instância de Djibouti (a menor) antes de
-passar para as demais.
+Testem a função primeiro com `berlin52` (a menor) antes de passar para as
+demais.
 
 ## Passo 4 — Escrever o script de resolução
 
@@ -241,12 +248,13 @@ resolver com o HiGHS, **1 thread** e **tempo limite de 600 segundos (10
 minutos)** passado como opção do solver.
 
 Esse tempo limite vale para o **solver**, não para a geração do modelo
-em si — a MCF tem $O(n^3)$ variáveis de fluxo, e montar esse modelo para
-as instâncias maiores (Luxemburgo, Omã, e possivelmente já Uruguai) pode
-ser lento ou consumir toda a memória disponível **antes mesmo** de o
-solver ser chamado. Isso é esperado, e faz parte do que a tarefa pede
-para observar: tentem rodar as 8 combinações e constatem, na prática,
-até onde a MCF é tratável.
+em si — a MCF tem $O(n^3)$ variáveis de fluxo: cerca de 140 mil em
+`berlin52`, 8 milhões em `kroA200`, 85 milhões em `pr439` e passa de 1
+bilhão em `pr1002`. Nas instâncias maiores, montar esse modelo pode ser
+lento ou consumir toda a memória disponível **antes mesmo** de o solver
+ser chamado. Isso é esperado, e faz parte do que a tarefa pede para
+observar: tentem rodar as 8 combinações e constatem, na prática, até
+onde a MCF é tratável.
 
 **O que fazer se travar ou faltar memória.** Se a geração do modelo ou a
 resolução não terminar em um tempo razoável, ou se o processo for
@@ -267,14 +275,14 @@ crescente de tamanho da instância:
 
 | Instância | Cidades ($n$) | Formulação | LB | UB | GAP | Tempo (s) | Status |
 |---|---|---|---|---|---|---|---|
-| Djibouti (dj38) | 38 | MTZ | ... | ... | ... | ... | ... |
-| Djibouti (dj38) | 38 | MCF | ... | ... | ... | ... | ... |
-| Uruguai (uy734) | 734 | MTZ | ... | ... | ... | ... | ... |
-| Uruguai (uy734) | 734 | MCF | ... | ... | ... | ... | ... |
-| Luxemburgo (lu980) | 980 | MTZ | ... | ... | ... | ... | ... |
-| Luxemburgo (lu980) | 980 | MCF | ... | ... | ... | ... | ... |
-| Omã (mu1979) | 1.979 | MTZ | ... | ... | ... | ... | ... |
-| Omã (mu1979) | 1.979 | MCF | ... | ... | ... | ... | ... |
+| berlin52 | 52 | MTZ | ... | ... | ... | ... | ... |
+| berlin52 | 52 | MCF | ... | ... | ... | ... | ... |
+| kroA200 | 200 | MTZ | ... | ... | ... | ... | ... |
+| kroA200 | 200 | MCF | ... | ... | ... | ... | ... |
+| pr439 | 439 | MTZ | ... | ... | ... | ... | ... |
+| pr439 | 439 | MCF | ... | ... | ... | ... | ... |
+| pr1002 | 1.002 | MTZ | ... | ... | ... | ... | ... |
+| pr1002 | 1.002 | MCF | ... | ... | ... | ... | ... |
 
 Para as combinações marcadas como impraticáveis, preencham a coluna
 `Status` com **impraticável** e descrevam o sintoma observado (travou,
@@ -295,9 +303,9 @@ Em dois ou três parágrafos, comentem:
   ficou mais próximo do UB do que o LB da MTZ, no mesmo tempo? Isso é
   coerente com a MCF ser uma formulação mais forte?
 - para as execuções em que o solver encontrou a rota ótima (GAP = 0),
-  compare o UB obtido com a rota ótima conhecida publicada na página da
-  TSPLIB (lembrando de usar a distância `EUC_2D` arredondada) — os
-  valores coincidem?
+  compare o UB obtido com o ótimo conhecido da tabela do Passo 3
+  (lembrando de usar a distância `EUC_2D` arredondada) — os valores
+  coincidem?
 - o compromisso entre as duas formulações (compacta e fraca *versus*
   compacta e forte, mas com muito mais variáveis) apareceu nos seus
   resultados? Em que situação prática vocês optariam por uma ou por

@@ -451,21 +451,21 @@
 	\frametitle{As instâncias}
 	\begin{center}
 	\footnotesize
-	\begin{tabular}{lc}
+	\begin{tabular}{lcc}
 		\toprule
-		Instância (TSPLIB) & Cidades \\
+		Instância (TSPLIB) & Cidades & Ótimo conhecido \\
 		\midrule
-		Djibouti (\texttt{dj38}) & 38 \\
-		Uruguai (\texttt{uy734}) & 734 \\
-		Luxemburgo (\texttt{lu980}) & 980 \\
-		Omã (\texttt{mu1979}) & 1\,979 \\
+		\texttt{berlin52} & 52 & 7\,542 \\
+		\texttt{kroA200} & 200 & 29\,368 \\
+		\texttt{pr439} & 439 & 107\,217 \\
+		\texttt{pr1002} & 1\,002 & 259\,045 \\
 		\bottomrule
 	\end{tabular}
 	\end{center}
 	\begin{itemize}
-		\item Quatro instâncias reais da coleção \emph{National TSP}
-			(formato TSPLIB, \texttt{EUC\_2D}), em ordem crescente de
-			tamanho;
+		\item Quatro instâncias reais da TSPLIB clássica
+			(\texttt{EUC\_2D}), escolhidas em progressão de tamanho para
+			que cada salto mude visivelmente a dificuldade;
 		\item As duas formulações são tentadas nas quatro -- não há
 			instância reservada só para uma delas;
 		\item Fonte e formato dos arquivos: ver o enunciado da tarefa, no
@@ -476,10 +476,11 @@
 \begin{frame}
 	\frametitle{Quando a MCF fica impraticável}
 	\begin{itemize}
-		\item A MCF tem $O(n^3)$ variáveis de fluxo -- em Djibouti
-			($n=38$) são dezenas de milhares; em Luxemburgo ($n=980$),
-			já passa de \textbf{940 milhões}; em Omã ($n=1979$), de
-			\textbf{7,7 bilhões};
+		\item A MCF tem $O(n^3)$ variáveis de fluxo -- em \texttt{berlin52}
+			($n=52$) são só cerca de 140 mil; em \texttt{kroA200}
+			($n=200$), 8 milhões; em \texttt{pr439} ($n=439$), já 85
+			milhões; em \texttt{pr1002} ($n=1002$), passa de \textbf{1
+			bilhão};
 		\item O limite de \textbf{10 min} vale para o \textbf{solver} --
 			não protege a fase de \textbf{montar} o modelo, que pode
 			travar ou esgotar a memória bem antes disso nas instâncias
@@ -508,8 +509,8 @@
 		\item Wong, R. T. \emph{Integer Programming Formulations of the
 			Travelling Salesman Problem}. IEEE ICCC, 1980 (formulação de
 			fluxo multi-produto);
-		\item TSPLIB / National TSP instances:
-			\url{https://www.math.uwaterloo.ca/tsp/world/countries.html};
+		\item TSPLIB:
+			\url{http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/};
 		\item AMPL: \url{https://ampl.com};
 		\item Documentação do \texttt{amplpy}: \url{https://amplpy.ampl.com}.
 	\end{itemize}
