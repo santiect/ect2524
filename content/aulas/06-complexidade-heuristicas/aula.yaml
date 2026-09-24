@@ -1,0 +1,20 @@
+titulo: "Aula 6 — Complexidade, P versus NP e Heurísticas"
+data: "2026-09-25"
+resumo: >
+  Introdução à complexidade computacional: tamanho de uma instância,
+  tempo de execução de um algoritmo, algoritmos eficientes versus não
+  eficientes, problemas de busca, a classe NP e a relação P versus NP.
+  A partir daí, o conceito de heurística como alternativa a um solver
+  exato quando o tempo ou a memória disponíveis não permitem resolver o
+  problema até a otimalidade comprovada — como já observado na tarefa da
+  Aula 5 com a formulação MCF do TSP. A tarefa avaliativa retoma as
+  quatro instâncias e os ótimos conhecidos da Aula 5 e pede a
+  implementação de duas heurísticas construtivas para o TSP (vizinho
+  mais próximo e construção aleatória), comparando os resultados
+  diretamente com o ótimo conhecido de cada instância.
+
+slides: "slides/aula06.tex"
+
+tarefas:
+  - titulo: "Tarefa avaliativa — Heurísticas para o TSP: vizinho mais próximo e construção aleatória — 25% da Unidade 1"
+    arquivo: "tarefas/tarefa06-heuristicas-tsp.md"
