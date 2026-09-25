@@ -222,7 +222,7 @@
 		\item Nesta disciplina, tratamos os dois sob o mesmo enfoque —
 			\textbf{problema de busca}: dada uma solução candidata (ou um
 			limiar $k$), verificar sua correção (ou se ela o alcança) em
-			tempo polinomial.
+			tempo polinomial, por um algoritmo \textbf{determinístico}.
 	\end{itemize}
 \end{frame}
 
@@ -230,13 +230,17 @@
 	\frametitle{Problemas de busca}
 	\begin{block}{Definição}
 		Um problema de busca é aquele em que, dada uma solução candidata,
-		é possível verificar sua correção em tempo polinomial.
+		é possível verificar sua correção em tempo polinomial, por um
+		algoritmo \textbf{determinístico} (o mesmo tipo de algoritmo comum,
+		sem "adivinhação" nem paralelismo infinito).
 	\end{block}
 	\begin{itemize}
 		\item A classe \textbf{NP} reúne todos os problemas de busca com
 			essa propriedade;
-		\item Verificar uma solução dada é, em geral, muito mais barato do
-			que encontrá-la.
+		\item É o \textbf{verificador} que é polinomial e determinístico —
+			não há garantia nenhuma sobre o tempo de \textbf{encontrar} a
+			solução candidata; NP não significa "não polinomial", significa
+			"verificável em tempo polinomial".
 	\end{itemize}
 \end{frame}
 
@@ -270,7 +274,8 @@
 		\item \textbf{P}: problemas de busca resolvíveis em tempo
 			polinomial por um algoritmo determinístico;
 		\item \textbf{NP}: problemas de busca cuja solução, uma vez dada,
-			pode ser verificada em tempo polinomial;
+			pode ser verificada em tempo polinomial por um algoritmo
+			determinístico;
 		\item $P \subset NP$: todo problema resolvível em tempo polinomial
 			também tem suas soluções verificáveis em tempo polinomial.
 	\end{itemize}
