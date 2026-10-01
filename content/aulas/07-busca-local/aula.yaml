@@ -1,0 +1,19 @@
+titulo: "Aula 7 — Busca Local e Vizinhança"
+data: "2026-10-02"
+resumo: >
+  Conceitos de espaço de soluções, ótimo local e ótimo global, vizinhança
+  e busca local (primeira e melhor aprimorante), com a distinção entre
+  exploração e explotação. A partir de uma solução inicial produzida por
+  uma heurística construtiva, a busca local a melhora até um ótimo local
+  em relação à vizinhança adotada. As vizinhanças são ilustradas no
+  problema da mochila (inversão de bit, inserção e troca) e no TSP
+  (2-opt). A tarefa avaliativa implementa a busca local 2-opt sobre as
+  soluções das três heurísticas construtivas da Aula 6 e compara, para as
+  quatro instâncias, o GAP em relação ao ótimo conhecido antes e depois
+  da busca local.
+
+slides: "slides/aula07.tex"
+
+tarefas:
+  - titulo: "Tarefa avaliativa — Busca local 2-opt para o TSP — 25% da Unidade 1"
+    arquivo: "tarefas/tarefa07-2opt-tsp.md"
