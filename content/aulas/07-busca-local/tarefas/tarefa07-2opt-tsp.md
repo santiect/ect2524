@@ -87,7 +87,7 @@ Requisitos:
   seguindo o procedimento descrito a seguir.
 
 **Procedimento (primeira aprimorante com reinício).** Para cada tamanho de trecho invertido $k = 2, 3, \ldots,
-n-2$, em ordem crescente, examinam-se as posições possíveis do trecho. Ao
+n-2$, em ordem crescente, examinam-se todas as subrotas possíveis de tamanho $k$. Ao
 encontrar o primeiro movimento com $\Delta < 0$, ele é aplicado e a busca
 **reinicia** a partir de $k = 2$. A busca termina quando todos os tamanhos
 de $k$ são examinados sem que nenhum movimento melhore a rota; a rota
