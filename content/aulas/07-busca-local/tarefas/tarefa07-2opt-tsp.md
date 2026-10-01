@@ -33,7 +33,7 @@ entregue, e o GAP em relação ao ótimo conhecido pode ser grande.
 Esta tarefa acrescenta uma etapa de **busca local**. A partir da rota
 produzida por uma heurística construtiva, aplica-se repetidamente a
 vizinhança **2-opt**, que remove duas arestas da rota e as reconecta
-invertendo o trecho entre elas. O procedimento termina quando nenhum
+invertendo o trecho entre elas (uma subrota de $k$ cidades consecutivas). O procedimento termina quando nenhum
 movimento 2-opt reduz o custo da rota, isto é, quando se atinge um **ótimo
 local** em relação a essa vizinhança. O objetivo é medir quanto cada
 solução inicial melhora e a que distância do ótimo conhecido ela fica antes
@@ -86,12 +86,18 @@ Requisitos:
 - a busca termina quando nenhum vizinho 2-opt reduz o custo (ótimo local),
   seguindo o procedimento descrito a seguir.
 
-**Procedimento (primeira aprimorante com reinício).** Para cada tamanho de trecho invertido $k = 2, 3, \ldots,
-n-2$, em ordem crescente, examinam-se todas as subrotas possíveis de tamanho $k$. Ao
-encontrar o primeiro movimento com $\Delta < 0$, ele é aplicado e a busca
-**reinicia** a partir de $k = 2$. A busca termina quando todos os tamanhos
-de $k$ são examinados sem que nenhum movimento melhore a rota; a rota
-obtida nesse ponto é a solução final.
+Equivalentemente, um movimento 2-opt inverte uma **subrota** de $k$
+cidades consecutivas da rota, o **tamanho** $k$ do trecho invertido (a
+inversão de $k=2$ cidades troca duas cidades vizinhas; $k=3$, $k=4$ etc.
+invertem trechos maiores).
+
+**Procedimento (primeira aprimorante com reinício).** Para cada tamanho
+$k = 2, 3, \ldots, n-2$, em ordem crescente, examinam-se todas as
+subrotas possíveis de tamanho $k$ e calcula-se o $\Delta$ da inversão de
+cada uma. Ao encontrar o primeiro movimento com $\Delta < 0$, ele é
+aplicado e a busca **reinicia** a partir de $k = 2$. A busca termina quando
+todos os tamanhos $k$ são examinados sem que nenhum movimento melhore a
+rota; a rota obtida nesse ponto é a solução final.
 
 ## Passo 3 — Aplicação às três heurísticas
 

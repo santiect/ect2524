@@ -6,8 +6,8 @@ resumo: >
   exploração e explotação. A partir de uma solução inicial produzida por
   uma heurística construtiva, a busca local a melhora até um ótimo local
   em relação à vizinhança adotada. As vizinhanças são ilustradas no
-  problema da mochila (inversão de bit, inserção e troca) e no TSP
-  (2-opt). A tarefa avaliativa implementa a busca local 2-opt sobre as
+  problema da mochila (inversão de bit e troca) e no TSP
+  (2-opt, por inversão de subrotas de tamanho crescente). A tarefa avaliativa implementa a busca local 2-opt sobre as
   soluções das três heurísticas construtivas da Aula 6 e compara, para as
   quatro instâncias, o GAP em relação ao ótimo conhecido antes e depois
   da busca local.
