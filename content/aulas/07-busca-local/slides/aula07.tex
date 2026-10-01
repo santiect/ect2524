@@ -78,31 +78,11 @@
 \begin{frame}
 	\frametitle{Da solução construtiva à solução melhorada}
 	\begin{itemize}
-		\item Uma heurística construtiva produz uma solução viável com
-			rapidez, mas sem garantia de qualidade;
-		\item Os GAPs obtidos na tarefa anterior (vizinho mais próximo e
-			construção aleatória) mostram que há margem para melhoria;
-		\item Ideia central: partir da solução construtiva e aplicar
-			pequenas modificações, mantendo apenas as que melhoram o
-			custo;
-		\item O processo termina em uma solução que nenhuma modificação
-			do tipo escolhido consegue melhorar: um \textbf{ótimo local};
-		\item Este procedimento é a \textbf{busca local}; as modificações
-			permitidas definem a \textbf{vizinhança}.
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Roteiro da aula}
-	\begin{itemize}
-		\item Espaço de soluções, ótimo local e ótimo global;
-		\item Vizinhança e algoritmo de busca local;
-		\item Exploração e explotação;
-		\item Vizinhanças para o problema da mochila: inversão de bit,
-			inserção e troca;
-		\item Vizinhança 2-opt para o TSP;
-		\item Tarefa: aplicar a busca local 2-opt às soluções das três
-			heurísticas construtivas.
+		\item Solução inicial: heurística construtiva;
+		\item Como melhorá-la?
+		\item \textbf{Busca local}: pequenas modificações, mantendo as que
+			melhoram o custo;
+		\item Resultado: um \textbf{ótimo local}.
 	\end{itemize}
 \end{frame}
 
@@ -111,14 +91,10 @@
 %------------------------------------------------------------
 
 \begin{frame}
-	\frametitle{Espaço de soluções e função objetivo}
+	\frametitle{Espaço de soluções}
 	\begin{itemize}
-		\item Conjunto $S$ das soluções viáveis; função objetivo
-			$f : S \to \mathbb{R}$;
-		\item Visualização: cada ponto do eixo horizontal é uma solução e
-			a altura é o valor de $f$ (problema de maximização);
-		\item Em problemas combinatórios, $S$ é finito, mas
-			enorme: $2^n$ soluções na mochila e $(n-1)!/2$ rotas no TSP.
+		\item Soluções viáveis $S$ e função objetivo $f : S \to \mathbb{R}$;
+		\item Mochila: $2^n$ soluções; TSP: $(n-1)!/2$ rotas.
 	\end{itemize}
 	\vspace{2mm}
 	\begin{center}
@@ -133,14 +109,10 @@
 	\begin{columns}[T]
 	\begin{column}{0.48\textwidth}
 	\begin{itemize}
-		\item \textbf{Ótimo global}: $x^* \in S$ tal que
-			$f(x^*) \geq f(x)$ para todo $x \in S$;
-		\item \textbf{Ótimo local} em relação a $\mathcal{N}$:
-			$\bar{x}\in S$ tal que $f(\bar{x}) \geq f(x)$ para todo
-			$x \in \mathcal{N}(\bar{x})$;
-		\item Todo ótimo global é ótimo local, qualquer que seja
-			$\mathcal{N}$; a recíproca é falsa;
-		\item Para minimização, inverte-se a desigualdade.
+		\item \textbf{Global}: $f(x^*) \geq f(x)$, $\forall x \in S$;
+		\item \textbf{Local} em relação a $\mathcal{N}$:
+			$f(\bar{x}) \geq f(x)$, $\forall x \in \mathcal{N}(\bar{x})$;
+		\item Todo global é local; o inverso não vale.
 	\end{itemize}
 	\end{column}
 	\begin{column}{0.5\textwidth}
@@ -149,7 +121,6 @@
 		\fill[red] (1.8,2.6) circle (3pt) node[above=2pt] {\scriptsize local};
 		\fill[red] (9.0,2.6) circle (3pt) node[above=2pt] {\scriptsize local};
 		\fill[green!50!black] (5.8,3.6) circle (3pt) node[above=2pt] {\scriptsize global};
-		\fill[orange] (3.6,0.8) circle (3pt) node[below=2pt] {\scriptsize mín. local};
 	\end{tikzpicture}
 	\end{column}
 	\end{columns}
@@ -162,19 +133,12 @@
 \begin{frame}
 	\frametitle{Vizinhança}
 	\begin{block}{Definição}
-		A vizinhança $\mathcal{N}(x)$ de uma solução $x$ é o conjunto de
-		soluções obtidas de $x$ por uma pequena alteração de seus
-		componentes, definida por um operador de movimento.
+		$\mathcal{N}(x)$: soluções obtidas de $x$ por uma pequena
+		alteração (operador de movimento).
 	\end{block}
 	\begin{itemize}
-		\item Depende da representação da solução e do operador escolhido;
-		\item Compromisso entre vizinhanças pequenas e grandes:
-			\begin{itemize}
-				\item pequena: iteração barata, mas muitos ótimos locais;
-				\item grande: iteração cara, mas menos ótimos locais.
-			\end{itemize}
-		\item Um ponto que é ótimo local para uma vizinhança pode deixar
-			de sê-lo para outra.
+		\item Vizinhança pequena: iteração barata, mais ótimos locais;
+		\item Vizinhança grande: iteração cara, menos ótimos locais.
 	\end{itemize}
 \end{frame}
 
@@ -202,7 +166,7 @@
 		\node[red,below,font=\scriptsize] at (3.2,-0.5) {$\mathcal{N}_2(x)$};
 		\fill[green!50!black] (5.8,3.6) circle (3pt);
 	\end{tikzpicture}\\[1mm]
-	{\scriptsize $x$ não é ótimo local: o vizinho melhor está em $\mathcal{N}_2$}
+	{\scriptsize $x$ não é ótimo local}
 	\end{column}
 	\end{columns}
 \end{frame}
@@ -210,40 +174,24 @@
 \begin{frame}
 	\frametitle{Algoritmo de busca local}
 	\begin{enumerate}
-		\item Seja $x$ a solução inicial (obtida por uma heurística
-			construtiva);
-		\item Examinar a vizinhança $\mathcal{N}(x)$;
-		\item Se existe $x' \in \mathcal{N}(x)$ com $f(x')$ melhor que
-			$f(x)$, fazer $x \leftarrow x'$ e voltar ao passo 2;
-		\item Caso contrário, parar: $x$ é um ótimo local em relação a
-			$\mathcal{N}$.
+		\item $x \leftarrow$ solução inicial;
+		\item Se existe $x' \in \mathcal{N}(x)$ melhor que $x$:
+			$x \leftarrow x'$, repetir;
+		\item Senão, parar: $x$ é ótimo local.
 	\end{enumerate}
 	\vspace{2mm}
 	\begin{itemize}
-		\item Termina sempre: o custo melhora estritamente a cada passo e
-			$S$ é finito;
-		\item O resultado depende da solução inicial e da vizinhança.
+		\item Sempre termina;
+		\item Depende de $x$ inicial e de $\mathcal{N}$.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Critério de escolha do vizinho}
+	\frametitle{Escolha do vizinho}
 	\begin{itemize}
-		\item \textbf{Primeira aprimorante}: adota o primeiro vizinho
-			$x'$ encontrado que melhora o custo de $x$;
-			\begin{itemize}
-				\item iteração mais barata, caminho de melhoria mais
-					longo;
-			\end{itemize}
-		\item \textbf{Melhor aprimorante}: examina toda a vizinhança
-			$\mathcal{N}(x)$ e adota o melhor vizinho $x''$;
-			\begin{itemize}
-				\item iteração mais cara, passos maiores;
-			\end{itemize}
-		\item Em ambos os casos, o ponto de parada é um ótimo local em
-			relação a $\mathcal{N}$;
-		\item Os dois critérios podem terminar em ótimos locais
-			diferentes.
+		\item \textbf{Primeira aprimorante}: o primeiro $x'$ que melhora;
+		\item \textbf{Melhor aprimorante}: o melhor de $\mathcal{N}(x)$;
+		\item Podem parar em ótimos locais diferentes.
 	\end{itemize}
 \end{frame}
 
@@ -254,38 +202,28 @@
 \begin{frame}
 	\frametitle{Exploração e explotação}
 	\begin{center}
-	\begin{tabular}{p{0.44\textwidth}p{0.44\textwidth}}
+	\begin{tabular}{p{0.4\textwidth}p{0.4\textwidth}}
 		\toprule
 		\textbf{Exploração} & \textbf{Explotação} \\
 		\midrule
-		Visitar regiões distintas do espaço de soluções
-		& Examinar com detalhe a região em torno de uma solução \\
-		Diversificação
-		& Intensificação \\
-		Reduz o risco de ignorar a região do ótimo global
-		& Atinge o melhor ponto da região atual \\
-		Construção aleatória, múltiplas soluções iniciais
-		& Busca local \\
+		Diversificação & Intensificação \\
+		Regiões distintas & Região atual \\
+		Construção aleatória & Busca local \\
 		\bottomrule
 	\end{tabular}
 	\end{center}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Exploração e explotação na paisagem}
+	\frametitle{Busca local: só explotação}
 	\begin{columns}[T]
-	\begin{column}{0.5\textwidth}
+	\begin{column}{0.45\textwidth}
 	\begin{itemize}
-		\item A busca local é puramente explotatória: sobe até o pico mais
-			próximo da solução inicial e para;
-		\item Soluções iniciais diferentes podem levar a ótimos locais
-			diferentes;
-		\item Equilibrar os dois comportamentos é o problema central das
-			estratégias mais elaboradas de busca, que ficam fora do
-			escopo desta aula.
+		\item Sobe até o pico mais próximo;
+		\item Outro ponto inicial, outro ótimo local.
 	\end{itemize}
 	\end{column}
-	\begin{column}{0.5\textwidth}
+	\begin{column}{0.55\textwidth}
 	\begin{tikzpicture}[xscale=0.44,yscale=0.6]
 		\paisagem
 		\fill[orange] (0.5,1.3) circle (3pt);
@@ -294,8 +232,6 @@
 		\draw[->,orange,thick] (4.9,2.0) -- (5.7,3.45);
 		\fill[orange] (7.9,1.9) circle (3pt);
 		\draw[->,orange,thick] (8.0,2.0) -- (8.9,2.5);
-		\node[font=\scriptsize,orange!70!black,align=center] at (4.8,-0.9)
-			{três soluções iniciais, três ótimos locais};
 	\end{tikzpicture}
 	\end{column}
 	\end{columns}
@@ -308,26 +244,20 @@
 \begin{frame}
 	\frametitle{Mochila: vizinhanças}
 	\begin{itemize}
-		\item Solução: vetor $x \in \{0,1\}^n$, viável se
-			$\sum_i p_i x_i \leq C$;
-		\item \textbf{Inversão de bit} (\textit{flip}): troca $x_i$ de
-			$0$ para $1$ ou de $1$ para $0$;
+		\item Solução: $x \in \{0,1\}^n$, com $\sum_i p_i x_i \leq C$;
+		\item \textbf{Inversão de bit} (\textit{flip}): $|\mathcal{N}| = n$;
 			\begin{itemize}
-				\item $|\mathcal{N}| = n$;
-				\item $0 \to 1$ equivale a \textbf{inserir} um item;
-				\item $1 \to 0$ equivale a \textbf{remover} um item;
+				\item $0 \to 1$: inserir item;
+				\item $1 \to 0$: remover item;
 			\end{itemize}
-		\item \textbf{Troca} (\textit{swap}): retira um item que está na
-			mochila e insere um que está fora;
-			\begin{itemize}
-				\item $|\mathcal{N}| = k(n-k)$, com $k$ itens na mochila;
-			\end{itemize}
-		\item Apenas vizinhos viáveis são considerados.
+		\item \textbf{Troca} (\textit{swap}): sai um item, entra outro;
+			$|\mathcal{N}| = k(n-k)$;
+		\item Só vizinhos viáveis.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Mochila: vizinhança de inversão de bit}
+	\frametitle{Inversão de bit}
 	\begin{center}
 	\begin{tikzpicture}
 		\node[anchor=east,font=\small] at (0.2,1.0) {solução $x$};
@@ -341,16 +271,13 @@
 	\end{tikzpicture}
 	\end{center}
 	\begin{itemize}
-		\item Inserir aumenta o benefício e o peso: só é aceito se a
-			capacidade $C$ for respeitada;
-		\item Remover sempre é viável, mas reduz o benefício;
-		\item Em um ótimo local para a inversão de bit, nenhum item cabe
-			na folga restante.
+		\item Inserir: só se couber em $C$;
+		\item Remover: sempre viável, mas piora.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Mochila: vizinhança de troca}
+	\frametitle{Troca}
 	\begin{center}
 	\begin{tikzpicture}
 		\node[anchor=east,font=\small] at (0.2,0.5) {solução $x$};
@@ -362,17 +289,13 @@
 	\end{tikzpicture}
 	\end{center}
 	\begin{itemize}
-		\item Um item sai e outro entra: o peso pode diminuir ou
-			aumentar, e o benefício varia pela diferença entre os dois;
-		\item Contém movimentos que a inversão de bit não alcança, pois
-			combina remoção e inserção em um só passo;
-		\item Vizinhança maior que a de inversão de bit: $k(n-k)$
-			avaliações por iteração, contra $n$.
+		\item Remoção e inserção em um só passo;
+		\item Alcança soluções fora da inversão de bit.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Mochila: instância e solução inicial}
+	\frametitle{Exemplo: instância e solução inicial}
 	\begin{columns}[T]
 	\begin{column}{0.5\textwidth}
 	\begin{center}
@@ -393,31 +316,26 @@
 	\end{column}
 	\begin{column}{0.5\textwidth}
 	\begin{itemize}
-		\item $n = 7$ e capacidade $C = 18$;
-		\item Heurística construtiva gulosa: itens em ordem decrescente de
-			$b_i/p_i$, inserindo os que cabem;
-		\item Inserção: 3, 5, 4 e 1 (o item 6 não cabe);
-		\item $x = (1,0,1,1,1,0,0)$, peso $15$, benefício $80$.
+		\item $n = 7$, $C = 18$;
+		\item Construtiva gulosa por $b_i/p_i$;
+		\item $x = (1,0,1,1,1,0,0)$;
+		\item Peso $15$, benefício $80$.
 	\end{itemize}
 	\end{column}
 	\end{columns}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Mochila: busca local com inversão de bit}
+	\frametitle{Busca local com inversão de bit}
 	\begin{itemize}
-		\item Solução inicial: $x = (1,0,1,1,1,0,0)$, peso $15$,
-			folga $3$, benefício $80$;
-		\item Inserir o item 2, 6 ou 7 exigiria peso $22$, $24$ ou
-			$24$, acima de $C = 18$: nenhum vizinho viável de inserção;
-		\item Remover qualquer item reduz o benefício;
-		\item Nenhum vizinho melhora $x$: \textbf{$x$ é ótimo local
-			para a inversão de bit}, com benefício $80$.
+		\item Folga de $3$: nenhum item fora cabe;
+		\item Remover qualquer item piora;
+		\item $x$ é ótimo local (benefício $80$).
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Mochila: busca local com troca}
+	\frametitle{Busca local com troca}
 	\begin{columns}[T]
 	\begin{column}{0.5\textwidth}
 	\begin{center}
@@ -432,28 +350,23 @@
 		\bottomrule
 	\end{tabular}
 	\end{center}
-	{\scriptsize Os outros 8 pares excedem $C = 18$ e são descartados.}
+	{\scriptsize Demais pares são inviáveis.}
 	\end{column}
 	\begin{column}{0.5\textwidth}
 	\begin{itemize}
-		\item Melhor vizinho: trocar o item 4 pelo 6, benefício $83$;
-		\item Novo $x = (1,0,1,0,1,1,0)$, peso $17$;
-		\item Nova rodada: nenhum vizinho de troca ou de inversão
-			melhora $83$.
+		\item Melhor vizinho: trocar 4 por 6;
+		\item $x = (1,0,1,0,1,1,0)$, benefício $83$;
+		\item Novo ótimo local.
 	\end{itemize}
 	\end{column}
 	\end{columns}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Mochila: ótimo local e ótimo global}
+	\frametitle{Ótimo local e ótimo global}
 	\begin{itemize}
-		\item Ótimo local para a inversão de bit: benefício $80$;
-		\item Ótimo local para troca (e inversão de bit): benefício $83$;
-		\item Ótimo global (enumeração das $2^7$ soluções):
-			$x^* = (0,0,1,1,0,1,0)$, peso $18$, benefício $84$;
-		\item $x^*$ difere do ótimo local de troca em três posições:
-			itens 1, 4 e 5 mudam de estado; nenhuma troca única o alcança.
+		\item Ótimo global (enumeração): benefício $84$;
+		\item Difere do ótimo local de troca em 3 posições.
 	\end{itemize}
 	\vspace{2mm}
 	\begin{center}
@@ -478,19 +391,13 @@
 \begin{frame}
 	\frametitle{A vizinhança 2-opt}
 	\begin{itemize}
-		\item Solução: permutação das cidades (rota);
-		\item Movimento: remover duas arestas da rota e reconectar os
-			dois caminhos restantes de outro modo, o que inverte o
-			trecho entre elas;
-		\item $|\mathcal{N}| = n(n-3)/2$ vizinhos por rota;
-		\item Remove cruzamentos: toda rota com arestas que se cruzam
-			pode ser melhorada por um movimento 2-opt.
+		\item Remove 2 arestas e reconecta, invertendo o trecho entre elas;
+		\item $|\mathcal{N}| = n(n-3)/2$.
 	\end{itemize}
 	\vspace{1mm}
 	\begin{center}
 	\begin{tikzpicture}[scale=0.8,
 		cid/.style={circle,draw,fill=blue!15,inner sep=1.5pt,font=\scriptsize}]
-		% antes
 		\begin{scope}
 			\foreach \i/\a in {1/90,2/30,3/-30,4/-90,5/-150,6/150}
 				\node[cid] (a\i) at (\a:1.2) {\i};
@@ -499,7 +406,6 @@
 			\node[font=\small] at (0,-1.9) {antes: 1-2-5-4-3-6-1};
 		\end{scope}
 		\draw[->,thick] (1.9,0) -- (3.0,0);
-		% depois
 		\begin{scope}[xshift=5cm]
 			\foreach \i/\a in {1/90,2/30,3/-30,4/-90,5/-150,6/150}
 				\node[cid] (b\i) at (\a:1.2) {\i};
@@ -515,16 +421,12 @@
 \begin{frame}
 	\frametitle{Variação de custo de um movimento 2-opt}
 	\begin{itemize}
-		\item Rota com arestas consecutivas $(a,b)$ e $(c,d)$, nesta ordem;
-		\item O movimento substitui $(a,b)$ e $(c,d)$ por $(a,c)$ e
-			$(b,d)$ e inverte o trecho de $b$ a $c$;
-		\item Variação de custo, calculada em tempo constante:
+		\item Arestas $(a,b)$ e $(c,d)$ saem; $(a,c)$ e $(b,d)$ entram;
+		\item Variação de custo, em tempo constante:
 			\[
 				\Delta = d_{ac} + d_{bd} - d_{ab} - d_{cd}
 			\]
-		\item Se $\Delta < 0$, o movimento melhora a rota;
-		\item O custo total não precisa ser recalculado: basta somar
-			$\Delta$ ao custo atual.
+		\item $\Delta < 0$: o movimento melhora a rota.
 	\end{itemize}
 \end{frame}
 
@@ -547,25 +449,16 @@ while melhorou:
                 melhorou = True
 	\end{lstlisting}
 	\begin{itemize}
-		\item Variante de primeira aprimorante: aplica o movimento assim
-			que $\Delta < 0$;
-		\item Variante de melhor aprimorante: percorre todos os pares e
-			aplica só o de menor $\Delta$;
-		\item A rota ao final é um ótimo local em relação ao 2-opt.
+		\item Primeira aprimorante; a melhor aprimorante aplica só o menor
+			$\Delta$.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Fluxo completo: construção e busca local}
+	\frametitle{Construção + busca local}
 	\begin{itemize}
-		\item Heurística construtiva (vizinho mais próximo, multi-start
-			ou aleatória) fornece a solução inicial;
-		\item A busca local 2-opt leva a solução a um ótimo local;
-		\item A qualidade final depende da solução inicial e da
-			vizinhança;
-		\item O ótimo local não é, em geral, o ótimo global: o GAP em
-			relação ao ótimo conhecido costuma diminuir, mas não se
-			anula.
+		\item Construtiva $\to$ busca local 2-opt $\to$ ótimo local;
+		\item GAP diminui, mas em geral não se anula.
 	\end{itemize}
 \end{frame}
 
@@ -576,29 +469,19 @@ while melhorou:
 \begin{frame}
 	\frametitle{Caráter avaliativo}
 	\begin{itemize}
-		\item Esta tarefa vale \textbf{25\% da nota da Unidade 1};
-		\item Pode ser realizada em equipes de até 3 pessoas;
-		\item Prazo: sexta-feira, \textbf{09/10}, às 8h50;
-		\item Prossegue a implementação do TSP: as quatro instâncias, os
-			ótimos conhecidos e as três heurísticas construtivas da
-			tarefa anterior são reutilizados.
+		\item \textbf{25\% da nota da Unidade 1};
+		\item Equipes de até 3 pessoas;
+		\item Prazo: sexta-feira, \textbf{09/10}, às 8h50.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{O que é pedido}
 	\begin{itemize}
-		\item Implementar a vizinhança 2-opt e a busca local
-			correspondente, com variação de custo calculada em tempo
-			constante;
-		\item Aplicar a busca local à solução de cada heurística
-			construtiva: vizinho mais próximo (cidade 1), vizinho mais
-			próximo multi-start e construção aleatória (30 execuções);
-		\item Montar uma tabela única com, por instância e heurística, o
-			GAP da solução inicial e o GAP da solução após o 2-opt, em
-			relação ao ótimo conhecido;
-		\item Descrever o ambiente computacional e analisar os
-			resultados.
+		\item Implementar o 2-opt e a busca local;
+		\item Aplicar às 3 heurísticas construtivas da tarefa anterior;
+		\item Tabela: GAP antes e depois do 2-opt, nas 4 instâncias;
+		\item Ambiente computacional e análise.
 	\end{itemize}
 \end{frame}
 
