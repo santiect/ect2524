@@ -74,13 +74,13 @@ $n(n-3)/2$ vizinhos 2-opt.
 
 Implementem uma função de busca local (ex.: `busca_local_2opt(d, rota)`)
 que recebe a matriz de distâncias e uma rota inicial e devolve a rota
-final, seu custo, o número de movimentos aplicados e o tempo de execução.
+final, seu custo, o número de inversões feitas e o tempo de execução.
 Requisitos:
 
 - a variação $\Delta$ deve ser calculada em tempo constante, a partir das
   quatro distâncias envolvidas; **não** é permitido recalcular o custo
   total da rota para avaliar cada vizinho;
-- o custo final deve ser obtido somando os $\Delta$ dos movimentos aplicados
+- o custo final deve ser obtido somando os $\Delta$ das inversões feitas
   ao custo inicial, e o grupo deve conferir, ao final, que ele coincide com o
   custo recalculado a partir da rota devolvida;
 - a busca termina quando nenhum vizinho 2-opt reduz o custo (ótimo local),
@@ -117,7 +117,7 @@ inicial de cada heurística construtiva:
 Uma única tabela, com uma linha por instância e por heurística (12 linhas),
 em ordem crescente de tamanho da instância:
 
-| Instância | $n$ | Ótimo | Heurística | Custo inicial | GAP inicial | Custo após 2-opt | GAP após 2-opt | Melhoria (%) | Movimentos | Tempo do 2-opt (s) |
+| Instância | $n$ | Ótimo | Heurística | Custo inicial | GAP inicial | Custo após 2-opt | GAP após 2-opt | Melhoria (%) | Inversões feitas | Tempo do 2-opt (s) |
 |---|---|---|---|---|---|---|---|---|---|---|
 | berlin52 | 52 | 7.542 | NN cidade 1 | ... | ... | ... | ... | ... | ... | ... |
 | berlin52 | 52 | 7.542 | NN multi-start | ... | ... | ... | ... | ... | ... | ... |
@@ -133,10 +133,10 @@ Onde, para cada linha:
   2-opt e `GAP após 2-opt` usa o custo depois;
 - $\text{Melhoria} = (\text{Custo inicial} - \text{Custo após 2-opt}) /
   \text{Custo inicial}$, em percentual;
-- `Movimentos` e `Tempo do 2-opt` referem-se apenas à busca local, sem
+- `Inversões feitas` (número de inversões aplicadas pela busca) e `Tempo do 2-opt` referem-se apenas à busca local, sem
   incluir o tempo da heurística construtiva;
 - para a heurística **Aleatória**, as colunas de custo, GAP, melhoria,
-  movimentos e tempo trazem a **média das 30 execuções**. Abaixo da tabela,
+  inversões feitas e tempo trazem a **média das 30 execuções**. Abaixo da tabela,
   acrescentem uma tabela auxiliar com o desvio-padrão e o melhor custo
   (antes e depois do 2-opt) por instância.
 
@@ -161,7 +161,7 @@ Em três ou quatro parágrafos, comentem:
 - por que a solução após o 2-opt, mesmo sendo um ótimo local, ainda
   permanece a um GAP não nulo do ótimo conhecido, relacionando a resposta
   ao conceito de ótimo local em relação a uma vizinhança;
-- o custo da busca local (número de movimentos e tempo) frente ao ganho em
+- o custo da busca local (número de inversões feitas e tempo) frente ao ganho em
   qualidade, e como esse tempo cresce com o tamanho da instância.
 
 ## Entrega
