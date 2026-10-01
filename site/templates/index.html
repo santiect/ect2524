@@ -10,7 +10,7 @@
   {% if aulas %}
   <div class="aula-grid">
     {% for aula in aulas %}
-    <a class="aula-card" href="{{ aula.slug }}/index.html">
+    <a class="aula-card" href="{{ aula.slug }}/index.html"{% if aula.resumo %} title="{{ aula.resumo }}"{% endif %}>
       <div class="aula-card-head">
         <span class="aula-data">{{ aula.data }}</span>
         {% if aula.slides_pdf %}<span class="badge">slides</span>{% endif %}
