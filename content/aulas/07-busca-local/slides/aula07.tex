@@ -242,21 +242,6 @@
 %------------------------------------------------------------
 
 \begin{frame}
-	\frametitle{Mochila: vizinhanças}
-	\begin{itemize}
-		\item Solução: $x \in \{0,1\}^n$, com $\sum_i p_i x_i \leq C$;
-		\item \textbf{Inversão de bit} (\textit{flip}): $|\mathcal{N}| = n$;
-			\begin{itemize}
-				\item $0 \to 1$: inserir item;
-				\item $1 \to 0$: remover item;
-			\end{itemize}
-		\item \textbf{Troca} (\textit{swap}): sai um item, entra outro;
-			$|\mathcal{N}| = k(n-k)$, com $k$ = número de itens na mochila;
-		\item Só vizinhos viáveis.
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
 	\frametitle{Inversão de bit}
 	\begin{center}
 	\begin{tikzpicture}
@@ -271,8 +256,11 @@
 	\end{tikzpicture}
 	\end{center}
 	\begin{itemize}
-		\item Inserir: só se couber em $C$;
-		\item Remover: sempre viável, mas piora.
+		\item Solução: $x \in \{0,1\}^n$, com $\sum_i p_i x_i \leq C$;
+		\item Inverte um único $x_i$: $|\mathcal{N}| = n$;
+		\item $0 \to 1$: inserir item, só se couber em $C$;
+		\item $1 \to 0$: remover item, sempre viável, mas piora;
+		\item Só vizinhos viáveis.
 	\end{itemize}
 \end{frame}
 
@@ -289,8 +277,12 @@
 	\end{tikzpicture}
 	\end{center}
 	\begin{itemize}
-		\item Remoção e inserção em um só passo;
-		\item Alcança soluções fora da inversão de bit.
+		\item Sai um item da mochila, entra um item de fora;
+		\item $|\mathcal{N}| = k(n-k)$, com $k$ = número de itens na
+			mochila;
+		\item Remoção e inserção em um só passo: alcança soluções fora da
+			inversão de bit;
+		\item Só vizinhos viáveis.
 	\end{itemize}
 \end{frame}
 
