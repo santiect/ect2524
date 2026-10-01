@@ -450,19 +450,18 @@
 	\frametitle{Lógica da busca local 2-opt}
 	\begin{enumerate}
 		\item Partir de uma rota inicial (construtiva);
-		\item Para cada par de arestas não adjacentes $(a,b)$ e $(c,d)$:
+		\item Para $k = 2, 3, \ldots, n-2$ (tamanho do trecho invertido):
 			\begin{itemize}
-				\item calcular $\Delta = d_{ac} + d_{bd} - d_{ab} - d_{cd}$;
-				\item se $\Delta < 0$: inverter o trecho de $b$ até $c$ e
-					somar $\Delta$ ao custo;
+				\item para cada posição do trecho, calcular $\Delta$;
+				\item se $\Delta < 0$: inverter o trecho, somar $\Delta$ ao
+					custo e \textbf{reiniciar} em $k = 2$;
 			\end{itemize}
-		\item Repetir o passo 2 enquanto algum movimento melhorar a rota;
-		\item Parar: a rota é um ótimo local em relação ao 2-opt.
+		\item Se nenhum tamanho $k$ produziu melhora: parar.
 	\end{enumerate}
 	\vspace{2mm}
 	\begin{itemize}
-		\item Primeira aprimorante: aplica ao encontrar $\Delta < 0$;
-		\item Melhor aprimorante: aplica só o menor $\Delta$ da varredura.
+		\item A rota final é um ótimo local em relação ao 2-opt;
+		\item Primeiro movimento que melhora é aplicado.
 	\end{itemize}
 \end{frame}
 

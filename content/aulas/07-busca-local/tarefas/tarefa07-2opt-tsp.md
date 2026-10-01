@@ -83,12 +83,15 @@ Requisitos:
 - o custo final deve ser obtido somando os $\Delta$ dos movimentos aplicados
   ao custo inicial, e o grupo deve conferir, ao final, que ele coincide com o
   custo recalculado a partir da rota devolvida;
-- a busca termina quando nenhum vizinho 2-opt reduz o custo (ótimo local);
-- o grupo escolhe o critério de escolha do vizinho — **primeira
-  aprimorante** (aplica o primeiro movimento com $\Delta<0$) ou **melhor
-  aprimorante** (examina todos os pares e aplica o de menor $\Delta$) — e
-  deve declarar, no relatório, qual foi usado. Vale implementar os dois e
-  compará-los, mas não é obrigatório.
+- a busca termina quando nenhum vizinho 2-opt reduz o custo (ótimo local),
+  seguindo o procedimento descrito a seguir.
+
+**Procedimento (primeira aprimorante com reinício).** Para cada tamanho de trecho invertido $k = 2, 3, \ldots,
+n-2$, em ordem crescente, examinam-se as posições possíveis do trecho. Ao
+encontrar o primeiro movimento com $\Delta < 0$, ele é aplicado e a busca
+**reinicia** a partir de $k = 2$. A busca termina quando todos os tamanhos
+de $k$ são examinados sem que nenhum movimento melhore a rota; a rota
+obtida nesse ponto é a solução final.
 
 ## Passo 3 — Aplicação às três heurísticas
 
@@ -153,9 +156,7 @@ Em três ou quatro parágrafos, comentem:
   permanece a um GAP não nulo do ótimo conhecido, relacionando a resposta
   ao conceito de ótimo local em relação a uma vizinhança;
 - o custo da busca local (número de movimentos e tempo) frente ao ganho em
-  qualidade, e como esse tempo cresce com o tamanho da instância;
-- se o grupo implementou os dois critérios (primeira e melhor aprimorante),
-  o que se observou de diferença em custo final, movimentos e tempo.
+  qualidade, e como esse tempo cresce com o tamanho da instância.
 
 ## Entrega
 
@@ -178,6 +179,5 @@ reunindo:
 
 - a tabela de resultados do Passo 4 e a tabela auxiliar da heurística
   aleatória;
-- a declaração do critério de escolha do vizinho usado;
 - a descrição do ambiente computacional do Passo 5;
 - a análise do Passo 6.
