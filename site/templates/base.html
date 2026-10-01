@@ -17,7 +17,11 @@
     {% if course.notebooks_url %}
     <a href="{{ course.notebooks_url }}" target="_blank" rel="noopener">Notebooks</a>
     {% endif %}
+    {% if course.professor_url %}
+    <a class="header-meta" href="{{ course.professor_url }}" target="_blank" rel="noopener">{{ course.professor }}</a>
+    {% else %}
     <span class="header-meta">{{ course.professor }}</span>
+    {% endif %}
   </nav>
 </header>
 

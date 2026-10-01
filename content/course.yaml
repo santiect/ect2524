@@ -2,6 +2,7 @@
 codigo: "ECT2524"
 nome: "Introdução à Otimização"
 professor: "Prof. Éverton Santi"
+professor_url: "https://sigaa.ufrn.br/sigaa/public/docente/portal.jsf?siape=2993322"
 instituicao: "Escola de Ciências e Tecnologia — UFRN"
 repo: "santiect/ect2524"
 descricao: "Slides, tarefas e notebooks da disciplina."
