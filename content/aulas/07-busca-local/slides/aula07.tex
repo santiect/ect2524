@@ -55,6 +55,15 @@
 	\draw[red,very thick] ({#2*0.65-0.3},{#1-0.3}) rectangle ({#2*0.65+0.3},{#1+0.3});
 }
 
+% Vetor de rota (#1 = y, #2 = ids das cidades, #3/#4 = primeira/última posição invertida)
+\tikzset{cid0/.style={bit,fill=white}, cid1/.style={bit,fill=red!25}}
+\newcommand{\rotavec}[4]{%
+	\foreach \v [count=\i] in {#2}{%
+		\ifnum\i<#3 \def\st{cid0}\else\ifnum\i>#4 \def\st{cid0}\else\def\st{cid1}\fi\fi
+		\node[\st] at (\i*0.65,#1) {\v};
+	}%
+}
+
 \title[Aula 7 -- Busca Local]{Busca Local e Vizinhança}
 \subtitle{Melhorando uma solução construtiva até um ótimo local}
 \author[Santi]{Prof. \'Everton Santi}
@@ -432,6 +441,26 @@
 		\end{scope}
 	\end{tikzpicture}
 	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{2-opt: inversão de um trecho de $k$ cidades}
+	\begin{center}
+	\begin{tikzpicture}
+		\node[anchor=east,font=\small] at (0.2,1.5) {rota};
+		\rotavec{1.5}{1,2,3,4,5,6,7,8}{0}{0}
+		\node[anchor=east,font=\small] at (0.2,0.6) {$k=2$};
+		\rotavec{0.6}{1,2,4,3,5,6,7,8}{3}{4}
+		\node[anchor=east,font=\small] at (0.2,-0.3) {$k=3$};
+		\rotavec{-0.3}{1,2,5,4,3,6,7,8}{3}{5}
+		\node[anchor=east,font=\small] at (0.2,-1.2) {$k=4$};
+		\rotavec{-1.2}{1,2,6,5,4,3,7,8}{3}{6}
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item Movimento 2-opt: inverter $k$ cidades consecutivas da rota;
+		\item Demais posições não mudam.
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
