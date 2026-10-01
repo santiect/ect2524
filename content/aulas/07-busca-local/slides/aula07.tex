@@ -13,6 +13,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta}
 \usepackage{graphicx}
 
 \lstset{
@@ -217,21 +218,21 @@
 \begin{frame}
 	\frametitle{Busca local: só explotação}
 	\begin{columns}[T]
-	\begin{column}{0.45\textwidth}
+	\begin{column}{0.36\textwidth}
 	\begin{itemize}
 		\item Sobe até o pico mais próximo;
 		\item Outro ponto inicial, outro ótimo local.
 	\end{itemize}
 	\end{column}
-	\begin{column}{0.55\textwidth}
-	\begin{tikzpicture}[xscale=0.44,yscale=0.6]
+	\begin{column}{0.62\textwidth}
+	\begin{tikzpicture}[xscale=0.58,yscale=0.8]
 		\paisagem
-		\fill[orange] (0.5,1.3) circle (3pt);
-		\draw[->,orange,thick] (0.55,1.45) -- (1.6,2.45);
-		\fill[orange] (4.8,1.9) circle (3pt);
-		\draw[->,orange,thick] (4.9,2.0) -- (5.7,3.45);
-		\fill[orange] (7.9,1.9) circle (3pt);
-		\draw[->,orange,thick] (8.0,2.0) -- (8.9,2.5);
+		\fill[red] (0.5,1.3) circle (3pt);
+		\draw[-{Stealth[length=3mm,width=2.5mm]},red,line width=1.4pt] (0.55,1.45) -- (1.6,2.45);
+		\fill[red] (4.8,1.9) circle (3pt);
+		\draw[-{Stealth[length=3mm,width=2.5mm]},red,line width=1.4pt] (4.9,2.0) -- (5.7,3.45);
+		\fill[red] (7.9,1.9) circle (3pt);
+		\draw[-{Stealth[length=3mm,width=2.5mm]},red,line width=1.4pt] (8.0,2.0) -- (8.9,2.5);
 	\end{tikzpicture}
 	\end{column}
 	\end{columns}
