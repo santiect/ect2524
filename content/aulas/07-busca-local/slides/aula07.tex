@@ -378,11 +378,34 @@
 \end{frame}
 
 %------------------------------------------------------------
+\section{A tarefa (avaliativa)}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Caráter avaliativo}
+	\begin{itemize}
+		\item \textbf{25\% da nota da Unidade 1};
+		\item Equipes de até 3 pessoas;
+		\item Prazo: sexta-feira, \textbf{09/10}, às 8h50.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{O que é pedido}
+	\begin{itemize}
+		\item Implementar o 2-opt e a busca local;
+		\item Aplicar às 3 heurísticas construtivas da tarefa anterior;
+		\item Tabela: GAP antes e depois do 2-opt, nas 4 instâncias;
+		\item Ambiente computacional e análise.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
 \section{Busca local no TSP: 2-opt}
 %------------------------------------------------------------
 
 \begin{frame}
-	\frametitle{A vizinhança 2-opt}
+	\frametitle{2-opt: exemplo e efeito do movimento}
 	\begin{itemize}
 		\item Remove 2 arestas e reconecta, invertendo o trecho entre elas;
 		\item $|\mathcal{N}| = n(n-3)/2$.
@@ -423,27 +446,23 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-	\frametitle{Busca local 2-opt}
-	\begin{lstlisting}[language=Python]
-melhorou = True
-while melhorou:
-    melhorou = False
-    for i in range(0, n - 2):
-        for j in range(i + 2, n):
-            if i == 0 and j == n - 1:
-                continue
-            a, b = rota[i], rota[i + 1]
-            c, e = rota[j], rota[(j + 1) % n]
-            delta = dist[a][c] + dist[b][e] - dist[a][b] - dist[c][e]
-            if delta < 0:
-                rota[i + 1 : j + 1] = reversed(rota[i + 1 : j + 1])
-                custo += delta
-                melhorou = True
-	\end{lstlisting}
+\begin{frame}
+	\frametitle{Lógica da busca local 2-opt}
+	\begin{enumerate}
+		\item Partir de uma rota inicial (construtiva);
+		\item Para cada par de arestas não adjacentes $(a,b)$ e $(c,d)$:
+			\begin{itemize}
+				\item calcular $\Delta = d_{ac} + d_{bd} - d_{ab} - d_{cd}$;
+				\item se $\Delta < 0$: inverter o trecho de $b$ até $c$ e
+					somar $\Delta$ ao custo;
+			\end{itemize}
+		\item Repetir o passo 2 enquanto algum movimento melhorar a rota;
+		\item Parar: a rota é um ótimo local em relação ao 2-opt.
+	\end{enumerate}
+	\vspace{2mm}
 	\begin{itemize}
-		\item Primeira aprimorante; a melhor aprimorante aplica só o menor
-			$\Delta$.
+		\item Primeira aprimorante: aplica ao encontrar $\Delta < 0$;
+		\item Melhor aprimorante: aplica só o menor $\Delta$ da varredura.
 	\end{itemize}
 \end{frame}
 
@@ -452,29 +471,6 @@ while melhorou:
 	\begin{itemize}
 		\item Construtiva $\to$ busca local 2-opt $\to$ ótimo local;
 		\item GAP diminui, mas em geral não se anula.
-	\end{itemize}
-\end{frame}
-
-%------------------------------------------------------------
-\section{A tarefa (avaliativa)}
-%------------------------------------------------------------
-
-\begin{frame}
-	\frametitle{Caráter avaliativo}
-	\begin{itemize}
-		\item \textbf{25\% da nota da Unidade 1};
-		\item Equipes de até 3 pessoas;
-		\item Prazo: sexta-feira, \textbf{09/10}, às 8h50.
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{O que é pedido}
-	\begin{itemize}
-		\item Implementar o 2-opt e a busca local;
-		\item Aplicar às 3 heurísticas construtivas da tarefa anterior;
-		\item Tabela: GAP antes e depois do 2-opt, nas 4 instâncias;
-		\item Ambiente computacional e análise.
 	\end{itemize}
 \end{frame}
 
