@@ -110,7 +110,8 @@ inicial de cada heurística construtiva:
   (apenas essa rota recebe a busca local);
 - **construção aleatória:** cada uma das 30 rotas aleatórias (mesmos seeds
   da tarefa da Aula 6) recebe a busca local; reportem custo médio,
-  desvio-padrão e melhor custo, tanto antes quanto depois do 2-opt.
+  desvio-padrão e melhor custo, tanto antes quanto depois do 2-opt (tabela
+  auxiliar do Passo 4).
 
 ## Passo 4 — Tabela de resultados
 
@@ -135,10 +136,39 @@ Onde, para cada linha:
   \text{Custo inicial}$, em percentual;
 - `Inversões feitas` (número de inversões aplicadas pela busca) e `Tempo do 2-opt` referem-se apenas à busca local, sem
   incluir o tempo da heurística construtiva;
-- para a heurística **Aleatória**, as colunas de custo, GAP, melhoria,
-  inversões feitas e tempo trazem a **média das 30 execuções**. Abaixo da tabela,
-  acrescentem uma tabela auxiliar com o desvio-padrão e o melhor custo
-  (antes e depois do 2-opt) por instância.
+- para a heurística **Aleatória**, como há 30 execuções por instância, a
+  linha da tabela principal traz a **média das 30 execuções** em todas as
+  colunas numéricas (custo inicial, GAP inicial, custo após 2-opt, GAP após
+  2-opt, melhoria, inversões feitas e tempo). A dispersão e os melhores
+  resultados vão na tabela auxiliar descrita a seguir.
+
+### Tabela auxiliar — heurística aleatória com 2-opt
+
+Logo abaixo da tabela principal, incluam uma segunda tabela, só com a
+heurística **Aleatória**, com **uma linha por instância** (4 linhas). Cada
+estatística é calculada sobre as **30 execuções** daquela instância, uma
+vez com os custos **antes** do 2-opt (as 30 rotas aleatórias originais) e
+outra com os custos **depois** do 2-opt (as 30 rotas resultantes da busca
+local, cada uma a partir da sua rota aleatória de origem):
+
+| Instância | Ótimo | Antes: média | Antes: desvio-padrão | Antes: melhor | GAP do melhor (antes) | Depois: média | Depois: desvio-padrão | Depois: melhor | GAP do melhor (depois) |
+|---|---|---|---|---|---|---|---|---|---|
+| berlin52 | 7.542 | ... | ... | ... | ... | ... | ... | ... | ... |
+| kroA100 | 21.282 | ... | ... | ... | ... | ... | ... | ... | ... |
+| ch150 | 6.528 | ... | ... | ... | ... | ... | ... | ... | ... |
+| kroA200 | 29.368 | ... | ... | ... | ... | ... | ... | ... | ... |
+
+Onde:
+
+- `média` e `desvio-padrão` são o custo médio e o desvio-padrão dos custos
+  das 30 execuções (as colunas `Antes: média` e `Depois: média` coincidem
+  com os custos da linha Aleatória da tabela principal);
+- `melhor` é o **menor custo** entre as 30 execuções, no respectivo momento
+  (antes ou depois do 2-opt). O melhor custo depois do 2-opt é o menor
+  custo final entre as 30 rotas, que pode vir de uma rota aleatória que não
+  era a melhor antes da busca local;
+- `GAP do melhor` usa o `melhor` da mesma linha e o ótimo conhecido:
+  $(\text{melhor} - \text{Ótimo}) / \text{Ótimo}$.
 
 ## Passo 5 — Ambiente computacional
 
