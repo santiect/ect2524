@@ -212,6 +212,10 @@ correto.
   build), usado para renderizar fórmulas LaTeX (`$...$` / `$$...$$`) nas
   tarefas em Markdown — ver seção "Fórmulas matemáticas nas tarefas"
   abaixo.
+- Exceção deliberada 2: `content/aulas/08-metaheuristicas/animacoes/` é uma
+  página estática anexa (animações das metaheurísticas) que usa p5.js,
+  versionado localmente em `p5.min.js` (sem CDN, sem build). A restrição de
+  libs vale para o site gerado por `site/build.py`; o anexo é copiado como está.
 - `antigos/` é o material antigo (slides, notebooks) ainda não migrado —
   não editar diretamente; é a fonte para futuras aulas em `content/aulas/`.
 - Nunca commitar artefatos de build: `dist/`, `.aux`/`.log`/`.nav`/etc. de

@@ -19,6 +19,15 @@
     {% endif %}
   </section>
 
+  {% if aula.animacoes %}
+  <section class="block">
+    <h2>Animações</h2>
+    <a class="pdf-link" href="{{ aula.animacoes }}" target="_blank" rel="noopener">
+      Abrir animações
+    </a>
+  </section>
+  {% endif %}
+
   <section class="block">
     <h2>Notebooks</h2>
     {% if course.notebooks_url %}

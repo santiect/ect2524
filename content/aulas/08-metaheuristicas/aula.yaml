@@ -11,6 +11,8 @@ resumo: >
 
 slides: "slides/aula08.tex"
 
+animacoes: "animacoes/index.html"
+
 tarefas:
   - titulo: "SEM1 — Seminário de artigo do SBPO — 25% da nota"
     arquivo: "tarefas/tarefa08-seminario-sbpo.md"

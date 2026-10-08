@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animações das metaheurísticas — Aula 8</title>
+<style>
+  :root {
+    --bg:#fafafa; --surface:#ffffff; --text:#1a1a1a; --muted:#6b6b6b;
+    --border:#e6e6e6; --accent:#2f6feb; --accent-soft:#eaf1fd;
+    --good:#1a9850; --warn:#d9822b; --bad:#d73027;
+    --radius:12px; --max-width:960px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#121212; --surface:#1a1a1a; --text:#f0f0f0; --muted:#a0a0a0;
+      --border:#2c2c2c; --accent:#6fa1f7; --accent-soft:#1c2a42;
+      --good:#5ac18e; --warn:#f0a35e; --bad:#f06a5f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;
+  }
+  main { max-width:var(--max-width); margin:0 auto; padding:24px 16px 48px; }
+  a { color:var(--accent); }
+  h1 { font-size:1.5rem; margin:.4rem 0 .2rem; }
+  .lead { color:var(--muted); margin:0 0 1rem; }
+  .card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:14px 16px; margin-bottom:14px;
+  }
+  .tabs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+  button, select, input[type=number] {
+    font:inherit; color:var(--text); background:var(--surface);
+    border:1px solid var(--border); border-radius:8px; padding:6px 12px;
+  }
+  button { cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  button.tab[aria-selected=true] { background:var(--accent); color:#fff; border-color:var(--accent); }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .desc { margin:0 0 6px; }
+  .row { display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; }
+  .row label { display:flex; align-items:center; gap:6px; font-size:.92rem; }
+  .params { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:8px 18px; margin-top:10px; }
+  .params label { display:flex; flex-direction:column; font-size:.88rem; color:var(--muted); }
+  .params input[type=range] { width:100%; }
+  .params output { color:var(--text); font-variant-numeric:tabular-nums; }
+  .stats { display:flex; flex-wrap:wrap; gap:4px 20px; font-size:.92rem; font-variant-numeric:tabular-nums; }
+  .stats b { color:var(--text); }
+  .stats span { color:var(--muted); }
+  #holder { width:100%; }
+  #holder canvas { display:block; }
+  #log { max-height:200px; overflow:auto; margin:0; padding-left:0; list-style:none; font-size:.9rem; }
+  #log li { padding:2px 0; border-bottom:1px solid var(--border); }
+  #log li:first-child { font-weight:600; }
+  #log .n { color:var(--muted); display:inline-block; min-width:3.2em; font-variant-numeric:tabular-nums; }
+  .table { width:100%; border-collapse:collapse; font-size:.9rem; font-variant-numeric:tabular-nums; }
+  .table th, .table td { text-align:right; padding:2px 8px; border-bottom:1px solid var(--border); }
+  noscript { color:var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <a href="../index.html">&larr; Aula 8</a>
+  <h1>Animações das metaheurísticas</h1>
+  <p class="lead">Problema da mochila 0/1: execução passo a passo da busca local iterada, do GRASP, do recozimento simulado, do algoritmo genético e do VNS/VND, com a trajetória da solução até o ótimo global.</p>
+  <noscript><p>Esta página requer JavaScript.</p></noscript>
+
+  <section class="card">
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <p class="desc" id="desc"></p>
+    <div class="row">
+      <label>Instância
+        <select id="inst"></select>
+      </label>
+      <label>Semente
+        <input type="number" id="seed" value="1" min="0" step="1" style="width:5.5em">
+      </label>
+      <button id="newseed" title="Sorteia uma nova semente">Nova semente</button>
+      <label>Velocidade
+        <input type="range" id="speed" min="1" max="60" value="4">
+        <output id="speedout">4 passos/s</output>
+      </label>
+    </div>
+    <div class="params" id="params"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" id="play">Executar</button>
+      <button id="step">Passo</button>
+      <button id="finish">Concluir</button>
+      <button id="reset">Reiniciar</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="card"><div id="holder"></div></section>
+
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 6px">Registro de decisões</h2>
+    <ol id="log"></ol>
+  </section>
+
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 6px">Instância</h2>
+    <div id="insttable" style="overflow-x:auto"></div>
+  </section>
+</main>
+<script src="p5.min.js"></script>
+<script src="animacoes.js"></script>
+</body>
+</html>
