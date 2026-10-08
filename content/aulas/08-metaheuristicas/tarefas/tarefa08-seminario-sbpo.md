@@ -34,7 +34,8 @@ A apresentação deve abordar, no mínimo:
 - **Método de solução:** como os autores resolveram o problema, incluindo a
   metaheurística adotada, a representação da solução, a vizinhança ou os
   operadores e a solução inicial;
-- **Dados:** instâncias utilizadas, reais ou sintéticas, e sua origem;
+- **Dados:** instâncias utilizadas, reais ou sintéticas, sua origem e seu
+  tamanho (por exemplo, número de cidades, itens, variáveis ou restrições);
 - **Desempenho computacional:** tempo de execução e máquina em que os
   experimentos foram realizados;
 - **Qualidade das soluções:** se o método alcança soluções ótimas e, em caso
