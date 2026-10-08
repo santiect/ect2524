@@ -38,6 +38,11 @@ A apresentação deve abordar, no mínimo:
   tamanho (por exemplo, número de cidades, itens, variáveis ou restrições);
 - **Desempenho computacional:** tempo de execução e máquina em que os
   experimentos foram realizados;
+- **Protocolo experimental:** número de réplicas (execuções independentes)
+  por instância, uso de sementes aleatórias distintas, valores dos parâmetros
+  da metaheurística e como foram definidos, e as estatísticas reportadas
+  (média, desvio-padrão, melhor e pior resultado), já que metaheurísticas
+  estocásticas podem produzir resultados diferentes a cada execução;
 - **Qualidade das soluções:** se o método alcança soluções ótimas e, em caso
   contrário, a distância em relação ao ótimo, a um limite ou à melhor
   solução conhecida;
