@@ -83,11 +83,12 @@ function step(inst, x, msg, changed, extra) {
   return Object.assign({ x: x.slice(), w, f, msg, changed: changed || [] }, extra || {});
 }
 
-function greedy(inst) {
-  const order = [...Array(inst.n).keys()].sort((i, j) => inst.b[j] / inst.p[j] - inst.b[i] / inst.p[i]);
+/* Solução viável aleatória: insere itens em ordem sorteada enquanto couberem. */
+function randomSolution(inst, rnd) {
   const x = new Array(inst.n).fill(0);
   let w = 0;
-  for (const i of order) if (w + inst.p[i] <= inst.C) { x[i] = 1; w += inst.p[i]; }
+  for (const i of shuffle([...Array(inst.n).keys()], rnd))
+    if (w + inst.p[i] <= inst.C) { x[i] = 1; w += inst.p[i]; }
   return x;
 }
 
@@ -160,8 +161,8 @@ function* localSearch(inst, x, tag) {
 /* ---------- algoritmos ---------- */
 
 function* ils(inst, P, rnd) {
-  let x = greedy(inst);
-  yield step(inst, x, 'Solução inicial gulosa');
+  let x = randomSolution(inst, rnd);
+  yield step(inst, x, 'Solução inicial aleatória');
   x = yield* localSearch(inst, x, 'Busca local inicial');
   yield step(inst, x, `Ótimo local inicial: benefício ${evalSol(inst, x).f}`);
   for (let it = 1; it <= P.iter; it++) {
@@ -202,9 +203,9 @@ function* grasp(inst, P, rnd) {
 }
 
 function* sa(inst, P, rnd) {
-  const x = greedy(inst);
+  const x = randomSolution(inst, rnd);
   let T = P.T0;
-  yield step(inst, x, 'Solução inicial gulosa', [], { T });
+  yield step(inst, x, 'Solução inicial aleatória', [], { T });
   for (let t = 1; t <= P.steps; t++) {
     const m = randomMove(inst, x, rnd);
     if (m) {
@@ -266,8 +267,8 @@ function* ga(inst, P, rnd) {
 }
 
 function* vns(inst, P, rnd) {
-  let x = greedy(inst);
-  yield step(inst, x, 'Solução inicial gulosa');
+  let x = randomSolution(inst, rnd);
+  yield step(inst, x, 'Solução inicial aleatória');
   x = yield* localSearch(inst, x, 'Busca local inicial');
   yield step(inst, x, `Ótimo local inicial: benefício ${evalSol(inst, x).f}`);
   let k = 1;
@@ -290,9 +291,9 @@ function* vns(inst, P, rnd) {
   }
 }
 
-function* vnd(inst) {
-  const x = greedy(inst);
-  yield step(inst, x, 'Solução inicial gulosa');
+function* vnd(inst, P, rnd) {
+  const x = randomSolution(inst, rnd);
+  yield step(inst, x, 'Solução inicial aleatória');
   const kinds = ['insert', 'swap'], names = ['N1 (inserção)', 'N2 (troca)'];
   let k = 0;
   while (k < kinds.length) {
