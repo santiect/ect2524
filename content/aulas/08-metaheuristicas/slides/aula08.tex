@@ -274,6 +274,37 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Efeito de $k$ no espaço de soluções}
+	\begin{center}
+	\begin{tikzpicture}[xscale=0.85,yscale=0.65]
+		\paisagem
+		\fill (1.8,2.6) circle (2pt) node[above left] {\scriptsize $x$};
+		% k pequeno
+		\fill[orange!80!black] (2.6,2.0) circle (2pt);
+		\draw[->,thick,orange!80!black,bend left=50] (1.8,2.6) to (2.6,2.0);
+		\draw[->,dashed,orange!80!black,bend right=40] (2.6,2.0) to (1.8,2.6);
+		% k médio
+		\fill[green!45!black] (4.6,1.6) circle (2pt);
+		\draw[->,thick,green!45!black,bend left=40] (1.8,2.6) to (4.6,1.6);
+		\draw[->,dashed,green!45!black] (4.6,1.6) to (5.8,3.6);
+		% k grande
+		\fill[red!70!black] (9.6,2.2) circle (2pt);
+		\draw[->,thick,red!70!black,bend left=20] (1.8,2.6) to (9.6,2.2);
+		\draw[->,dashed,red!70!black] (9.6,2.2) to (9.0,2.6);
+		\node[font=\scriptsize,orange!80!black] at (3.6,2.7) {$k$ pequeno};
+		\node[font=\scriptsize,green!45!black] at (4.6,0.9) {$k$ intermediário};
+		\node[font=\scriptsize,red!70!black] at (9.3,1.6) {$k$ grande};
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item Setas contínuas: perturbação; tracejadas: busca local;
+		\item $k$ pequeno: retorna a $x$;
+		\item $k$ intermediário: alcança outro ótimo local, possivelmente melhor;
+		\item $k$ grande: ótimo local arbitrário, como um reinício.
+	\end{itemize}
+\end{frame}
+
 %------------------------------------------------------------
 \section{Busca local iterada (ILS)}
 %------------------------------------------------------------
