@@ -6,7 +6,7 @@
 pode ser realizado em equipes de até 3 pessoas, com a mesma composição das
 tarefas anteriores.
 
-**Data do seminário:** **23 de outubro**, com **15 minutos** de apresentação
+**Data do seminário:** **23 de outubro**, com **20 minutos** de apresentação
 por equipe.
 
 **Entrega.** O arquivo da apresentação, em **PDF**, deve ser enviado na
@@ -44,7 +44,7 @@ A apresentação deve abordar, no mínimo:
 
 ## Orientações
 
-- O tempo de 15 minutos é rígido; dimensionem o número de slides de acordo.
+- O tempo de 20 minutos é rígido; dimensionem o número de slides de acordo.
 - Citem o artigo escolhido (autores, título, edição do SBPO) no primeiro
   slide.
 - Os slides devem ser enviados em PDF, e não no formato-fonte da
