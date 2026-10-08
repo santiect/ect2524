@@ -1,0 +1,16 @@
+titulo: "Aula 8 — Metaheurísticas"
+data: "2026-10-09"
+resumo: >
+  Recapitulação das heurísticas construtivas e da busca local, com a
+  limitação de estacionar em ótimos locais. Definição de metaheurística e
+  dos elementos em comum (construção, busca local e perturbação), seguida
+  da apresentação da busca local iterada, do GRASP, do recozimento
+  simulado e do algoritmo genético, com menção ao VNS e à busca tabu. A
+  tarefa avaliativa é um seminário sobre um artigo dos anais do SBPO que
+  aplique metaheurística a um problema de otimização.
+
+slides: "slides/aula08.tex"
+
+tarefas:
+  - titulo: "SEM1 — Seminário de artigo do SBPO — 25% da nota"
+    arquivo: "tarefas/tarefa08-seminario-sbpo.md"

@@ -1,0 +1,715 @@
+\documentclass[fleqn]{beamer}
+
+\mode<presentation> {
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+\usepackage{graphicx}
+
+\lstset{
+	basicstyle=\ttfamily\scriptsize,
+	breaklines=true,
+	keywordstyle=\color{blue!60!black},
+	commentstyle=\color{gray},
+	stringstyle=\color{green!45!black},
+	showstringspaces=false,
+	columns=fullflexible,
+	frame=single,
+	framesep=4pt,
+	aboveskip=6pt,
+	belowskip=2pt,
+}
+
+% ---------- Figuras reutilizáveis ----------
+
+% Paisagem unidimensional de um problema de maximização:
+% três máximos locais (x = 1,8; 5,8; 9,0), sendo 5,8 o global.
+\newcommand{\paisagem}{%
+	\draw[->] (-0.2,0) -- (9.8,0) node[right] {\scriptsize $x \in S$};
+	\draw[->] (0,-0.1) -- (0,4.2) node[above] {\scriptsize $f(x)$};
+	\draw[thick,blue!60!black] plot[smooth] coordinates {%
+		(0.3,1.0) (1.0,2.0) (1.8,2.6) (2.6,2.0) (3.6,0.8) (4.6,1.6)
+		(5.8,3.6) (6.8,2.4) (7.6,1.8) (8.4,2.4) (9.0,2.6) (9.6,2.2)};
+}
+
+% Paisagem bidimensional (superfície 3D) com os mesmos três máximos:
+% (2,2) e (8,2) locais, (6,6) global. Recebe o conteúdo extra do eixo.
+\newcommand{\paisagemtres}[1]{%
+	\begin{tikzpicture}
+	\begin{axis}[width=0.98\linewidth,height=5.2cm,view={-30}{35},
+		hide axis,colorbar,colorbar style={width=2mm,ytick=\empty,
+			title={\scriptsize $f(x)$},title style={yshift=-1mm}},
+		colormap={custo}{color=(red) color=(yellow) color=(green) color=(cyan) color=(blue) color=(violet)},
+		domain=0:10,y domain=0:10,samples=26,zmin=0,zmax=4.5]
+		\addplot3[surf,shader=interp]
+			{2.6*exp(-((x-2)^2+(y-2)^2)/1.5)+3.6*exp(-((x-6)^2+(y-6)^2)/1.5)
+			+2.6*exp(-((x-8)^2+(y-2)^2)/1.5)};
+		#1
+	\end{axis}
+	\end{tikzpicture}%
+}
+
+% Linha de um vetor binário (#1 = coordenada y, #2 = lista de bits)
+\tikzset{bit/.style={draw,minimum size=0.6cm,inner sep=0pt,font=\small},
+	bit0/.style={bit,fill=white}, bit1/.style={bit,fill=green!25}}
+\newcommand{\vetor}[2]{%
+	\foreach \v [count=\i] in {#2}{%
+		\node[bit\v] at (\i*0.65,#1) {\v};
+	}%
+}
+% Contorno em destaque de uma posição do vetor (#1 = y, #2 = índice)
+\newcommand{\destaque}[2]{%
+	\draw[red,very thick] ({#2*0.65-0.3},{#1-0.3}) rectangle ({#2*0.65+0.3},{#1+0.3});
+}
+
+% Vetor de rota (#1 = y, #2 = ids das cidades, #3/#4 = primeira/última posição invertida)
+\tikzset{cid0/.style={bit,fill=white}, cid1/.style={bit,fill=red!25}}
+\newcommand{\rotavec}[4]{%
+	\foreach \v [count=\i] in {#2}{%
+		\ifnum\i<#3 \def\st{cid0}\else\ifnum\i>#4 \def\st{cid0}\else\def\st{cid1}\fi\fi
+		\node[\st] at (\i*0.65,#1) {\v};
+	}%
+}
+
+\title[Aula 8 -- Metaheurísticas]{Metaheurísticas}
+\subtitle{Escapando de ótimos locais}
+\author[Santi]{Prof. \'Everton Santi}
+\institute[UFRN/ECT]{ECT2524 -- Introdução à Otimização \\ Escola de Ciências e Tecnologia -- UFRN}
+\date{Aula 8}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sumário}
+	\tableofcontents
+\end{frame}
+
+%------------------------------------------------------------
+\section{Recapitulação}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Heurística construtiva e busca local}
+	\begin{itemize}
+		\item \textbf{Heurística construtiva}: monta uma solução viável
+			elemento a elemento (aleatória, gulosa, vizinho mais próximo);
+		\item \textbf{Busca local}: parte de uma solução e a substitui
+			por um vizinho melhor, enquanto houver;
+		\item Vizinhança $\mathcal{N}(x)$: soluções obtidas de $x$ por uma
+			pequena modificação;
+		\item Exemplos: inversão de bit e troca (mochila); 2-opt (TSP).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Ótimo local e ótimo global}
+	\begin{columns}[T]
+	\begin{column}{0.36\textwidth}
+	\begin{itemize}
+		\item Ótimo local: nenhum vizinho é melhor;
+		\item Ótimo global: melhor solução de todo $S$;
+		\item Um ótimo local depende da vizinhança adotada.
+	\end{itemize}
+	\end{column}
+	\begin{column}{0.62\textwidth}
+	\paisagemtres{%
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize ótimo local},every node near coord/.style={above,black}]
+				coordinates {(2,2,2.6)};
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize ótimo local},every node near coord/.style={above,black}]
+				coordinates {(8,2,2.6)};
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize ótimo global},every node near coord/.style={above,black}]
+				coordinates {(6,6,3.6)};
+		}
+	\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Busca local: só explotação}
+	\begin{columns}[T]
+	\begin{column}{0.36\textwidth}
+	\begin{itemize}
+		\item Sobe até o pico mais próximo;
+		\item Outro ponto inicial, outro ótimo local.
+	\end{itemize}
+	\end{column}
+	\begin{column}{0.62\textwidth}
+	\paisagemtres{%
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize $x_1$},every node near coord/.style={below,black}]
+				coordinates {(0.9,1.0,0.6)};
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize $x_2$},every node near coord/.style={below,black}]
+				coordinates {(7.2,5.4,1.09)};
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize $x_3$},every node near coord/.style={below,black}]
+				coordinates {(8.9,1.0,0.78)};
+			\addplot3[black,very thick,-{Stealth[length=2.5mm]}] coordinates {(0.9,1.0,0.6) (1.8,1.8,2.45)};
+			\addplot3[black,very thick,-{Stealth[length=2.5mm]}] coordinates {(7.2,5.4,1.09) (6.2,5.9,3.4)};
+			\addplot3[black,very thick,-{Stealth[length=2.5mm]}] coordinates {(8.9,1.0,0.78) (8.2,1.8,2.45)};
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize $x_1'$},every node near coord/.style={above,black}]
+				coordinates {(2,2,2.6)};
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize $x_2'$},every node near coord/.style={above,black}]
+				coordinates {(6,6,3.6)};
+			\addplot3[only marks,mark=*,black,mark size=2pt,
+				nodes near coords={\scriptsize $x_3'$},every node near coord/.style={above,black}]
+				coordinates {(8,2,2.6)};
+		}
+	\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Limitação da busca local}
+	\begin{itemize}
+		\item Termina no primeiro ótimo local encontrado;
+		\item Não dispõe de mecanismo para escapar dele;
+		\item A qualidade do resultado depende da solução inicial;
+		\item Nada garante que o ótimo local seja próximo do global.
+	\end{itemize}
+	\vspace{2mm}
+	\begin{block}{Questão}
+		Como continuar a busca a partir de um ótimo local, sem abandonar
+		a busca local?
+	\end{block}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Metaheurísticas}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Definição de metaheurística}
+	\begin{block}{Hillier e Lieberman (2010)}
+		Método de resolução geral que fornece tanto uma estrutura quanto
+		diretrizes de estratégia gerais para desenvolver um método
+		heurístico específico que se ajuste a um tipo de problema
+		particular.
+	\end{block}
+	\begin{block}{Hillier e Lieberman (2010)}
+		Método de resolução geral que orquestra a interação entre
+		procedimentos de melhoria local e estratégias de nível mais alto
+		para criar um processo capaz de escapar dos ótimos locais e
+		realizar uma busca consistente de uma região de soluções viáveis.
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Características}
+	\begin{itemize}
+		\item Gerenciam heurísticas de nível mais baixo e guiam a busca;
+		\item Incorporam mecanismos para escapar de ótimos locais;
+		\item Não dependem do problema: o que muda é a representação, a
+			vizinhança e a função objetivo;
+		\item Não fornecem prova de otimalidade.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Elementos em comum}
+	\begin{itemize}
+		\item \textbf{Heurística construtiva}: gera soluções iniciais;
+		\item \textbf{Busca local}: explotação, leva a um ótimo local;
+		\item \textbf{Perturbação}: exploração, tira a busca do ótimo local;
+		\item As metaheurísticas diferem na forma, na quantidade e na
+			intensidade com que esses elementos são empregados.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Perturbação}
+	\begin{block}{Definição}
+		Procedimento que gera uma nova solução $x'$, a partir de $x$, pela
+		modificação aleatória de algumas de suas componentes.
+	\end{block}
+	\begin{itemize}
+		\item A intensidade da modificação ($k$ componentes) é definida
+			pelo usuário;
+		\item Fuga de ótimos locais.
+	\end{itemize}
+	\vspace{2mm}
+	\begin{center}
+	\begin{tikzpicture}
+		\node[anchor=east,font=\small] at (0.2,0.5) {solução $x$};
+		\vetor{0.5}{1,0,1,0,1,1,0}
+		\node[anchor=east,font=\small] at (0.2,-0.5) {perturbação, $k=2$};
+		\vetor{-0.5}{0,0,1,0,0,1,0}
+		\destaque{-0.5}{1}
+		\destaque{-0.5}{5}
+	\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Intensidade da perturbação}
+	\begin{itemize}
+		\item $k$ pequeno: $x'$ fica na região de atração de $x$ e a
+			busca local retorna ao mesmo ótimo local;
+		\item $k$ grande: $x'$ se aproxima de uma solução aleatória e a
+			busca degenera em reinícios;
+		\item Compromisso entre exploração e explotação;
+		\item No TSP: reconexão de $k$ arestas (por exemplo, $k$ trocas de
+			cidades).
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Busca local iterada (ILS)}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Busca local iterada}
+	\begin{itemize}
+		\item \textit{Iterated Local Search} (ILS);
+		\item Perturba o ótimo local atual e aplica nova busca local;
+		\item Estrutura mais simples entre as metaheurísticas;
+		\item Componentes: solução inicial, busca local, perturbação e
+			critério de aceitação.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Algoritmo ILS}
+	\begin{enumerate}
+		\item $x \leftarrow$ heurística construtiva;
+		\item $x \leftarrow$ busca local$(x)$;
+		\item Enquanto o critério de parada não for satisfeito:
+		\begin{enumerate}
+			\item $x' \leftarrow$ perturbação$(x)$;
+			\item $x'' \leftarrow$ busca local$(x')$;
+			\item Se $x''$ satisfaz o critério de aceitação: $x \leftarrow x''$;
+			\item Atualiza a melhor solução encontrada;
+		\end{enumerate}
+		\item Retorna a melhor solução.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{ILS na paisagem de soluções}
+	\begin{center}
+	\begin{tikzpicture}[xscale=0.85,yscale=0.65]
+		\paisagem
+		\fill (1.8,2.6) circle (2pt) node[above] {\scriptsize $x$};
+		\fill (4.6,1.6) circle (2pt) node[below] {\scriptsize $x'$};
+		\fill (5.8,3.6) circle (2pt) node[above] {\scriptsize $x''$};
+		\draw[->,thick,red!70!black,bend left=35] (1.8,2.6) to (4.6,1.6);
+		\draw[->,thick,black] (4.6,1.6) to (5.8,3.6);
+		\node[font=\scriptsize,red!70!black] at (3.5,3.5) {perturbação};
+		\node[font=\scriptsize] at (7.4,3.3) {busca local};
+	\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Critério de aceitação}
+	\begin{itemize}
+		\item \textbf{Melhor}: aceita $x''$ somente se $f(x'') $ melhora $f(x)$;
+			intensifica a busca em torno do ótimo local atual;
+		\item \textbf{Sempre}: aceita qualquer $x''$; diversifica a busca,
+			como um passeio aleatório entre ótimos locais;
+		\item \textbf{Intermediário}: aceita $x''$ levemente pior, ou
+			reinicia após certo número de iterações sem melhora.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemplo: ILS na mochila}
+	\begin{itemize}
+		\item Instância da Aula 7 ($n = 7$, $C = 18$);
+		\item Ótimo local da troca: $x$, benefício $83$.
+	\end{itemize}
+	\vspace{1mm}
+	\begin{center}
+	\begin{tikzpicture}
+		\node[anchor=east,font=\small] at (0.2,0.9) {ótimo local $x$};
+		\vetor{0.9}{1,0,1,0,1,1,0}
+		\node[anchor=west,font=\small] at (5.0,0.9) {$83$};
+		\node[anchor=east,font=\small] at (0.2,0.0) {perturbação $x'$};
+		\vetor{0.0}{0,0,1,0,0,1,0}
+		\destaque{0.0}{1}
+		\destaque{0.0}{5}
+		\node[anchor=west,font=\small] at (5.0,0.0) {$57$};
+		\node[anchor=east,font=\small] at (0.2,-0.9) {busca local $x''$};
+		\vetor{-0.9}{0,0,1,1,0,1,0}
+		\destaque{-0.9}{4}
+		\node[anchor=west,font=\small] at (5.0,-0.9) {$84$};
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item Remove os itens 1 e 5; a busca local insere o item 4;
+		\item $x''$ é o ótimo global.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{GRASP}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{GRASP}
+	\begin{itemize}
+		\item \textit{Greedy Randomized Adaptive Search Procedure}
+			(Feo e Resende, 1989);
+		\item Repete: construção semigulosa e busca local;
+		\item Mantém a melhor solução encontrada;
+		\item A diversificação vem da construção, não de uma perturbação.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Construção gulosa e semigulosa}
+	\begin{itemize}
+		\item \textbf{Gulosa}: a cada passo, insere o melhor candidato
+			segundo o critério guloso;
+		\item Determinística: sempre a mesma solução;
+		\item \textbf{Semigulosa}: forma a \textbf{lista restrita de
+			candidatos} (LRC) com os melhores candidatos e sorteia um
+			deles;
+		\item Cada construção produz uma solução diferente e de boa
+			qualidade.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Lista restrita de candidatos}
+	\begin{itemize}
+		\item $c_{\min}$, $c_{\max}$: menor e maior custo guloso entre os
+			candidatos;
+		\item Parâmetro $\alpha \in [0,1]$;
+		\item Candidato $i$ entra na LRC se $c_i \leq c_{\min} +
+			\alpha\,(c_{\max} - c_{\min})$;
+		\item $\alpha = 0$: construção gulosa;
+		\item $\alpha = 1$: construção aleatória.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Guloso versus aleatório}
+	\begin{center}
+	\begin{tabular}{lcc}
+		\toprule
+		& $\alpha = 0$ (guloso) & $\alpha = 1$ (aleatório) \\
+		\midrule
+		Variância & nenhuma & alta \\
+		Qualidade média & boa & baixa \\
+		Convergência da busca local & rápida & lenta \\
+		\bottomrule
+	\end{tabular}
+	\end{center}
+	\begin{itemize}
+		\item GRASP combina o melhor dos dois extremos.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Algoritmo GRASP}
+	\begin{enumerate}
+		\item $f^* \leftarrow \infty$ (minimização);
+		\item Enquanto o critério de parada não for satisfeito:
+		\begin{enumerate}
+			\item $x \leftarrow$ construção semigulosa$(\alpha)$;
+			\item $x' \leftarrow$ busca local$(x)$;
+			\item Se $f(x') < f^*$: $f^* \leftarrow f(x')$, $x^* \leftarrow x'$;
+		\end{enumerate}
+		\item Retorna $x^*$.
+	\end{enumerate}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Simulated Annealing}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Recozimento simulado}
+	\begin{itemize}
+		\item \textit{Simulated Annealing} (Kirkpatrick et al., 1983);
+		\item Analogia com o recozimento de metais: aquecimento seguido de
+			resfriamento lento;
+		\item Temperatura alta: o sistema se move livremente;
+		\item Temperatura baixa: o sistema se estabiliza em um estado de
+			baixa energia;
+		\item Energia $\leftrightarrow$ função objetivo.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Aceitação de soluções piores}
+	\begin{itemize}
+		\item Sorteia um vizinho $x'$ de $x$ e calcula
+			$\Delta = f(x') - f(x)$ (minimização);
+		\item Se $\Delta \leq 0$: aceita $x'$;
+		\item Se $\Delta > 0$: aceita $x'$ com probabilidade
+			$e^{-\Delta/T}$ (critério de Metropolis);
+		\item $T > 0$: temperatura;
+		\item A perturbação é o próprio movimento aleatório de vizinhança.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Probabilidade de aceitação}
+	\begin{columns}[T]
+	\begin{column}{0.38\textwidth}
+	\begin{itemize}
+		\item Piora grande: probabilidade menor;
+		\item $T$ alto: aceita quase tudo (exploração);
+		\item $T$ baixo: aceita quase só melhoras (explotação).
+	\end{itemize}
+	\end{column}
+	\begin{column}{0.6\textwidth}
+	\begin{tikzpicture}
+	\begin{axis}[width=\linewidth,height=4.8cm,xlabel={$\Delta$},
+		ylabel={$e^{-\Delta/T}$},xmin=0,xmax=5,ymin=0,ymax=1.05,
+		legend pos=north east,legend style={font=\scriptsize},
+		label style={font=\small},tick label style={font=\scriptsize}]
+		\addplot[thick,red!70!black,domain=0:5,samples=40] {exp(-x/0.5)};
+		\addplot[thick,blue!60!black,domain=0:5,samples=40] {exp(-x/1)};
+		\addplot[thick,green!45!black,domain=0:5,samples=40] {exp(-x/3)};
+		\legend{$T=0{,}5$,$T=1$,$T=3$}
+	\end{axis}
+	\end{tikzpicture}
+	\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Resfriamento}
+	\begin{itemize}
+		\item Temperatura inicial $T_0$ alta;
+		\item Esquema geométrico: $T \leftarrow \beta\,T$, com
+			$\beta \in (0,1)$, por exemplo $0{,}95$;
+		\item Em cada temperatura, um número fixo de iterações;
+		\item Parada: $T$ abaixo de um limite ou número de iterações sem
+			melhora.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Algoritmo Simulated Annealing}
+	\begin{enumerate}
+		\item $x \leftarrow$ solução inicial; $T \leftarrow T_0$;
+		\item Enquanto o critério de parada não for satisfeito:
+		\begin{enumerate}
+			\item Repete $L$ vezes:
+			\begin{enumerate}
+				\item Sorteia $x' \in \mathcal{N}(x)$; $\Delta \leftarrow f(x') - f(x)$;
+				\item Se $\Delta \leq 0$ ou $\text{rand}(0,1) < e^{-\Delta/T}$: $x \leftarrow x'$;
+				\item Atualiza a melhor solução encontrada;
+			\end{enumerate}
+			\item $T \leftarrow \beta\,T$;
+		\end{enumerate}
+		\item Retorna a melhor solução.
+	\end{enumerate}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Algoritmo genético}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Algoritmo genético}
+	\begin{itemize}
+		\item Inspirado na evolução biológica: seleção natural,
+			reprodução, hereditariedade e mutação;
+		\item Mantém uma \textbf{população} de soluções, não uma única;
+		\item \textbf{Cromossomo}: representação de uma solução (por
+			exemplo, vetor binário);
+		\item \textbf{Aptidão} (\textit{fitness}): qualidade da solução,
+			dada pela função objetivo;
+		\item \textbf{Geração}: população em um dado instante.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Operadores}
+	\begin{itemize}
+		\item \textbf{Seleção}: escolhe os pais; quanto maior a aptidão,
+			maior a chance;
+		\item \textbf{Cruzamento}: combina trechos de dois pais para
+			gerar filhos;
+		\item \textbf{Mutação}: altera aleatoriamente alguns genes do
+			filho; corresponde à perturbação;
+		\item Cruzamento: explotação das boas características dos pais;
+			mutação: exploração.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Cruzamento de um ponto}
+	\begin{center}
+	\begin{tikzpicture}
+		\node[anchor=east,font=\small] at (0.2,1.4) {pai A};
+		\vetor{1.4}{1,0,1,1,1,0,0}
+		\node[anchor=east,font=\small] at (0.2,0.7) {pai B};
+		\vetor{0.7}{0,0,1,0,1,1,0}
+		\draw[red,very thick,dashed] (2.275,0.2) -- (2.275,1.9);
+		\node[anchor=east,font=\small] at (0.2,-0.2) {filho 1};
+		\vetor{-0.2}{1,0,1,0,1,1,0}
+		\node[anchor=east,font=\small] at (0.2,-0.9) {filho 2};
+		\vetor{-0.9}{0,0,1,1,1,0,0}
+	\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item Ponto de corte sorteado;
+		\item Filho 1: início de A e fim de B; filho 2: o inverso;
+		\item Pode gerar solução inviável: reparo ou penalização.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Algoritmo genético simples}
+	\begin{enumerate}
+		\item Gera a população inicial de $N$ cromossomos;
+		\item Calcula a aptidão de cada cromossomo;
+		\item Enquanto o critério de parada não for satisfeito:
+		\begin{enumerate}
+			\item Repete até formar $N$ filhos: seleciona dois pais,
+				cruza com probabilidade $p_c$, aplica mutação com
+				probabilidade $p_m$;
+			\item Substitui a população pela nova geração;
+			\item Calcula as aptidões e atualiza a melhor solução;
+		\end{enumerate}
+		\item Retorna a melhor solução.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Representação em outros problemas}
+	\begin{itemize}
+		\item Mochila: vetor binário;
+		\item TSP: permutação das cidades; o cruzamento de um ponto
+			gera rotas inválidas, exigindo operadores específicos;
+		\item Variáveis contínuas: vetor de números reais.
+	\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Outras metaheurísticas}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Busca em vizinhança variável (VNS)}
+	\begin{itemize}
+		\item \textit{Variable Neighborhood Search} (Mladenović e
+			Hansen, 1997);
+		\item Família de vizinhanças $\mathcal{N}_1, \ldots,
+			\mathcal{N}_{k_{\max}}$, de tamanho crescente;
+		\item Perturbação: sorteia $x'$ em $\mathcal{N}_k(x)$, depois
+			aplica busca local;
+		\item Se melhora: $x \leftarrow x''$ e $k \leftarrow 1$; senão,
+			$k \leftarrow k+1$;
+		\item A intensidade da perturbação cresce até a busca sair do
+			ótimo local;
+		\item Variante VND: só a descida, sem perturbação.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Busca tabu}
+	\begin{itemize}
+		\item Move-se sempre para o melhor vizinho, mesmo que pior que
+			a solução atual;
+		\item Lista tabu: movimentos recentes ficam proibidos por algumas
+			iterações;
+		\item Evita retornar ao ótimo local de que acabou de sair.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Comparação}
+	\begin{center}
+	\small
+	\begin{tabular}{lll}
+		\toprule
+		Método & Solução(ões) & Mecanismo de escape \\
+		\midrule
+		ILS & uma & perturbação + aceitação \\
+		GRASP & várias independentes & construção semigulosa \\
+		Simulated Annealing & uma & aceita piores, $e^{-\Delta/T}$ \\
+		Algoritmo genético & população & cruzamento + mutação \\
+		VNS & uma & vizinhança crescente \\
+		\bottomrule
+	\end{tabular}
+	\end{center}
+\end{frame}
+
+%------------------------------------------------------------
+\section{A tarefa (avaliativa)}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Seminário (SEM1)}
+	\begin{itemize}
+		\item \textbf{25\% da nota}; equipes de até 3 pessoas (mesmas
+			equipes das tarefas anteriores);
+		\item Seminário em \textbf{23/10}, 15 minutos por equipe;
+		\item Artigo dos anais do SBPO (qualquer edição) que aplique
+			metaheurística a um problema;
+		\item Apresentar como se fossem os autores no congresso;
+		\item Envio do PDF na tarefa \textbf{SEM1} do SIGAA, até
+			23/10, às 23h59.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Conteúdo da apresentação}
+	\begin{itemize}
+		\item Problema, motivação e aplicação;
+		\item Método de solução (metaheurística, representação,
+			vizinhança ou operadores);
+		\item Dados utilizados;
+		\item Tempo de execução e máquina;
+		\item Soluções ótimas ou não;
+		\item Contribuições e limitações.
+	\end{itemize}
+	\vspace{2mm}
+	\begin{alertblock}{Presença}
+		Não apresentar, ou não assistir às apresentações dos colegas,
+		implica não receber a nota do seminário.
+	\end{alertblock}
+\end{frame}
+
+%------------------------------------------------------------
+\section{Referências}
+%------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Referências}
+	\begin{itemize}
+		\item Hillier, F. S.; Lieberman, G. J. \textit{Introduction to
+			Operations Research}. 2010.
+		\item Goldbarg, M. C.; Luna, H. P. L. \textit{Otimização
+			Combinatória e Programação Linear}. 2005.
+		\item Feo, T. A.; Resende, M. G. C. A probabilistic heuristic for
+			a computationally difficult set covering problem.
+			\textit{Operations Research Letters}, 8(2), 1989.
+		\item Kirkpatrick, S.; Gelatt, C. D.; Vecchi, M. P. Optimization
+			by simulated annealing. \textit{Science}, 220(4598), 1983.
+		\item Mladenovi\'c, N.; Hansen, P. Variable neighborhood search.
+			\textit{Computers \& Operations Research}, 24(11), 1997.
+		\item Mitchell, M. \textit{An Introduction to Genetic
+			Algorithms}. 1998.
+	\end{itemize}
+\end{frame}
+
+\end{document}
