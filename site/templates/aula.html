@@ -23,8 +23,13 @@
   <section class="block">
     <h2>Animações</h2>
     <a class="pdf-link" href="{{ aula.animacoes }}" target="_blank" rel="noopener">
-      Abrir animações
+      Abrir animações (mochila)
     </a>
+    {% if aula.animacoes_tsp %}
+    <a class="pdf-link" href="{{ aula.animacoes_tsp }}" target="_blank" rel="noopener">
+      Abrir animações (caixeiro viajante)
+    </a>
+    {% endif %}
   </section>
   {% endif %}
 
