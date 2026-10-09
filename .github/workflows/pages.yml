@@ -21,13 +21,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # PDFs dos slides em cache, chaveados pelo conteúdo de todos os arquivos
+      # em slides/ (.tex, .bib, figuras). Se nenhum slide mudou desde um build
+      # anterior, o cache acerta e as duas etapas de TeX (instalar + compilar)
+      # são puladas -- o caso comum quando só tarefas, animações ou o gerador
+      # do site mudaram. Se qualquer arquivo de slide mudar, a chave muda e
+      # tudo é recompilado.
+      - name: Cache dos PDFs dos slides
+        id: pdfs
+        uses: actions/cache@v4
+        with:
+          path: content/aulas/*/slides/*.pdf
+          key: slides-pdf-v1-${{ hashFiles('content/aulas/**/slides/**') }}
+
       - name: Cache de pacotes apt do TeX Live
+        if: steps.pdfs.outputs.cache-hit != 'true'
         uses: actions/cache@v4
         with:
           path: /var/cache/apt/archives
           key: apt-texlive-v1-${{ runner.os }}
 
       - name: Instalar TeX Live (subconjunto necessário)
+        if: steps.pdfs.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
@@ -45,6 +60,7 @@ jobs:
         # (`apt-file search nome.sty` ou `dpkg -S` num TeX Live completo).
 
       - name: Compilar slides (LaTeX -> PDF)
+        if: steps.pdfs.outputs.cache-hit != 'true'
         run: |
           shopt -s globstar nullglob
           for tex in content/aulas/**/slides/*.tex; do
