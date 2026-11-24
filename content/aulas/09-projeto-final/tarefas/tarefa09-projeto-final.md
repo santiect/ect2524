@@ -107,7 +107,7 @@ O repositório deve ser **público**. Após criar e popular o repositório, subm
 
 ## Critérios de avaliação
 
-**A apresentação presencial é obrigatória.** Integrantes que não comparecerem e não apresentarem o trabalho no dia 11/12 receberão nota zero, independentemente da qualidade do material entregue no GitHub.
+A nota final é condicionada à apresentação presencial no dia 11/12. Apenas integrantes que apresentarem o trabalho serão avaliados.
 
 - **Código:** corretude, organização, reprodutibilidade (instruções claras, sementes fixadas)
 - **Protocolo experimental:** mínimo de 10 réplicas por instância, parâmetros documentados, máquina registrada
