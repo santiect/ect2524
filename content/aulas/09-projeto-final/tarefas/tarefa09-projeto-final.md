@@ -1,15 +1,14 @@
 ## Projeto final — Unidade 2
 
-**Peso na nota:** 100% da Unidade 2  
-**Equipes:** grupos de 3 pessoas  
-**Entrega:** repositório público no GitHub, link submetido via SIGAA até **11/12/2026 às 23h59**  
-**Apresentações:** **11/12/2026**, 10 minutos por equipe
+Este projeto **substitui todas as outras avaliações da Unidade 2** e corresponde a **100% da nota da unidade**. Não há prova nem outra atividade avaliativa nesta unidade — a nota do projeto é a nota da unidade.
+
+Os grupos são os mesmos das atividades anteriores (3 pessoas). A entrega é até **11/12/2026 às 23h59** via repositório público no GitHub (link submetido via SIGAA). As apresentações ocorrem na própria aula do dia **11/12**, com **10 minutos por equipe**.
 
 ---
 
 ## Duas opções de projeto
 
-Cada equipe escolhe uma das opções abaixo. Ambas têm os mesmos entregáveis e os mesmos critérios de avaliação.
+Cada equipe escolhe uma das duas opções abaixo. Os entregáveis e os critérios de avaliação são os mesmos para as duas.
 
 ### Opção 1 — Metaheurística para o TSP
 
