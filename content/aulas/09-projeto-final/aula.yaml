@@ -1,0 +1,11 @@
+titulo: "Aula 9 — Projeto Final"
+data: "2026-11-27"
+resumo: >
+  Apresentação do projeto final da Unidade 2. Os grupos recebem as instruções,
+  tiram dúvidas e começam a planejar a implementação. O projeto vale 100% da
+  nota da unidade; entrega até 11/12/2026 às 23h59 via GitHub, com
+  apresentação presencial de 10 minutos na própria aula do dia 11/12.
+
+tarefas:
+  - titulo: "Projeto final — Unidade 2"
+    arquivo: "tarefas/tarefa09-projeto-final.md"
