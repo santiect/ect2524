@@ -100,6 +100,8 @@ relatorio.md
 apresentacao.pdf
 ```
 
+O repositório deve ser **público**. Após criar e popular o repositório, submeta o link na **tarefa correspondente no SIGAA** até **11/12/2026 às 23h59**. Entregas fora do SIGAA (e-mail, mensagem, etc.) não serão consideradas.
+
 ---
 
 ## Critérios de avaliação
