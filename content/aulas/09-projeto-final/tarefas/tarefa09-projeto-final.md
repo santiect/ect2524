@@ -67,6 +67,7 @@ Incluir um arquivo `README.md` na raiz com instruções de execução: dependên
 
 Arquivo `relatorio.md` no repositório, contendo:
 
+- **Nome completo de todos os integrantes da equipe** (obrigatório, no início do arquivo)
 - Descrição do problema e da metaheurística implementada
 - Representação da solução, vizinhança/operadores de perturbação, geração da solução inicial
 - Critério de parada adotado e justificativa
@@ -77,7 +78,7 @@ Arquivo `relatorio.md` no repositório, contendo:
 
 ### 3. Apresentação
 
-PDF de slides (`apresentacao.pdf` no repositório), **10 minutos**, seguindo o mesmo formato do seminário da Aula 8. A equipe apresenta o próprio trabalho cobrindo:
+PDF de slides (`apresentacao.pdf` no repositório), **10 minutos**, seguindo o mesmo formato do seminário da Aula 8. O primeiro slide deve identificar **todos os integrantes da equipe**. A equipe apresenta o próprio trabalho cobrindo:
 
 - Descrição do problema e motivação
 - Método: representação da solução, vizinhança, solução inicial, critério de parada
