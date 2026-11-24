@@ -1,6 +1,6 @@
 ## Projeto final — Unidade 2
 
-Este projeto **substitui todas as outras avaliações da Unidade 2** e corresponde a **100% da nota da unidade**. Não há prova nem outra atividade avaliativa nesta unidade — a nota do projeto é a nota da unidade.
+Este projeto é a **única avaliação da Unidade 2** e corresponde a **100% da nota da unidade**.
 
 Os grupos são os mesmos das atividades anteriores (3 pessoas). A entrega é até **11/12/2026 às 23h59** via repositório público no GitHub (link submetido via SIGAA). As apresentações ocorrem na própria aula do dia **11/12**, com **10 minutos por equipe**.
 
